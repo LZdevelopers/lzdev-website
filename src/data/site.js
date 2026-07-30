@@ -1,0 +1,555 @@
+/**
+ * Fonte única de verdade do conteúdo do site.
+ * Nenhum componente contém texto fixo — alterar copy nunca exige tocar em JSX.
+ *
+ * Ordem das seções na página (App.jsx):
+ *   1 Hero · 2 Projetos · 3 Ferramentas · 4 Custo invisível · 5 Diferenciais
+ *   6 Processo · 7 Equipe · 8 Números · 9 FAQ · 10 Contato
+ *
+ * ⚠️  TODO: substituir os placeholders marcados abaixo pelos dados reais.
+ */
+
+/* -------------------------------------------------------------------------- */
+/*  CONTATO — TODO: trocar por dados reais                                    */
+/* -------------------------------------------------------------------------- */
+export const contact = {
+  email: 'contato@lzdev.com.br', // TODO: e-mail comercial real
+  whatsapp: {
+    // Formato internacional, apenas dígitos (55 + DDD + número)
+    number: '5544999999999', // TODO: WhatsApp comercial real
+    display: '(44) 99999-9999', // TODO
+  },
+  location: 'Atendimento remoto em todo o Brasil',
+  hours: 'Segunda a sexta, 08h às 18h',
+
+  /**
+   * Redes sociais exibidas na seção de contato e no footer.
+   * Deixar `href` vazio esconde o botão — nada de link morto no ar.
+   */
+  socials: [
+    { icon: 'github', label: 'GitHub', href: 'https://github.com/lzdev' }, // TODO
+    { icon: 'instagram', label: 'Instagram', href: 'https://instagram.com/lzdev' }, // TODO
+    { icon: 'linkedin', label: 'LinkedIn', href: '' }, // TODO: preencher para exibir
+  ],
+}
+
+export const whatsappLink = (message) =>
+  `https://wa.me/${contact.whatsapp.number}?text=${encodeURIComponent(message)}`
+
+/** Redes com link preenchido — usado por Contact e Footer. */
+export const activeSocials = contact.socials.filter((social) => social.href)
+
+/* -------------------------------------------------------------------------- */
+/*  NAVEGAÇÃO                                                                 */
+/* -------------------------------------------------------------------------- */
+export const navLinks = [
+  { label: 'Projetos', href: '#projetos' },
+  { label: 'Ferramentas', href: '#ferramentas' },
+  { label: 'Diferenciais', href: '#diferenciais' },
+  { label: 'Processo', href: '#processo' },
+  { label: 'Equipe', href: '#equipe' },
+  { label: 'FAQ', href: '#faq' },
+]
+
+/* -------------------------------------------------------------------------- */
+/*  1 · HERO                                                                  */
+/* -------------------------------------------------------------------------- */
+export const hero = {
+  /**
+   * Título em linhas controladas: cada item externo é uma linha do <h1> e cada
+   * token interno uma palavra/trecho. `accent` aplica o gradiente da marca
+   * ('violet' | 'blue' | 'cyan'). Ajustar a quebra é mudar o array — o CSS
+   * escala a fonte pela largura da coluna, então nada estoura em tela estreita.
+   */
+  title: [
+    [{ text: 'Transformamos' }],
+    [{ text: 'desafios em ' }, { text: 'soluções', accent: 'violet' }],
+    [{ text: 'digitais que ' }, { text: 'geram', accent: 'blue' }],
+    [{ text: 'resultado.', accent: 'cyan' }],
+  ],
+
+  subtitle:
+    'Desenvolvemos soluções digitais completas, do planejamento ao código, para organizar a operação, automatizar o repetitivo e devolver tempo à sua equipe.',
+  primaryCta: 'Solicitar projeto',
+  secondaryCta: 'Conhecer projetos',
+
+  /** Cards flutuantes ao redor do painel — recortes de `why.items`. */
+  floatingCards: [
+    { icon: 'gauge', tone: 'blue', title: 'Performance', text: 'Sistemas rápidos e otimizados', at: 'perf' },
+    { icon: 'code', tone: 'violet', title: 'Código limpo', text: 'Escalável, organizado e sustentável', at: 'code' },
+    { icon: 'shield', tone: 'cyan', title: 'Segurança', text: 'Seus dados sempre protegidos', at: 'secure' },
+  ],
+
+  /** Faixa inferior: setores atendidos, com o ícone declarado junto do nome. */
+  industries: [
+    { name: 'Restaurantes', icon: 'utensils' },
+    { name: 'Clínicas', icon: 'stethoscope' },
+    { name: 'Escritórios', icon: 'briefcase' },
+    { name: 'Escolas', icon: 'graduation' },
+    { name: 'Comércios', icon: 'cart' },
+    { name: 'Empresas', icon: 'building' },
+  ],
+
+  scrollHint: 'Role para explorar',
+}
+
+/* -------------------------------------------------------------------------- */
+/*  2 · PROJETOS — TODO: substituir as URLs pelos links reais                 */
+/* -------------------------------------------------------------------------- */
+export const projects = {
+  eyebrow: 'Projetos em destaque',
+  title: 'Resultado entregue, não portfólio de conceito',
+  subtitle: 'Uma amostra do que já está no ar e em uso — do sistema de gestão completo à ferramenta pública.',
+
+  /**
+   * `image`: caminho de uma imagem em /public (ex.: '/projetos/sprint-max.png').
+   * Enquanto estiver vazio, o card desenha o mockup de `mockup` em CSS — assim
+   * nunca existe imagem quebrada nem espaço vazio antes das telas reais.
+   */
+  items: [
+    {
+      name: 'Sprint Max',
+      category: 'Sistema de gestão',
+      image: '', // TODO: screenshot real
+      mockup: 'dashboard',
+      text: 'Sistema completo de gestão de produtos, usuários e vendas. Substituiu o controle por planilha por um painel único, com permissões por perfil e relatórios que fecham sozinhos.',
+      stack: ['PHP', 'Laravel', 'MySQL', 'Bootstrap'],
+      url: '#', // TODO: link real
+    },
+    {
+      name: 'Kimori Korean Food',
+      category: 'Website',
+      image: '', // TODO
+      mockup: 'restaurant',
+      text: 'Presença digital para restaurante de comida coreana: cardápio navegável, identidade marcante e caminho curto até o pedido pelo WhatsApp.',
+      stack: ['HTML', 'CSS', 'JavaScript', 'Tailwind CSS'],
+      url: '#', // TODO
+    },
+    {
+      name: 'Horário de Brasília',
+      category: 'Ferramenta online',
+      image: '', // TODO
+      mockup: 'clock',
+      text: 'Ferramenta pública de consulta ao horário oficial de Brasília. Interface direta, precisa e leve o bastante para abrir instantaneamente em qualquer conexão.',
+      stack: ['JavaScript', 'HTML', 'CSS'],
+      url: '#', // TODO
+    },
+    {
+      name: 'Portfólio',
+      category: 'Site pessoal',
+      image: '', // TODO
+      mockup: 'portfolio',
+      text: 'Site pessoal moderno com foco em experiência e desempenho: animações refinadas, navegação fluida e apresentação clara de projetos e competências.',
+      stack: ['React', 'Tailwind CSS', 'JavaScript'],
+      url: '#', // TODO
+    },
+  ],
+  cta: 'Visualizar projeto',
+}
+
+/* -------------------------------------------------------------------------- */
+/*  3 · FERRAMENTAS                                                           */
+/* -------------------------------------------------------------------------- */
+export const tools = {
+  eyebrow: 'Ferramentas',
+  title: 'A stack que sustenta cada entrega',
+  subtitle:
+    'Você não precisa entender nada desta lista — escolher certo é o nosso trabalho. Ela está aqui para mostrar que existe critério técnico por trás de cada decisão.',
+
+  /**
+   * Agrupado por camada em vez de uma lista solta: mostra que a stack cobre o
+   * projeto de ponta a ponta, e não que sabemos dez nomes.
+   * Os totais por grupo (4 · 4 · 2) fecham as colunas em todos os breakpoints.
+   */
+  groups: [
+    {
+      label: 'Front-end',
+      caption: 'O que o seu cliente vê e usa',
+      items: [
+        { name: 'HTML', icon: 'html', color: '#E34F26', text: 'Marcação semântica: a base do SEO e da acessibilidade.' },
+        { name: 'CSS', icon: 'css', color: '#8B5CF6', text: 'Layouts fluidos e animações leves, sem peso extra.' },
+        { name: 'JavaScript', icon: 'javascript', color: '#F7DF1E', text: 'A linguagem que dá vida à interface no navegador.' },
+        { name: 'React', icon: 'react', color: '#61DAFB', text: 'Interfaces componentizadas, rápidas e fáceis de evoluir.' },
+      ],
+    },
+    {
+      label: 'Back-end e dados',
+      caption: 'A regra de negócio e a informação',
+      items: [
+        { name: 'PHP', icon: 'php', color: '#8B8FD1', text: 'Maturidade e hospedagem acessível para regras de negócio.' },
+        { name: 'Laravel', icon: 'laravel', color: '#FF4530', text: 'Estrutura robusta com segurança e autenticação prontas.' },
+        { name: 'Node.js', icon: 'nodejs', color: '#6FBF5A', text: 'APIs e automações de alta performance em tempo real.' },
+        { name: 'MySQL', icon: 'mysql', color: '#5B95C4', text: 'Dados íntegros, consultas rápidas e backup confiável.' },
+      ],
+    },
+    {
+      label: 'Design e versionamento',
+      caption: 'Como o projeto nasce e fica rastreável',
+      items: [
+        { name: 'Figma', icon: 'figma', color: '#F24E1E', text: 'Protótipo navegável aprovado antes da primeira linha de código.' },
+        { name: 'Git', icon: 'git', color: '#F0503E', text: 'Histórico completo: qualquer mudança é reversível.' },
+      ],
+    },
+  ],
+  note: 'Precisa de outra tecnologia? Avaliamos o cenário e escolhemos a que serve ao seu caso — não a que estamos acostumados a usar.',
+}
+
+/* -------------------------------------------------------------------------- */
+/*  4 · O CUSTO INVISÍVEL                                                     */
+/* -------------------------------------------------------------------------- */
+export const invisibleCost = {
+  eyebrow: 'O custo invisível',
+  title: 'Não ter um site profissional não aparece na conta — mas você paga por ele',
+  subtitle:
+    'Nenhum desses prejuízos vem com aviso ou boleto. Eles acontecem em silêncio, todos os dias, enquanto o cliente decide fechar com outra empresa.',
+  items: [
+    {
+      icon: 'userX',
+      title: 'Clientes que desistem por falta de credibilidade',
+      text: 'Antes de ligar, o cliente pesquisa. Sem um site que sustente a sua reputação, ele fica na dúvida sobre o tamanho e a seriedade da operação.',
+      consequence: 'O contato morre antes de existir',
+    },
+    {
+      icon: 'moon',
+      title: 'Perda de vendas fora do horário comercial',
+      text: 'A decisão de compra raramente acontece de segunda a sexta, das 8h às 18h. Sem um canal aberto, a intenção esfria até alguém responder.',
+      consequence: 'Demanda que chega quando ninguém atende',
+    },
+    {
+      icon: 'share',
+      title: 'Dependência excessiva das redes sociais',
+      text: 'Perfil suspenso, alcance derrubado por mudança de algoritmo ou conta perdida — e todo o seu histórico comercial vai junto. A regra é de outro dono.',
+      consequence: 'Sua presença digital alugada, não sua',
+    },
+    {
+      icon: 'trendingDown',
+      title: 'Concorrentes passando na frente',
+      text: 'Na comparação lado a lado, quem apresenta melhor a proposta ganha a reunião. Não é sempre quem entrega melhor — é quem parece mais preparado.',
+      consequence: 'Você perde antes de poder argumentar',
+    },
+    {
+      icon: 'searchX',
+      title: 'Baixa presença no Google',
+      text: 'Quem procura pelo seu serviço hoje encontra quem investiu em estrutura e conteúdo. Sem site, você simplesmente não está entre as opções.',
+      consequence: 'Demanda pronta indo para outro lugar',
+    },
+  ],
+  closing: {
+    title: 'Todo mês sem site é um mês pagando essa conta',
+    text: 'A boa notícia: nenhum desses pontos é difícil de resolver. É estrutura, não sorte.',
+    cta: 'Quero resolver isso',
+  },
+}
+
+/* -------------------------------------------------------------------------- */
+/*  5 · DIFERENCIAIS                                                          */
+/* -------------------------------------------------------------------------- */
+export const why = {
+  eyebrow: 'Por que escolher a LZdev',
+  title: 'Feito certo agora custa menos que refeito depois',
+  subtitle:
+    'Boa parte do que recebemos para manter foi construído às pressas por alguém que não pensou no ano seguinte. Nosso padrão de engenharia existe para você nunca precisar recomeçar.',
+  items: [
+    {
+      icon: 'ruler',
+      title: 'Desenvolvimento sob medida',
+      text: 'Nada de template adaptado. Mapeamos como a sua operação funciona e construímos as regras e os fluxos em cima disso.',
+    },
+    {
+      icon: 'gauge',
+      title: 'Performance e velocidade',
+      text: 'Otimização de carga, consultas e assets. Página lenta perde cliente antes do primeiro clique — e posição no Google.',
+    },
+    {
+      icon: 'palette',
+      title: 'Design moderno',
+      text: 'Interface limpa, hierarquia clara e navegação óbvia. Bonito de ver e, mais importante, fácil de usar todo dia.',
+    },
+    {
+      icon: 'search',
+      title: 'SEO otimizado',
+      text: 'Semântica correta, dados estruturados e Core Web Vitals no verde desde a primeira entrega — não como ajuste posterior.',
+    },
+    {
+      icon: 'code',
+      title: 'Código limpo',
+      text: 'Legível, padronizado e documentado. Qualquer desenvolvedor assume o projeto depois sem precisar reescrever tudo.',
+    },
+    {
+      icon: 'lifebuoy',
+      title: 'Suporte contínuo',
+      text: 'Entrega não é despedida. Acompanhamos o uso real, corrigimos o que aparecer e evoluímos o produto com o negócio.',
+    },
+    {
+      icon: 'devices',
+      title: 'Responsividade completa',
+      text: 'Testado de verdade em celular, tablet, notebook e telas grandes. Nada quebra, nada desalinha, nada fica escondido.',
+    },
+  ],
+}
+
+/* -------------------------------------------------------------------------- */
+/*  6 · NOSSO PROCESSO                                                        */
+/* -------------------------------------------------------------------------- */
+export const process = {
+  eyebrow: 'Nosso processo',
+  title: 'Organização e transparência do briefing à entrega',
+  subtitle:
+    'Sem caixa-preta e sem semanas de silêncio. Cada etapa tem entregável claro, e você acompanha a evolução do começo ao fim.',
+
+  /** Frase destacada ao final da timeline. */
+  highlight: 'Você sempre sabe em que etapa o seu projeto está.',
+  highlightText:
+    'Cada etapa termina num entregável que você aprova. Nada avança sem o seu aval, e nenhuma semana passa sem retorno.',
+
+  /**
+   * Descrições curtas de propósito: na timeline horizontal cada etapa ocupa
+   * uma coluna estreita, então um parágrafo longo viraria uma torre de texto.
+   * `role` diz o que fica na sua mão naquela etapa — é o que sustenta a
+   * promessa de transparência da seção.
+   */
+  steps: [
+    {
+      icon: 'chat',
+      title: 'Briefing',
+      text: 'Entendemos o que trava a operação hoje e qual resultado realmente importa.',
+      deliverable: 'Diagnóstico e escopo inicial',
+      role: 'Você conta o problema',
+    },
+    {
+      icon: 'map',
+      title: 'Planejamento',
+      text: 'Definimos escopo, prioridades, prazo e investimento antes de codar.',
+      deliverable: 'Proposta com escopo fechado',
+      role: 'Você aprova a proposta',
+    },
+    {
+      icon: 'palette',
+      title: 'Design',
+      text: 'Projetamos a interface para quem usa todo dia: pouco clique, nada escondido.',
+      deliverable: 'Protótipo navegável',
+      role: 'Você valida o layout',
+    },
+    {
+      icon: 'terminal',
+      title: 'Desenvolvimento',
+      text: 'Construção em ciclos curtos, com ambiente de homologação sempre no ar.',
+      deliverable: 'Entregas parciais funcionais',
+      role: 'Você acompanha a evolução',
+    },
+    {
+      icon: 'bug',
+      title: 'Testes',
+      text: 'Validamos regras, formulários, permissões, responsividade e desempenho.',
+      deliverable: 'Checklist de qualidade aprovado',
+      role: 'Você recebe o relatório',
+    },
+    {
+      icon: 'rocket',
+      title: 'Entrega',
+      text: 'Publicação, domínio, treinamento da equipe e o código-fonte nas suas mãos.',
+      deliverable: 'Sistema no ar + documentação',
+      role: 'Você assume o controle',
+    },
+  ],
+}
+
+/* -------------------------------------------------------------------------- */
+/*  7 · EQUIPE — TODO: substituir usuários/números reais                      */
+/* -------------------------------------------------------------------------- */
+export const team = {
+  eyebrow: 'Quem constrói',
+  title: 'Você fala direto com quem escreve o código',
+  subtitle:
+    'Sem camada de intermediário e sem atendente repassando recado. Time enxuto, contato direto e responsabilidade sobre o que entregamos.',
+
+  /**
+   * `photo`: caminho de uma imagem em /public (ex.: '/equipe/enzo.jpg').
+   * Vazio → o card usa o avatar de iniciais, mantendo a identidade visual.
+   */
+  members: [
+    {
+      name: 'Enzo Pontes do Nascimento',
+      role: 'Desenvolvedor Full Stack',
+      initials: 'EN',
+      photo: '', // TODO: foto real
+      bio: 'Especializado em aplicações web modernas, sistemas administrativos e dashboards. Foca em desempenho, organização e uma experiência de uso que dispensa manual.',
+      stacks: ['React', 'JavaScript', 'Laravel', 'PHP', 'MySQL'],
+      links: {
+        github: 'https://github.com/enzonascimento', // TODO
+        whatsapp: '5544999999999', // TODO
+        linkedin: '', // TODO: preencher para exibir o botão
+      },
+    },
+    {
+      name: 'Luis Ricardo Soares',
+      role: 'Desenvolvedor Full Stack',
+      initials: 'LS',
+      photo: '', // TODO: foto real
+      bio: 'Atua em sistemas web, APIs e integrações, com foco em arquitetura bem estruturada e código limpo. Cuida da qualidade técnica do back-end à interface.',
+      stacks: ['Node.js', 'PHP', 'Laravel', 'MySQL', 'Git'],
+      links: {
+        github: 'https://github.com/luisricardo', // TODO
+        whatsapp: '5544999999999', // TODO
+        linkedin: '', // TODO
+      },
+    },
+  ],
+}
+
+/* -------------------------------------------------------------------------- */
+/*  8 · NOSSOS NÚMEROS                                                        */
+/* -------------------------------------------------------------------------- */
+export const stats = {
+  eyebrow: 'Nossos números',
+  title: 'Consistência que dá para medir',
+  subtitle:
+    'Sem número inflado para impressionar. É o que já foi entregue, está no ar e continua sendo mantido.',
+  items: [
+    {
+      icon: 'rocket',
+      value: 30,
+      suffix: '+',
+      label: 'Projetos entregues',
+      text: 'De landing pages a sistemas completos em produção.',
+    },
+    {
+      icon: 'users',
+      value: 20,
+      suffix: '+',
+      label: 'Clientes atendidos',
+      text: 'Negócios de segmentos e portes diferentes.',
+    },
+    {
+      icon: 'blocks',
+      value: 10,
+      suffix: '+',
+      label: 'Tecnologias dominadas',
+      text: 'Do front-end ao banco de dados e à infraestrutura.',
+    },
+    {
+      icon: 'clock',
+      value: 3,
+      suffix: ' sem.',
+      label: 'Tempo médio de entrega',
+      text: 'Média entre projetos de site institucional.',
+    },
+    {
+      icon: 'star',
+      value: 100,
+      suffix: '%',
+      label: 'Satisfação dos clientes',
+      text: 'Projetos aprovados e mantidos após a entrega.',
+    },
+  ],
+}
+
+/* -------------------------------------------------------------------------- */
+/*  9 · FAQ                                                                   */
+/* -------------------------------------------------------------------------- */
+export const faq = {
+  eyebrow: 'Perguntas frequentes',
+  title: 'As dúvidas que chegam antes do primeiro contato',
+  helper: {
+    text: 'Ficou alguma dúvida que não está aqui? Pergunte direto — respondemos sem enrolação e sem compromisso.',
+    cta: 'Fazer uma pergunta',
+  },
+  items: [
+    {
+      q: 'Quanto custa um site?',
+      a: 'Depende do que precisa ser resolvido. Uma landing page costuma partir de R$ 1.800, sites institucionais de R$ 3.200 e sistemas web de R$ 8.500 — a diferença está no número de páginas, integrações e regras de negócio envolvidas. Depois da nossa conversa você recebe uma proposta com escopo fechado, sem valor surpresa no meio do caminho.',
+    },
+    {
+      q: 'Quanto tempo demora?',
+      a: 'Landing pages ficam prontas em cerca de uma semana; sites institucionais entre duas e três; sistemas web geralmente de cinco a oito semanas, conforme o escopo. Trabalhamos em ciclos curtos com ambiente de homologação, então você acompanha a evolução desde o início em vez de esperar o resultado final no escuro.',
+    },
+    {
+      q: 'O site funciona no celular?',
+      a: 'Sim, e essa é a prioridade — a maior parte dos acessos vem de celular. Todo projeto é desenvolvido pensando primeiro na tela pequena e testado de verdade em celular, tablet, notebook e monitores grandes. Nada de layout que desalinha ou botão que não dá para tocar.',
+    },
+    {
+      q: 'Vocês oferecem suporte?',
+      a: 'Sim. Entrega não é despedida. Oferecemos acompanhamento contínuo para correções, atualizações de segurança, ajustes de performance e novas funcionalidades conforme o negócio evolui. Você escolhe entre suporte pontual ou um plano mensal de manutenção.',
+    },
+    {
+      q: 'Posso solicitar alterações?',
+      a: 'Pode, e é esperado que aconteça. Durante o projeto você acompanha cada etapa e os ajustes previstos no escopo entram sem custo extra. Mudanças que ampliam o escopo original são orçadas antes de qualquer execução, então você nunca é surpreendido pela fatura.',
+    },
+    {
+      q: 'Desenvolvem sistemas totalmente personalizados?',
+      a: 'É exatamente o nosso foco. Não adaptamos template nem forçamos o seu processo a caber num software de prateleira: mapeamos como a sua operação funciona e construímos as regras, permissões e fluxos em cima disso. O código é seu e não fica preso a nenhuma plataforma.',
+    },
+    {
+      q: 'Atendem empresas de fora da região?',
+      a: 'Atendemos todo o Brasil de forma remota. Reuniões por vídeo, acompanhamento online e comunicação por WhatsApp e e-mail. A distância não muda o padrão de entrega nem o tempo de resposta.',
+    },
+  ],
+}
+
+/* -------------------------------------------------------------------------- */
+/*  10 · FALE COM A GENTE                                                     */
+/* -------------------------------------------------------------------------- */
+export const contactSection = {
+  eyebrow: 'Fale com a gente',
+  title: 'Descreva o desafio. Nós desenhamos a solução.',
+  subtitle:
+    'Preencha o formulário e receba um retorno em até 2 horas úteis com as próximas etapas. Quanto mais contexto você der, mais preciso será o nosso diagnóstico.',
+  projectTypes: [
+    { value: 'site', label: 'Site institucional' },
+    { value: 'landing', label: 'Landing page' },
+    { value: 'system', label: 'Sistema web' },
+    { value: 'saas', label: 'SaaS' },
+    { value: 'automation', label: 'Automação / API' },
+    { value: 'other', label: 'Outro' },
+  ],
+  budgets: [
+    { value: 'a', label: 'Até R$ 3.000' },
+    { value: 'b', label: 'R$ 3.000 a R$ 8.000' },
+    { value: 'c', label: 'R$ 8.000 a R$ 20.000' },
+    { value: 'd', label: 'Acima de R$ 20.000' },
+    { value: 'e', label: 'Ainda não sei' },
+  ],
+  deadlines: [
+    { value: 'urgent', label: 'O quanto antes' },
+    { value: 'month', label: 'Até 1 mês' },
+    { value: 'quarter', label: 'Nos próximos 3 meses' },
+    { value: 'planning', label: 'Só planejando' },
+  ],
+  reassurance: [
+    'Retorno em até 2 horas úteis',
+    'Diagnóstico inicial sem custo',
+    'Seus dados não são compartilhados',
+  ],
+  direct: {
+    title: 'Prefere falar direto?',
+    text: 'Escolha o canal que preferir. Respondemos rápido em todos.',
+    socialsLabel: 'Também estamos aqui',
+  },
+}
+
+/* -------------------------------------------------------------------------- */
+/*  FOOTER                                                                    */
+/* -------------------------------------------------------------------------- */
+export const footer = {
+  tagline: 'Software house full stack. Transformamos desafios operacionais em soluções digitais que geram resultado.',
+  columns: [
+    {
+      title: 'Navegação',
+      links: [
+        { label: 'Projetos', href: '#projetos' },
+        { label: 'Ferramentas', href: '#ferramentas' },
+        { label: 'Diferenciais', href: '#diferenciais' },
+        { label: 'Processo', href: '#processo' },
+      ],
+    },
+    {
+      title: 'Empresa',
+      links: [
+        { label: 'Equipe', href: '#equipe' },
+        { label: 'Nossos números', href: '#numeros' },
+        { label: 'Perguntas frequentes', href: '#faq' },
+        { label: 'Fale com a gente', href: '#contato' },
+      ],
+    },
+  ],
+}

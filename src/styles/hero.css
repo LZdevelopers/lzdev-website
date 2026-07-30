@@ -1,0 +1,1063 @@
+/* ==========================================================================
+   HERO — LZdev
+   Estilos isolados da seção inicial. Nada aqui vaza para as outras seções:
+   todo seletor vive sob `.hero`.
+
+   Todas as medidas saem das variáveis --hero-* declaradas em `.hero`, que
+   por sua vez reaproveitam os tokens globais do @theme (index.css).
+
+   O painel do dashboard escala por container query: `--s` funciona como
+   "unidade" (um length), então `calc(14 * var(--s))` vale 14px na largura de
+   projeto e encolhe proporcionalmente em telas menores. Isso mantém o mockup
+   íntegro em qualquer largura sem uma media query por elemento.
+   ========================================================================== */
+
+.hero {
+  /* — superfícies e traços — */
+  --hero-bg: #05050b;
+  --hero-surface: rgb(9 10 18 / 0.72); /* vidro dos cards flutuantes */
+  --hero-surface-2: rgb(255 255 255 / 0.03); /* cards internos do dashboard */
+  --hero-border: rgb(255 255 255 / 0.08);
+  --hero-border-strong: rgb(255 255 255 / 0.16);
+
+  /* — texto — */
+  --hero-text: var(--color-ink);
+  --hero-muted: var(--color-muted);
+  --hero-faint: var(--color-faint);
+
+  /* — cores de marca — */
+  --hero-purple: var(--color-brand);
+  --hero-purple-soft: var(--color-brand-soft);
+  --hero-blue: #4c7dff;
+  --hero-cyan: var(--color-accent);
+
+  /* — luz, raio e ritmo — */
+  --hero-glow: 0 0 140px -30px rgb(124 58 237 / 0.78);
+  --hero-shadow: 0 48px 110px -40px rgb(0 0 0 / 0.95);
+  --hero-radius: 1.05rem;
+  --hero-radius-sm: 0.7rem;
+  --hero-container-width: 80rem;
+  --hero-ease: var(--ease-out-soft);
+
+  /* — inclinação 3D do painel (reduzida nos breakpoints menores) — */
+  --hero-perspective: 1750px;
+  --hero-tilt-x: 5deg;
+  --hero-tilt-y: -14deg;
+  --hero-tilt-z: 3.6deg;
+
+  position: relative;
+  isolation: isolate;
+  overflow: hidden; /* o painel sangra à direita: nunca gerar scroll horizontal */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* fallback para navegadores sem unidades dinâmicas */
+  min-height: 100svh;
+  /* O ritmo vertical acompanha a ALTURA da tela: em notebooks baixos tudo
+     comprime o suficiente para o hero fechar em ~100vh sem cortar nada. */
+  padding-block: clamp(6rem, 11svh, 7.5rem) 1.5rem;
+}
+
+.hero-inner {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  max-width: var(--hero-container-width);
+}
+
+/* ==========================================================================
+   1 · FUNDO — gradientes radiais, halos, arcos e partículas
+   ========================================================================== */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  background:
+    radial-gradient(70% 55% at 78% 30%, rgb(46 22 120 / 0.42), transparent 68%),
+    radial-gradient(45% 40% at 96% 74%, rgb(20 70 130 / 0.22), transparent 70%),
+    radial-gradient(38% 34% at 4% 8%, rgb(70 34 160 / 0.2), transparent 72%),
+    linear-gradient(180deg, rgb(5 5 11 / 0.35), rgb(5 5 11 / 0.9));
+}
+
+/* Halo principal, atrás do dashboard */
+.hero-halo {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(46px);
+}
+.hero-halo--main {
+  top: 12%;
+  right: 2%;
+  width: min(46rem, 62%);
+  aspect-ratio: 1;
+  background: radial-gradient(circle, rgb(96 44 214 / 0.4), rgb(76 36 180 / 0.16) 46%, transparent 70%);
+  animation: hero-breathe 14s ease-in-out infinite alternate;
+}
+.hero-halo--cyan {
+  right: -6%;
+  bottom: 6%;
+  width: min(28rem, 40%);
+  aspect-ratio: 1;
+  background: radial-gradient(circle, rgb(34 211 238 / 0.16), transparent 68%);
+  animation: hero-breathe 18s ease-in-out -6s infinite alternate;
+}
+.hero-halo--violet {
+  top: 30%;
+  left: -12%;
+  width: min(24rem, 36%);
+  aspect-ratio: 1;
+  background: radial-gradient(circle, rgb(124 58 237 / 0.2), transparent 70%);
+}
+
+/* Arcos orbitais decorativos que contornam o dashboard.
+   A caixa fica confinada à metade direita da seção: assim os traços contornam
+   o painel e convergem para a plataforma sem cruzar a coluna de texto. */
+.hero-arcs {
+  position: absolute;
+  top: -4%;
+  right: -14%;
+  width: 68%;
+  height: 104%;
+  overflow: visible;
+}
+
+/* Partículas de luz */
+.hero-spark {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #e9d5ff;
+  box-shadow: 0 0 10px 2px rgb(167 139 250 / 0.9);
+  animation: hero-twinkle 4.5s ease-in-out infinite;
+}
+.hero-spark--sm {
+  width: 2px;
+  height: 2px;
+  box-shadow: 0 0 8px 1px rgb(96 165 250 / 0.8);
+  background: #bfdbfe;
+}
+
+/* Vinheta que fecha as bordas da seção */
+.hero-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 118% 92% at 52% 46%, transparent 42%, rgb(5 5 11 / 0.82) 100%);
+}
+
+/* ==========================================================================
+   2 · GRADE PRINCIPAL
+   ========================================================================== */
+.hero-grid {
+  display: grid;
+  flex: 1;
+  align-items: center;
+  gap: 3rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* ==========================================================================
+   3 · COLUNA DE TEXTO
+   ========================================================================== */
+.hero-copy {
+  /* container do bloco de texto: o título escala pela largura da COLUNA,
+     não do viewport, então as quebras de linha desenhadas no conteúdo
+     sobrevivem de 320px ao desktop sem uma media query por breakpoint. */
+  container-type: inline-size;
+  position: relative;
+  z-index: 2;
+  max-width: 34rem;
+}
+
+/* 3.1 · Título — primeiro elemento da coluna, sem etiqueta acima */
+.hero-title {
+  margin-top: 0;
+  /* 9.8cqw ≈ a largura da linha MAIS LONGA do array em site.js
+     ("desafios em soluções" ≈ 9,4em): abaixo disso nenhuma linha quebra em
+     duas e as quebras desenhadas no conteúdo sobrevivem em qualquer largura.
+     O `min()` com svh encolhe o título em notebooks baixos, para o conjunto
+     texto + faixa + indicador continuar fechando em ~100vh. */
+  font-size: clamp(1.85rem, min(9.6cqw, 5.4svh), 3.4rem);
+  line-height: 1.16;
+  letter-spacing: -0.035em;
+  color: var(--hero-text);
+  /* as quebras vêm do conteúdo; `balance` (herdado do h1 global) não se aplica */
+  text-wrap: wrap;
+}
+.hero-title-line {
+  display: block;
+}
+.hero-title-accent {
+  background-image: linear-gradient(96deg, var(--hero-purple-soft), var(--hero-blue));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.hero-title-accent[data-tone='blue'] {
+  background-image: linear-gradient(96deg, #60a5fa, #3b82f6);
+}
+.hero-title-accent[data-tone='cyan'] {
+  background-image: linear-gradient(96deg, #a78bfa, var(--hero-cyan));
+}
+
+/* 3.3 · Parágrafo */
+.hero-lead {
+  margin-top: clamp(0.9rem, 2.4svh, 1.6rem);
+  max-width: 29rem;
+  font-size: clamp(0.95rem, 3.2cqw, 1.06rem);
+  line-height: 1.72;
+  color: var(--hero-muted);
+}
+
+/* 3.4 · Botões */
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: clamp(1.4rem, 3.6svh, 2.4rem);
+}
+
+/* ==========================================================================
+   4 · PALCO — dashboard, cards flutuantes, plataforma e órbitas
+   ========================================================================== */
+.hero-stage-outer {
+  container-type: inline-size;
+  position: relative;
+  z-index: 1;
+}
+.hero-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1.06;
+  perspective: var(--hero-perspective);
+  perspective-origin: 62% 42%;
+}
+
+/* 4.1 · Painel inclinado */
+.hero-panel-wrap {
+  position: absolute;
+  top: 15%;
+  left: 0;
+  right: 3%;
+  container-type: inline-size;
+  transform: rotateX(var(--hero-tilt-x)) rotateY(var(--hero-tilt-y)) rotateZ(var(--hero-tilt-z));
+  z-index: 2;
+}
+.hero-panel-float {
+  animation: hero-float 13s ease-in-out infinite alternate;
+}
+
+.hero-panel {
+  /* "unidade" do mockup: 1px na largura de projeto (~700px) */
+  --s: clamp(0.44px, 0.142cqw, 1px);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--hero-border-strong);
+  border-radius: calc(22 * var(--s));
+  background:
+    radial-gradient(120% 90% at 82% -12%, rgb(68 44 156 / 0.34), transparent 62%),
+    linear-gradient(180deg, #0d1020, #06070f);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.07),
+    0 0 0 1px color-mix(in oklab, var(--hero-purple) 30%, transparent),
+    var(--hero-shadow),
+    var(--hero-glow);
+  font-size: calc(13 * var(--s));
+  color: var(--hero-text);
+}
+
+/* Brilho diagonal lentíssimo atravessando o vidro do painel */
+.hero-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(104deg, transparent 38%, rgb(255 255 255 / 0.055) 50%, transparent 62%);
+  animation: hero-sheen 9s var(--hero-ease) 1.4s infinite;
+  pointer-events: none;
+}
+
+/* — barra superior — */
+.hero-panel-top {
+  display: flex;
+  align-items: center;
+  gap: calc(9 * var(--s));
+  border-bottom: 1px solid rgb(255 255 255 / 0.07);
+  background: rgb(255 255 255 / 0.02);
+  padding: calc(11 * var(--s)) calc(14 * var(--s));
+}
+.hero-panel-mark {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: calc(21 * var(--s));
+  height: calc(21 * var(--s));
+  border-radius: calc(7 * var(--s));
+  background: linear-gradient(140deg, #8b5cf6, #6d28d9 55%, #22d3ee);
+  color: #fff;
+}
+.hero-panel-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(7 * var(--s));
+  border: 1px solid rgb(255 255 255 / 0.07);
+  border-radius: calc(7 * var(--s));
+  background: rgb(255 255 255 / 0.045);
+  padding: calc(5 * var(--s)) calc(9 * var(--s));
+  font-size: calc(9.5 * var(--s));
+  font-weight: 600;
+  color: #dbe2ef;
+  white-space: nowrap;
+}
+.hero-panel-tab svg {
+  color: var(--hero-faint);
+}
+.hero-panel-search {
+  display: flex;
+  align-items: center;
+  gap: calc(6 * var(--s));
+  /* base fixa + margin-left:auto — a margem automática empurra o campo para a
+     direita e o flex-shrink cuida das larguras apertadas. */
+  flex: 0 1 calc(200 * var(--s));
+  min-width: 0;
+  margin-left: auto;
+  border: 1px solid rgb(255 255 255 / 0.07);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.035);
+  padding: calc(4.5 * var(--s)) calc(9 * var(--s));
+  font-size: calc(9 * var(--s));
+  color: var(--hero-faint);
+}
+.hero-panel-ph {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.hero-panel-kbd {
+  flex: none;
+  border: 1px solid rgb(255 255 255 / 0.09);
+  border-radius: calc(4 * var(--s));
+  padding: 0 calc(4 * var(--s));
+  font-size: calc(7.5 * var(--s));
+  letter-spacing: 0.04em;
+}
+.hero-panel-avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: calc(23 * var(--s));
+  height: calc(23 * var(--s));
+  border-radius: 50%;
+  background: linear-gradient(140deg, #a78bfa, #4c1d95);
+  box-shadow: 0 0 0 calc(1.5 * var(--s)) rgb(255 255 255 / 0.1);
+  font-family: var(--font-display);
+  font-size: calc(9 * var(--s));
+  font-weight: 800;
+  color: #fff;
+}
+
+/* — corpo — */
+.hero-panel-body {
+  display: flex;
+  align-items: stretch;
+}
+
+/* trilha lateral de ícones */
+.hero-panel-rail {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(7 * var(--s));
+  border-right: 1px solid rgb(255 255 255 / 0.06);
+  padding: calc(14 * var(--s)) calc(8 * var(--s));
+}
+.hero-panel-rail li {
+  display: grid;
+  place-items: center;
+  width: calc(22 * var(--s));
+  height: calc(22 * var(--s));
+  border-radius: calc(7 * var(--s));
+  color: #4b5468;
+}
+.hero-panel-rail li[data-active='true'] {
+  background: rgb(124 58 237 / 0.22);
+  box-shadow: inset 0 0 0 1px rgb(167 139 250 / 0.4);
+  color: #ddd6fe;
+}
+
+.hero-panel-main {
+  flex: 1;
+  min-width: 0;
+  padding: calc(18 * var(--s)) calc(18 * var(--s)) calc(20 * var(--s));
+}
+
+/* saudação */
+.hero-panel-greet strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: calc(15.5 * var(--s));
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.hero-panel-greet span {
+  display: block;
+  margin-top: calc(3 * var(--s));
+  font-size: calc(9 * var(--s));
+  color: var(--hero-faint);
+}
+
+/* KPIs */
+.hero-panel-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: calc(9 * var(--s));
+  margin-top: calc(18 * var(--s));
+}
+.hero-kpi {
+  border: 1px solid rgb(255 255 255 / 0.06);
+  border-radius: calc(10 * var(--s));
+  background: var(--hero-surface-2);
+  padding: calc(12 * var(--s)) calc(11 * var(--s)) calc(11 * var(--s));
+}
+.hero-kpi > span {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.hero-kpi-label {
+  font-size: calc(8.2 * var(--s));
+  color: var(--hero-faint);
+}
+.hero-kpi-value {
+  margin-top: calc(4 * var(--s));
+  font-family: var(--font-display);
+  font-size: calc(16 * var(--s));
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.hero-kpi-delta {
+  margin-top: calc(4 * var(--s));
+  font-size: calc(8 * var(--s));
+  font-weight: 600;
+  color: #6ee7b7;
+}
+
+/* linha inferior: gráfico + atividades */
+.hero-panel-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.42fr) minmax(0, 1fr);
+  gap: calc(9 * var(--s));
+  margin-top: calc(9 * var(--s));
+}
+.hero-tile {
+  position: relative;
+  border: 1px solid rgb(255 255 255 / 0.06);
+  border-radius: calc(10 * var(--s));
+  background: var(--hero-surface-2);
+  padding: calc(11 * var(--s));
+}
+.hero-tile-title {
+  font-size: calc(9.8 * var(--s));
+  font-weight: 700;
+}
+.hero-tile-sub {
+  margin-top: calc(2 * var(--s));
+  font-size: calc(8 * var(--s));
+  color: var(--hero-faint);
+}
+.hero-tile-close {
+  position: absolute;
+  top: calc(10 * var(--s));
+  right: calc(10 * var(--s));
+  color: #3f4757;
+}
+
+/* gráfico de linha */
+.hero-chart {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: calc(7 * var(--s));
+  margin-top: calc(9 * var(--s));
+}
+.hero-chart-y {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: calc(7.2 * var(--s));
+  color: #3f4757;
+  text-align: right;
+}
+.hero-chart-plot {
+  display: block;
+  width: 100%;
+  height: calc(138 * var(--s));
+  overflow: visible;
+}
+.hero-chart-x {
+  display: flex;
+  justify-content: space-between;
+  grid-column: 2;
+  margin-top: calc(5 * var(--s));
+  font-size: calc(7.2 * var(--s));
+  color: #3f4757;
+}
+
+/* atividades recentes */
+.hero-acts {
+  display: flex;
+  flex-direction: column;
+  gap: calc(9 * var(--s));
+  margin-top: calc(10 * var(--s));
+}
+.hero-act {
+  display: flex;
+  align-items: center;
+  gap: calc(7 * var(--s));
+  font-size: calc(8.6 * var(--s));
+  color: #c3ccdb;
+}
+.hero-act-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: calc(17 * var(--s));
+  height: calc(17 * var(--s));
+  border-radius: 50%;
+  background: color-mix(in oklab, var(--hero-purple) 16%, transparent);
+  box-shadow: inset 0 0 0 1px rgb(167 139 250 / 0.28);
+  color: var(--hero-purple-soft);
+}
+.hero-act-icon[data-tone='cyan'] {
+  background: rgb(34 211 238 / 0.14);
+  box-shadow: inset 0 0 0 1px rgb(34 211 238 / 0.3);
+  color: #67e8f9;
+}
+.hero-act-icon[data-tone='emerald'] {
+  background: rgb(52 211 153 / 0.14);
+  box-shadow: inset 0 0 0 1px rgb(52 211 153 / 0.3);
+  color: #6ee7b7;
+}
+.hero-act-icon[data-tone='blue'] {
+  background: rgb(59 130 246 / 0.16);
+  box-shadow: inset 0 0 0 1px rgb(96 165 250 / 0.32);
+  color: #93c5fd;
+}
+.hero-act-text {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.hero-act time {
+  flex: none;
+  font-size: calc(7.4 * var(--s));
+  color: #3f4757;
+}
+.hero-acts-more {
+  align-self: flex-end;
+  margin-top: calc(2 * var(--s));
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: calc(6 * var(--s));
+  background: rgb(255 255 255 / 0.04);
+  padding: calc(4 * var(--s)) calc(9 * var(--s));
+  font-size: calc(8 * var(--s));
+  font-weight: 600;
+  color: #c3ccdb;
+}
+
+/* 4.3 · Cards flutuantes */
+.hero-card {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8em;
+  width: max-content;
+  /* largura em `em`: acompanha o font-size fluido do card, então o texto
+     mantém o mesmo número de linhas da referência em qualquer breakpoint. */
+  max-width: 16.8em;
+  border: 1px solid var(--hero-border);
+  border-radius: var(--hero-radius);
+  background: var(--hero-surface);
+  padding: 1em 1.15em;
+  font-size: clamp(0.58rem, 1.95cqw, 0.78rem);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.06),
+    0 26px 60px -26px rgb(0 0 0 / 0.95);
+  backdrop-filter: blur(14px);
+  transition:
+    border-color 0.5s var(--hero-ease),
+    box-shadow 0.5s var(--hero-ease);
+  /* keyframes próprio: `transform` está reservado à flutuação, então o hover
+     age só sobre borda e sombra (e nunca briga com a animação). */
+  animation: hero-card-float 11s ease-in-out infinite alternate;
+}
+.hero-card:hover {
+  border-color: rgb(167 139 250 / 0.4);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.09),
+    0 30px 70px -26px rgb(0 0 0 / 0.95),
+    0 0 44px -14px rgb(124 58 237 / 0.7);
+}
+.hero-card-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.5em;
+  height: 2.5em;
+  border-radius: var(--hero-radius-sm);
+  background: color-mix(in oklab, var(--hero-purple) 16%, transparent);
+  box-shadow: inset 0 0 0 1px rgb(167 139 250 / 0.3);
+  color: var(--hero-purple-soft);
+}
+.hero-card-icon[data-tone='blue'] {
+  background: rgb(59 130 246 / 0.16);
+  box-shadow: inset 0 0 0 1px rgb(96 165 250 / 0.32);
+  color: #93c5fd;
+}
+.hero-card-icon[data-tone='cyan'] {
+  background: rgb(34 211 238 / 0.14);
+  box-shadow: inset 0 0 0 1px rgb(34 211 238 / 0.32);
+  color: #67e8f9;
+}
+.hero-card strong {
+  display: block;
+  font-size: 1.06em;
+  font-weight: 700;
+  color: var(--hero-text);
+}
+.hero-card p {
+  margin-top: 0.3em;
+  font-size: 0.95em;
+  line-height: 1.42;
+  color: var(--hero-muted);
+}
+
+/* Posições espelhando a referência: um card acima à direita, um embaixo à
+   esquerda do painel e um embaixo à direita. */
+.hero-card--perf {
+  top: 1%;
+  right: 6%;
+  animation-delay: -2s;
+}
+.hero-card--code {
+  bottom: 14%;
+  left: 0;
+  animation-delay: -5s;
+}
+.hero-card--secure {
+  right: 3%;
+  bottom: 15%;
+  animation-delay: -8s;
+}
+
+/* 4.4 · Plataforma holográfica */
+.hero-platform {
+  position: absolute;
+  bottom: 0;
+  /* 46%: acompanha o centro ÓPTICO do painel inclinado, que a rotação em Y
+     desloca para a esquerda do centro geométrico do palco. */
+  left: 46%;
+  z-index: 1;
+  width: 78%;
+  aspect-ratio: 1 / 0.3;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.hero-platform-core {
+  position: absolute;
+  top: 51%;
+  left: 50%;
+  width: 46%;
+  aspect-ratio: 1 / 0.5;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(233 213 255 / 0.85), rgb(124 58 237 / 0.5) 38%, transparent 72%);
+  filter: blur(16px);
+  animation: hero-core-pulse 6.5s ease-in-out infinite alternate;
+}
+.hero-platform-rings {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+/* Reflexo no "chão" */
+.hero-platform-floor {
+  position: absolute;
+  bottom: -6%;
+  left: 50%;
+  width: 62%;
+  height: 26%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgb(124 58 237 / 0.35), transparent 70%);
+  filter: blur(22px);
+}
+/* Marca d'água da LZdev projetada pela plataforma */
+.hero-watermark {
+  position: absolute;
+  bottom: 16%;
+  left: 44%;
+  z-index: 0;
+  transform: translateX(-50%);
+  opacity: 0.075;
+  pointer-events: none;
+}
+
+/* 4.5 · Órbitas com pontos viajantes.
+   O anel gira em círculo e é achatado por scaleY: o ponto descreve a elipse
+   e é "desachatado" de volta para continuar redondo. */
+.hero-orbit {
+  --squash: 0.186;
+  position: absolute;
+  /* alinhado ao centro dos anéis da plataforma (mesmo 46% de .hero-platform) */
+  bottom: 10.3%;
+  left: 46%;
+  z-index: 1;
+  aspect-ratio: 1;
+  transform: translate(-50%, 50%) scaleY(var(--squash)) rotate(0deg);
+  animation: hero-orbit-spin 34s linear infinite;
+  pointer-events: none;
+}
+.hero-orbit--wide {
+  width: 74%;
+}
+.hero-orbit--tight {
+  --squash: 0.184;
+  width: 54%;
+  animation-duration: 23s;
+  animation-direction: reverse;
+}
+.hero-orbit-dot {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #f5f3ff;
+  box-shadow: 0 0 12px 3px rgb(167 139 250 / 0.95);
+  transform: translate(-50%, -50%) scaleY(calc(1 / var(--squash)));
+}
+.hero-orbit--tight .hero-orbit-dot {
+  background: #cffafe;
+  box-shadow: 0 0 12px 3px rgb(34 211 238 / 0.9);
+}
+
+/* ==========================================================================
+   5 · FAIXA DE SEGMENTOS + INDICADOR DE ROLAGEM
+   ========================================================================== */
+/* Sem título acima da lista: a separação fica por conta de uma régua de 1px
+   que se dissolve nas pontas, no lugar das linhas que flanqueavam o título. */
+.hero-strip {
+  margin-top: auto;
+  padding-top: clamp(1.75rem, 4.4svh, 3rem);
+}
+.hero-strip::before {
+  content: '';
+  display: block;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(255 255 255 / 0.12) 22%,
+    rgb(255 255 255 / 0.12) 78%,
+    transparent
+  );
+}
+.hero-strip-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+  margin: clamp(1.1rem, 2.6svh, 1.75rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.hero-strip-list li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.855rem;
+  color: #9aa6ba;
+  transition: color 0.35s var(--hero-ease);
+}
+.hero-strip-list li svg {
+  color: #6b7a93;
+  transition: color 0.35s var(--hero-ease);
+}
+.hero-strip-list li:hover {
+  color: var(--hero-text);
+}
+.hero-strip-list li:hover svg {
+  color: var(--hero-purple-soft);
+}
+
+.hero-scroll {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: clamp(1.25rem, 3.4svh, 2.5rem);
+}
+.hero-mouse {
+  position: relative;
+  width: 1.35rem;
+  height: 2.15rem;
+  border: 1px solid rgb(255 255 255 / 0.18);
+  border-radius: 999px;
+}
+.hero-mouse-wheel {
+  position: absolute;
+  top: 0.35rem;
+  left: 50%;
+  width: 2px;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: var(--hero-purple-soft);
+  transform: translateX(-50%);
+  animation: hero-wheel 2.1s var(--hero-ease) infinite;
+}
+.hero-scroll-text {
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #626e83;
+  margin-right: -0.32em;
+}
+
+/* ==========================================================================
+   6 · ANIMAÇÕES
+   ========================================================================== */
+@keyframes hero-float {
+  from {
+    transform: translate3d(0, 7px, 0);
+  }
+  to {
+    transform: translate3d(0, -7px, 0);
+  }
+}
+@keyframes hero-card-float {
+  from {
+    transform: translate3d(0, 4px, 0);
+  }
+  to {
+    transform: translate3d(0, -4px, 0);
+  }
+}
+@keyframes hero-breathe {
+  from {
+    opacity: 0.72;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+/* Pulso do núcleo da plataforma — precisa repetir o translate da posição,
+   senão a animação substituiria o transform base e o núcleo sairia do lugar. */
+@keyframes hero-core-pulse {
+  from {
+    opacity: 0.75;
+    transform: translate(-50%, -50%) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+@keyframes hero-twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.32;
+  }
+}
+@keyframes hero-orbit-spin {
+  to {
+    transform: translate(-50%, 50%) scaleY(var(--squash)) rotate(360deg);
+  }
+}
+@keyframes hero-sheen {
+  0% {
+    transform: translateX(-105%);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  46% {
+    transform: translateX(105%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(105%);
+    opacity: 0;
+  }
+}
+@keyframes hero-wheel {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0);
+  }
+  22% {
+    opacity: 1;
+  }
+  78% {
+    opacity: 0;
+    transform: translate(-50%, 0.75rem);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, 0.75rem);
+  }
+}
+
+/* ==========================================================================
+   7 · RESPONSIVIDADE
+   ========================================================================== */
+
+/* — Celular: uma coluna, texto primeiro, perspectiva suavizada — */
+@media (max-width: 639px) {
+  .hero {
+    --hero-tilt-x: 3deg;
+    --hero-tilt-y: -9deg;
+    --hero-tilt-z: 2.2deg;
+    --hero-perspective: 1100px;
+  }
+  .hero-grid {
+    gap: 2.25rem;
+  }
+  .hero-copy {
+    max-width: none;
+  }
+  .hero-actions > * {
+    flex: 1 1 100%;
+  }
+  .hero-stage {
+    aspect-ratio: 1 / 1.1;
+  }
+  .hero-panel-wrap {
+    top: 15%;
+    left: 0;
+    right: 0;
+  }
+  /* Reposicionados para caber; nenhum card sai de cena e o painel continua
+     sendo o elemento principal do Hero também no celular. */
+  .hero-card--perf {
+    top: 0;
+    right: 0;
+  }
+  .hero-card--code {
+    bottom: 15%;
+    left: 0;
+  }
+  .hero-card--secure {
+    right: 0;
+    bottom: 4%;
+  }
+  .hero-strip-list {
+    justify-content: center;
+    gap: 0.85rem 1.15rem;
+  }
+  .hero-strip-list li {
+    font-size: 0.78rem;
+  }
+}
+
+/* — Tablet retrato: uma coluna, palco mais contido — */
+@media (min-width: 640px) and (max-width: 899px) {
+  .hero {
+    --hero-tilt-y: -11deg;
+    --hero-tilt-z: 3deg;
+  }
+  .hero-copy {
+    max-width: 38rem;
+  }
+  .hero-stage-outer {
+    width: min(100%, 40rem);
+    margin-inline: auto;
+  }
+}
+
+/* — Tablet paisagem, notebook e desktop: duas colunas — */
+@media (min-width: 900px) {
+  .hero-grid {
+    grid-template-columns: minmax(0, 0.86fr) minmax(0, 1fr);
+    gap: 2rem;
+  }
+  .hero-stage-outer {
+    /* A largura do palco também é limitada pela ALTURA disponível: assim o
+       conjunto (texto + palco + faixa + indicador) fecha em ~100vh em
+       notebooks baixos, sem cortar nada e sem sobra em telas altas.
+       O 19rem é o orçamento vertical do resto da seção e o piso de 20rem
+       evita que o painel fique ilegível em janelas muito baixas. */
+    width: clamp(20rem, calc((100svh - 19rem) / 1.06), 100%);
+    margin-left: auto;
+    /* cancela o padding do container: o painel chega à borda da tela */
+    margin-right: -2rem;
+  }
+  /* Em duas colunas o painel avança sobre a calha da grade — como na
+     referência, onde ele começa a ~42% da largura da tela. A coluna de texto
+     tem folga de sobra (a linha mais longa do título ocupa ~92% dela), então
+     nada encosta. */
+  .hero-panel-wrap {
+    top: 10%;
+    left: -13%;
+    right: 3%;
+  }
+  /* Os dois cards de baixo ficam praticamente no mesmo nível, como na
+     referência, logo abaixo das quinas inferiores do painel. */
+  .hero-card--code {
+    left: -15%;
+    bottom: 6%;
+  }
+  .hero-card--secure {
+    right: 4%;
+    bottom: 7.5%;
+  }
+}
+
+@media (min-width: 1280px) {
+  .hero-grid {
+    gap: 2.5rem;
+  }
+  .hero-stage-outer {
+    margin-right: -2.5rem;
+  }
+}
+
+/* ==========================================================================
+   8 · MOVIMENTO REDUZIDO
+   O bloco global de index.css já zera durações; aqui garantimos que nenhum
+   elemento fique parado num estado deslocado do keyframe final.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .hero-panel-float,
+  .hero-panel::after,
+  .hero-card,
+  .hero-orbit,
+  .hero-spark,
+  .hero-halo,
+  .hero-platform-core,
+  .hero-mouse-wheel {
+    animation: none;
+  }
+  .hero-panel::after {
+    display: none;
+  }
+  .hero-mouse-wheel {
+    opacity: 1;
+  }
+}
