@@ -8,11 +8,15 @@ import { Section, SectionHeader } from '../primitives/Section'
  * Cartão de prejuízo. O tom de alerta (warn) é usado só aqui — é a única
  * seção da página que fala de perda, e o vermelho carrega esse peso sem
  * precisar de nenhum recurso de movimento.
+ *
+ * Ícone e texto ficam lado a lado, não empilhados: a altura do cartão passa a
+ * ser a do texto, e não "ícone + texto". A consequência continua numa faixa
+ * própria de largura cheia, porque é o remate de cada cartão.
  */
 function CostCard({ item, className = '' }) {
   return (
     <article
-      className={`group relative flex h-full flex-col gap-4 overflow-hidden rounded-[var(--radius-card)] border border-warn/18 bg-warn/[0.035] p-6 transition-[border-color,background-color,transform] duration-500 ease-[var(--ease-out-soft)] hover:-translate-y-1 hover:border-warn/40 hover:bg-warn/[0.07] sm:p-7 ${className}`}
+      className={`group relative flex h-full flex-col gap-3 overflow-hidden rounded-[var(--radius-card)] border border-warn/18 bg-warn/[0.035] p-4 transition-[border-color,background-color,transform] duration-500 ease-[var(--ease-out-soft)] hover:-translate-y-1 hover:border-warn/40 hover:bg-warn/[0.07] sm:p-5 ${className}`}
     >
       {/* Brasa no canto superior — estática, só a opacidade cresce no hover */}
       <span
@@ -20,15 +24,18 @@ function CostCard({ item, className = '' }) {
         className="pointer-events-none absolute -top-16 -right-10 size-40 rounded-full bg-warn/12 opacity-60 blur-3xl transition-opacity duration-500 group-hover:opacity-100"
       />
 
-      <span className="relative grid size-12 shrink-0 place-items-center rounded-xl bg-warn/10 text-warn ring-1 ring-warn/22">
-        <Icon name={item.icon} size={22} />
-      </span>
+      <div className="relative flex items-start gap-3.5">
+        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-warn/10 text-warn ring-1 ring-warn/22">
+          <Icon name={item.icon} size={20} />
+        </span>
+        <div className="min-w-0">
+          <h3 className="text-[0.98rem] leading-snug font-bold text-ink sm:text-base">{item.title}</h3>
+          <p className="mt-1.5 text-[0.82rem] leading-snug text-muted">{item.text}</p>
+        </div>
+      </div>
 
-      <h3 className="relative text-lg leading-snug font-bold text-ink">{item.title}</h3>
-      <p className="relative text-sm leading-relaxed text-muted">{item.text}</p>
-
-      <p className="relative mt-auto flex items-center gap-2 border-t border-warn/12 pt-4 text-sm font-semibold text-warn">
-        <Icon name="trendingDown" size={16} className="shrink-0" />
+      <p className="relative mt-auto flex items-center gap-2 border-t border-warn/12 pt-3 text-[0.78rem] font-semibold text-warn">
+        <Icon name="trendingDown" size={14} className="shrink-0" />
         {item.consequence}
       </p>
     </article>
@@ -48,7 +55,7 @@ export function InvisibleCost() {
 
       {/* Dois cartões maiores puxam a atenção; os três restantes fecham a
           composição numa linha de apoio, evitando um mosaico monótono. */}
-      <div className="mt-14 grid gap-4 lg:grid-cols-2">
+      <div className="mt-9 grid gap-3.5 sm:mt-10 lg:grid-cols-2">
         {[first, second].map((item, i) => (
           <Reveal key={item.title} delay={i * 100} className="h-full">
             <CostCard item={item} />
@@ -56,7 +63,7 @@ export function InvisibleCost() {
         ))}
       </div>
 
-      <div className="mt-4 grid gap-4 md:grid-cols-3">
+      <div className="mt-3.5 grid gap-3.5 md:grid-cols-3">
         {rest.map((item, i) => (
           <Reveal key={item.title} delay={200 + i * 100} className="h-full">
             <CostCard item={item} />
@@ -66,10 +73,10 @@ export function InvisibleCost() {
 
       {/* Virada de tom: fecha a seção olhando para a solução, não para a dor */}
       <Reveal variant="scale" delay={120}>
-        <div className="mt-8 flex flex-col items-center gap-6 rounded-[var(--radius-xl2)] border border-brand/25 bg-brand/[0.07] px-6 py-9 text-center sm:px-10 border-gradient">
+        <div className="mt-6 flex flex-col items-center gap-5 rounded-[var(--radius-xl2)] border border-brand/25 bg-brand/[0.07] px-6 py-7 text-center sm:px-10 border-gradient">
           <div className="max-w-2xl">
-            <h3 className="text-[clamp(1.35rem,3vw,1.85rem)] text-ink">{invisibleCost.closing.title}</h3>
-            <p className="mt-3 text-base leading-relaxed text-muted">{invisibleCost.closing.text}</p>
+            <h3 className="text-[clamp(1.3rem,2.8vw,1.7rem)] text-ink">{invisibleCost.closing.title}</h3>
+            <p className="mt-2.5 text-[0.95rem] leading-relaxed text-muted">{invisibleCost.closing.text}</p>
           </div>
           <Button href="#contato" size="lg" icon="arrowRight">
             {invisibleCost.closing.cta}

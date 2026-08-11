@@ -29,7 +29,33 @@ npm install      # instala dependências
 npm run dev      # servidor de desenvolvimento
 npm run build    # build de produção em dist/
 npm run preview  # serve o build para conferência
+npm run icons    # regera os ícones a partir de public/logo.png
 ```
+
+### Ícones da marca
+
+`public/logo.png` é a arte original e a **única fonte** dos ícones. Ela vem num
+canvas 3:2 com ~300px de vazio de cada lado — usá-la direto em qualquer slot
+quadrado distorce a marca. `npm run icons` recorta o canvas morto, centra a arte
+num quadrado (sem esticar) e reamostra para cada destino:
+
+- `logo-mark-256.png` — transparente, usado pelo `<Logo />` na página
+- `favicon-16/32/48/180.png` e `apple-touch-icon.png` — sobre placa **preta**
+  (`#09090B`) com a estrela em branco, porque a arte nasce branca e sozinha
+  desapareceria numa aba de tema claro
+
+A marca é um merkaba em wireframe e é ela que vai em **todos** os tamanhos. O
+problema é o traço: ~3% da largura do símbolo, ou seja meio pixel a 16px, que a
+média de área devolve em cinza médio. Nos tamanhos de aba (16/32/48) o script
+compensa em dois passos — engrossa o traço na arte em resolução cheia (filtro de
+máximo) *antes* de reduzir, e estica o contraste do alpha *depois*, para a linha
+chegar branca e o vão entre as arestas ficar preto. A dose é por tamanho e vive na
+tabela `TARGETS` (`thicken` em fração de pixel de saída, `contrast` em faixa de
+alpha); a 180px nada disso entra, lá o traço já tem corpo.
+`ICON_THEME=white npm run icons` inverte a placa (branca, arte em preto).
+
+Rode o comando sempre que o `logo.png` mudar. O script não tem dependências:
+monta o PNG à mão sobre o `zlib` do Node.
 
 ## Onde mudar as coisas
 
@@ -82,7 +108,8 @@ src/
 
 ### Hero
 
-O Hero ocupa ~100vh e é montado por inteiro em JSX/CSS/SVG — nenhuma imagem.
+O Hero ocupa ~100vh e é montado por inteiro em JSX/CSS/SVG — a única imagem é a
+marca d'água da marca ao fundo, a 7,5% de opacidade.
 O dashboard inclinado usa `perspective` + `rotateX/Y/Z` e escala por *container
 query*: a variável `--s` (em `hero.css`) funciona como unidade, então todo o
 mockup encolhe proporcionalmente de 320px ao desktop sem quebrar. Os números do

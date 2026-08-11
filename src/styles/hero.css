@@ -752,89 +752,6 @@
 }
 
 /* ==========================================================================
-   5 · FAIXA DE SEGMENTOS + INDICADOR DE ROLAGEM
-   ========================================================================== */
-/* Sem título acima da lista: a separação fica por conta de uma régua de 1px
-   que se dissolve nas pontas, no lugar das linhas que flanqueavam o título. */
-.hero-strip {
-  margin-top: auto;
-  padding-top: clamp(1.75rem, 4.4svh, 3rem);
-}
-.hero-strip::before {
-  content: '';
-  display: block;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgb(255 255 255 / 0.12) 22%,
-    rgb(255 255 255 / 0.12) 78%,
-    transparent
-  );
-}
-.hero-strip-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 1rem 1.5rem;
-  margin: clamp(1.1rem, 2.6svh, 1.75rem) 0 0;
-  padding: 0;
-  list-style: none;
-}
-.hero-strip-list li {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  font-size: 0.855rem;
-  color: #9aa6ba;
-  transition: color 0.35s var(--hero-ease);
-}
-.hero-strip-list li svg {
-  color: #6b7a93;
-  transition: color 0.35s var(--hero-ease);
-}
-.hero-strip-list li:hover {
-  color: var(--hero-text);
-}
-.hero-strip-list li:hover svg {
-  color: var(--hero-purple-soft);
-}
-
-.hero-scroll {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.7rem;
-  margin-top: clamp(1.25rem, 3.4svh, 2.5rem);
-}
-.hero-mouse {
-  position: relative;
-  width: 1.35rem;
-  height: 2.15rem;
-  border: 1px solid rgb(255 255 255 / 0.18);
-  border-radius: 999px;
-}
-.hero-mouse-wheel {
-  position: absolute;
-  top: 0.35rem;
-  left: 50%;
-  width: 2px;
-  height: 0.45rem;
-  border-radius: 999px;
-  background: var(--hero-purple-soft);
-  transform: translateX(-50%);
-  animation: hero-wheel 2.1s var(--hero-ease) infinite;
-}
-.hero-scroll-text {
-  font-size: 0.6rem;
-  font-weight: 500;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  color: #626e83;
-  margin-right: -0.32em;
-}
-
-/* ==========================================================================
    6 · ANIMAÇÕES
    ========================================================================== */
 @keyframes hero-float {
@@ -906,23 +823,6 @@
     opacity: 0;
   }
 }
-@keyframes hero-wheel {
-  0% {
-    opacity: 0;
-    transform: translate(-50%, 0);
-  }
-  22% {
-    opacity: 1;
-  }
-  78% {
-    opacity: 0;
-    transform: translate(-50%, 0.75rem);
-  }
-  100% {
-    opacity: 0;
-    transform: translate(-50%, 0.75rem);
-  }
-}
 
 /* ==========================================================================
    7 · RESPONSIVIDADE
@@ -966,13 +866,6 @@
   .hero-card--secure {
     right: 0;
     bottom: 4%;
-  }
-  .hero-strip-list {
-    justify-content: center;
-    gap: 0.85rem 1.15rem;
-  }
-  .hero-strip-list li {
-    font-size: 0.78rem;
   }
 }
 
@@ -1050,14 +943,10 @@
   .hero-orbit,
   .hero-spark,
   .hero-halo,
-  .hero-platform-core,
-  .hero-mouse-wheel {
+  .hero-platform-core {
     animation: none;
   }
   .hero-panel::after {
     display: none;
-  }
-  .hero-mouse-wheel {
-    opacity: 1;
   }
 }

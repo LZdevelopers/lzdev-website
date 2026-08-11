@@ -62,7 +62,7 @@ export function Navbar() {
         aria-label="Navegação principal"
       >
         <a href="#inicio" className="rounded-lg" aria-label="LZdev — início">
-          <Logo />
+          <Logo compact />
         </a>
 
         {/* Links — desktop */}

@@ -1,40 +1,54 @@
 /**
- * Marca da LZdev. Símbolo geométrico ("Z" angular sobre gradiente violeta→ciano)
- * + wordmark. Vetorial e inline: nítido em qualquer densidade, zero request.
+ * Marca da LZdev: símbolo + wordmark.
+ *
+ * O símbolo é derivado de public/logo.png por `npm run icons` — o original tem
+ * canvas 3:2 com ~300px de vazio de cada lado, e usá-lo direto é o que deixava
+ * a marca distorcida em qualquer slot quadrado. O derivado é quadrado de fato.
+ *
+ * Sem `size`, o símbolo escala por breakpoint: na navbar e no rodapé do desktop
+ * sobra espaço, e a marca precisa ocupá-lo. Com `size` (número), fica travado
+ * em px — é o que a marca d'água do Hero usa.
+ *
+ * Um único arquivo de 256px atende os três usos (navbar, rodapé, marca d'água
+ * de 132px): resolução de sobra até 2x em todos, e uma requisição só.
+ *
+ * `compact` é um passo abaixo na escala, usado só no header — lá a marca divide
+ * uma barra de 72px com o menu e o CTA. No rodapé ela respira e fica no passo
+ * cheio, então símbolo e wordmark descem juntos para o lockup não desproporcionar.
  */
-export function Logo({ className = '', showWordmark = true, size = 34 }) {
+const MARK = '/logo-mark-256.png'
+
+const MARK_SIZE = {
+  compact: 'size-9 sm:size-10 lg:size-11', // 36 · 40 · 44
+  full: 'size-10 sm:size-11 lg:size-12', //   40 · 44 · 48
+}
+
+const WORDMARK_SIZE = {
+  compact: 'text-[1.3rem] sm:text-[1.45rem] lg:text-[1.55rem]',
+  full: 'text-[1.4rem] sm:text-[1.55rem] lg:text-[1.7rem]',
+}
+
+export function Logo({ className = '', showWordmark = true, size, compact = false }) {
+  const fixed = typeof size === 'number'
+  const step = compact ? 'compact' : 'full'
+
   return (
-    <span className={`inline-flex items-center gap-2.5 ${className}`}>
-      <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true" className="shrink-0">
-        <defs>
-          <linearGradient id="lz-mark" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#8B5CF6" />
-            <stop offset="55%" stopColor="#7C3AED" />
-            <stop offset="100%" stopColor="#22D3EE" />
-          </linearGradient>
-        </defs>
-        <rect x="0.75" y="0.75" width="30.5" height="30.5" rx="9" fill="url(#lz-mark)" />
-        <rect
-          x="0.75"
-          y="0.75"
-          width="30.5"
-          height="30.5"
-          rx="9"
-          fill="none"
-          stroke="rgb(255 255 255 / 0.28)"
-          strokeWidth="1.5"
-        />
-        <path
-          d="M10 10.5h12L10 21.5h12"
-          fill="none"
-          stroke="#fff"
-          strokeWidth="2.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
+    <span className={`inline-flex items-center gap-2.5 sm:gap-3 ${className}`}>
+      {/* alt vazio de propósito: na navbar e no rodapé quem nomeia a marca é o
+          wordmark ao lado (texto de verdade), e no Hero o símbolo é decorativo. */}
+      <img
+        src={MARK}
+        alt=""
+        width={fixed ? size : undefined}
+        height={fixed ? size : undefined}
+        decoding="async"
+        className={`shrink-0 ${fixed ? '' : MARK_SIZE[step]}`}
+      />
+
       {showWordmark ? (
-        <span className="font-display text-[1.35rem] font-extrabold tracking-tight text-ink">
+        <span
+          className={`font-display leading-none font-extrabold tracking-[-0.035em] text-ink ${WORDMARK_SIZE[step]}`}
+        >
           LZ<span className="text-accent">dev</span>
         </span>
       ) : null}

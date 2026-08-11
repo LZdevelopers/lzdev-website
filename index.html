@@ -4,7 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#09090B" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Ícones derivados de public/logo.png por `npm run icons`. Um tamanho por
+         slot, cada um reamostrado do original: assim o navegador nunca precisa
+         espremer a arte, que era a causa do ícone esticado. Placa preta com a
+         estrela branca — a arte nasce branca e sozinha desapareceria numa aba de
+         tema claro. Nos tamanhos de aba (16/32/48) o traço do wireframe é
+         engrossado antes da redução e tem o contraste esticado depois: sem isso
+         ele mede meio pixel a 16px e a estrela vira borrão cinza.
+         Detalhes em scripts/generate-icons.mjs. -->
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
+    <link rel="icon" type="image/png" sizes="180x180" href="/favicon-180.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
     <title>LZdev — Software House Full Stack | Sistemas Web, SaaS e Automações</title>
     <meta

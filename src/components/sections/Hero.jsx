@@ -1,7 +1,6 @@
 import { Fragment } from 'react'
 import { hero } from '../../data/site'
 import { Button } from '../primitives/Button'
-import { Icon } from '../primitives/Icon'
 import { Reveal } from '../primitives/Reveal'
 import { HeroBackdrop } from './hero/HeroBackdrop'
 import { HeroStage } from './hero/HeroStage'
@@ -77,26 +76,6 @@ export function Hero() {
             <HeroStage />
           </Reveal>
         </div>
-
-        {/* — faixa de segmentos — */}
-        <Reveal delay={340} className="hero-strip">
-          <ul className="hero-strip-list">
-            {hero.industries.map((item) => (
-              <li key={item.name}>
-                <Icon name={item.icon} size={18} />
-                {item.name}
-              </li>
-            ))}
-          </ul>
-        </Reveal>
-
-        {/* — indicador de rolagem — */}
-        <Reveal delay={420} className="hero-scroll">
-          <span className="hero-mouse" aria-hidden="true">
-            <span className="hero-mouse-wheel" />
-          </span>
-          <span className="hero-scroll-text">{hero.scrollHint}</span>
-        </Reveal>
       </div>
     </section>
   )

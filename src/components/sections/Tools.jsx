@@ -11,12 +11,17 @@ import { Section, SectionHeader } from '../primitives/Section'
  * teclado — o ícone assume a cor da marca, o tile se acende e o card sobe 4px.
  * Nada acompanha o cursor: são transições de cor e transform disparadas apenas
  * pelo estado de hover/foco.
+ *
+ * O card é horizontal (ícone à esquerda, texto à direita) em vez de empilhado:
+ * assim a altura passa a ser a do bloco de texto, e não "tile + texto". Cada
+ * card encurta cerca de um terço sem cortar uma palavra da descrição — é o que
+ * comprime a seção, junto com o respiro menor entre os grupos.
  */
 function ToolCard({ tool }) {
   return (
     <div
       tabIndex={0}
-      className="group relative flex h-full w-full flex-col gap-4 overflow-hidden rounded-[var(--radius-card)] border border-white/8 bg-surface/40 p-5 transition-[border-color,background-color,transform] duration-400 ease-[var(--ease-out-soft)] hover:-translate-y-1 hover:border-[color-mix(in_oklab,var(--tool)_40%,transparent)] hover:bg-surface/70 focus-visible:-translate-y-1"
+      className="group relative flex h-full w-full items-start gap-3.5 overflow-hidden rounded-[var(--radius-card)] border border-white/8 bg-surface/40 p-4 transition-[border-color,background-color,transform] duration-400 ease-[var(--ease-out-soft)] hover:-translate-y-1 hover:border-[color-mix(in_oklab,var(--tool)_40%,transparent)] hover:bg-surface/70 focus-visible:-translate-y-1"
       style={{ '--tool': tool.color }}
     >
       {/* Halo na cor da marca — posição fixa, só a opacidade cresce */}
@@ -29,16 +34,16 @@ function ToolCard({ tool }) {
         }}
       />
 
-      <div className="relative flex items-center gap-3.5">
-        {/* Tile, ícone e anel puxam a cor de --tool, então não existe uma
-            classe do Tailwind por tecnologia — só a variável no card. */}
-        <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-white/[0.04] text-muted ring-1 ring-white/8 transition-[color,background-color,box-shadow] duration-400 group-hover:bg-[color-mix(in_oklab,var(--tool)_14%,transparent)] group-hover:text-[var(--tool)] group-hover:ring-[color-mix(in_oklab,var(--tool)_32%,transparent)] group-focus-visible:bg-[color-mix(in_oklab,var(--tool)_14%,transparent)] group-focus-visible:text-[var(--tool)]">
-          <Icon name={tool.icon} size={26} />
-        </span>
-        <h3 className="text-base font-bold text-ink">{tool.name}</h3>
-      </div>
+      {/* Tile, ícone e anel puxam a cor de --tool, então não existe uma
+          classe do Tailwind por tecnologia — só a variável no card. */}
+      <span className="relative grid size-10 shrink-0 place-items-center rounded-xl bg-white/[0.04] text-muted ring-1 ring-white/8 transition-[color,background-color,box-shadow] duration-400 group-hover:bg-[color-mix(in_oklab,var(--tool)_14%,transparent)] group-hover:text-[var(--tool)] group-hover:ring-[color-mix(in_oklab,var(--tool)_32%,transparent)] group-focus-visible:bg-[color-mix(in_oklab,var(--tool)_14%,transparent)] group-focus-visible:text-[var(--tool)]">
+        <Icon name={tool.icon} size={22} />
+      </span>
 
-      <p className="relative text-sm leading-relaxed text-muted">{tool.text}</p>
+      <div className="relative min-w-0">
+        <h3 className="text-[0.95rem] leading-tight font-bold text-ink">{tool.name}</h3>
+        <p className="mt-1.5 text-[0.8rem] leading-snug text-muted">{tool.text}</p>
+      </div>
     </div>
   )
 }
@@ -48,7 +53,7 @@ export function Tools() {
     <Section id="ferramentas">
       <SectionHeader eyebrow={tools.eyebrow} title={tools.title} subtitle={tools.subtitle} />
 
-      <div className="mt-14 flex flex-col gap-10">
+      <div className="mt-10 flex flex-col gap-7 sm:mt-12">
         {tools.groups.map((group, g) => (
           <div key={group.label}>
             {/* Cabeçalho do grupo: rótulo + régua que ocupa o espaço restante */}
@@ -72,7 +77,7 @@ export function Tools() {
                 deixaria metade da linha vazia; com flex-wrap de largura fixa e
                 centralizado, ele fica centrado mantendo a MESMA largura de card
                 dos outros grupos. */}
-            <ul className="mt-5 flex flex-wrap justify-center gap-3.5">
+            <ul className="mt-4 flex flex-wrap justify-center gap-3.5">
               {group.items.map((tool, i) => (
                 <Reveal
                   as="li"
@@ -89,7 +94,7 @@ export function Tools() {
       </div>
 
       <Reveal delay={120}>
-        <p className="mx-auto mt-12 max-w-2xl rounded-[var(--radius-card)] border border-dashed border-brand/30 bg-brand/[0.05] p-5 text-center text-sm leading-relaxed text-muted">
+        <p className="mx-auto mt-10 max-w-2xl rounded-[var(--radius-card)] border border-dashed border-brand/30 bg-brand/[0.05] px-5 py-4 text-center text-sm leading-relaxed text-muted">
           {tools.note}
         </p>
       </Reveal>

@@ -80,17 +80,6 @@ export const hero = {
     { icon: 'shield', tone: 'cyan', title: 'Segurança', text: 'Seus dados sempre protegidos', at: 'secure' },
   ],
 
-  /** Faixa inferior: setores atendidos, com o ícone declarado junto do nome. */
-  industries: [
-    { name: 'Restaurantes', icon: 'utensils' },
-    { name: 'Clínicas', icon: 'stethoscope' },
-    { name: 'Escritórios', icon: 'briefcase' },
-    { name: 'Escolas', icon: 'graduation' },
-    { name: 'Comércios', icon: 'cart' },
-    { name: 'Empresas', icon: 'building' },
-  ],
-
-  scrollHint: 'Role para explorar',
 }
 
 /* -------------------------------------------------------------------------- */
@@ -366,15 +355,18 @@ export const team = {
   /**
    * `photo`: caminho de uma imagem em /public (ex.: '/equipe/enzo.jpg').
    * Vazio → o card usa o avatar de iniciais, mantendo a identidade visual.
+   * `tag`: selo sobre o retrato. `focus`: a linha de especialidade destacada,
+   * o que a pessoa resolve — vem antes da bio no card.
    */
   members: [
     {
       name: 'Enzo Pontes do Nascimento',
       role: 'Desenvolvedor Full Stack',
       initials: 'EN',
+      tag: 'Full stack',
       photo: '', // TODO: foto real
+      focus: 'Sistemas administrativos e dashboards',
       bio: 'Especializado em aplicações web modernas, sistemas administrativos e dashboards. Foca em desempenho, organização e uma experiência de uso que dispensa manual.',
-      stacks: ['React', 'JavaScript', 'Laravel', 'PHP', 'MySQL'],
       links: {
         github: 'https://github.com/enzonascimento', // TODO
         whatsapp: '5544999999999', // TODO
@@ -385,9 +377,10 @@ export const team = {
       name: 'Luis Ricardo Soares',
       role: 'Desenvolvedor Full Stack',
       initials: 'LS',
+      tag: 'Full stack',
       photo: '', // TODO: foto real
+      focus: 'APIs, integrações e arquitetura',
       bio: 'Atua em sistemas web, APIs e integrações, com foco em arquitetura bem estruturada e código limpo. Cuida da qualidade técnica do back-end à interface.',
-      stacks: ['Node.js', 'PHP', 'Laravel', 'MySQL', 'Git'],
       links: {
         github: 'https://github.com/luisricardo', // TODO
         whatsapp: '5544999999999', // TODO
@@ -451,37 +444,51 @@ export const faq = {
   eyebrow: 'Perguntas frequentes',
   title: 'As dúvidas que chegam antes do primeiro contato',
   helper: {
-    text: 'Ficou alguma dúvida que não está aqui? Pergunte direto — respondemos sem enrolação e sem compromisso.',
+    text: 'Sua dúvida não está aqui? Pergunte direto — resposta rápida, sem compromisso.',
     cta: 'Fazer uma pergunta',
   },
+
+  /**
+   * Ordem = ordem de exibição, e a numeração (01, 02, …) sai do índice.
+   * `tag`: o assunto da resposta, exibido como selo no fim dela.
+   * Respostas curtas de propósito: duas frases resolvem a dúvida e quem quiser
+   * detalhe fala com a gente — é esse o próximo passo que a seção quer.
+   */
   items: [
     {
       q: 'Quanto custa um site?',
-      a: 'Depende do que precisa ser resolvido. Uma landing page costuma partir de R$ 1.800, sites institucionais de R$ 3.200 e sistemas web de R$ 8.500 — a diferença está no número de páginas, integrações e regras de negócio envolvidas. Depois da nossa conversa você recebe uma proposta com escopo fechado, sem valor surpresa no meio do caminho.',
+      tag: 'Investimento',
+      a: 'Landing page a partir de R$ 1.800, site institucional de R$ 3.200 e sistema web de R$ 8.500. Você recebe uma proposta com escopo fechado — sem valor surpresa no meio do caminho.',
     },
     {
       q: 'Quanto tempo demora?',
-      a: 'Landing pages ficam prontas em cerca de uma semana; sites institucionais entre duas e três; sistemas web geralmente de cinco a oito semanas, conforme o escopo. Trabalhamos em ciclos curtos com ambiente de homologação, então você acompanha a evolução desde o início em vez de esperar o resultado final no escuro.',
-    },
-    {
-      q: 'O site funciona no celular?',
-      a: 'Sim, e essa é a prioridade — a maior parte dos acessos vem de celular. Todo projeto é desenvolvido pensando primeiro na tela pequena e testado de verdade em celular, tablet, notebook e monitores grandes. Nada de layout que desalinha ou botão que não dá para tocar.',
-    },
-    {
-      q: 'Vocês oferecem suporte?',
-      a: 'Sim. Entrega não é despedida. Oferecemos acompanhamento contínuo para correções, atualizações de segurança, ajustes de performance e novas funcionalidades conforme o negócio evolui. Você escolhe entre suporte pontual ou um plano mensal de manutenção.',
+      tag: 'Prazo',
+      a: 'Landing page em cerca de uma semana, site institucional entre duas e três e sistema web de cinco a oito. Você acompanha a evolução em ambiente de homologação desde o início, em vez de esperar o resultado no escuro.',
     },
     {
       q: 'Posso solicitar alterações?',
-      a: 'Pode, e é esperado que aconteça. Durante o projeto você acompanha cada etapa e os ajustes previstos no escopo entram sem custo extra. Mudanças que ampliam o escopo original são orçadas antes de qualquer execução, então você nunca é surpreendido pela fatura.',
+      tag: 'Escopo',
+      a: 'Pode, e é esperado que aconteça. Os ajustes previstos no escopo entram sem custo extra; o que amplia o escopo original é orçado antes de qualquer execução, então nenhuma fatura surpreende você.',
     },
     {
-      q: 'Desenvolvem sistemas totalmente personalizados?',
-      a: 'É exatamente o nosso foco. Não adaptamos template nem forçamos o seu processo a caber num software de prateleira: mapeamos como a sua operação funciona e construímos as regras, permissões e fluxos em cima disso. O código é seu e não fica preso a nenhuma plataforma.',
+      q: 'O site funciona no celular?',
+      tag: 'Responsivo',
+      a: 'Sim, e essa é a prioridade — a maior parte dos acessos vem de celular. Todo projeto nasce pensando na tela pequena e é testado de verdade em celular, tablet, notebook e monitor grande.',
+    },
+    {
+      q: 'Desenvolvem sistemas personalizados?',
+      tag: 'Sob medida',
+      a: 'É exatamente o nosso foco. Nada de template nem de encaixar a sua operação num software de prateleira: mapeamos o seu processo e construímos as regras, permissões e fluxos em cima dele. O código é seu.',
+    },
+    {
+      q: 'Vocês oferecem suporte?',
+      tag: 'Suporte',
+      a: 'Sim, entrega não é despedida. Cuidamos de correções, atualizações de segurança, performance e novas funcionalidades conforme o negócio evolui — de forma pontual ou em plano mensal.',
     },
     {
       q: 'Atendem empresas de fora da região?',
-      a: 'Atendemos todo o Brasil de forma remota. Reuniões por vídeo, acompanhamento online e comunicação por WhatsApp e e-mail. A distância não muda o padrão de entrega nem o tempo de resposta.',
+      tag: 'Atendimento',
+      a: 'Atendemos todo o Brasil de forma remota: reuniões por vídeo, acompanhamento online e contato por WhatsApp e e-mail. A distância não muda o padrão de entrega nem o tempo de resposta.',
     },
   ],
 }
