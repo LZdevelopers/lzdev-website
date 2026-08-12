@@ -15,21 +15,20 @@ import { HeroStage } from './hero/HeroStage'
  * Renderiza uma linha de tokens aplicando o gradiente onde `accent` existir.
  * O espaço entre tokens é inserido aqui (e só quando falta), então o conteúdo
  * em site.js fica livre de espaços de significado tipográfico.
+ *
+ * Os tokens já carregaram um tom por matiz ('violeta' | 'azul' | 'ciano'), que
+ * escolhia entre três gradientes. Na paleta preta e branca o destaque tem um
+ * tratamento só — branco pleno contra o cinza-claro da frase —, então `accent`
+ * voltou a ser um booleano.
  */
-function Tokens({ tokens, accentClass, useTone = false }) {
+function Tokens({ tokens, accentClass }) {
   return tokens.map((token, i) => {
     const glued = i === 0 || /\s$/.test(tokens[i - 1].text) || /^\s/.test(token.text)
 
     return (
       <Fragment key={i}>
         {glued ? null : ' '}
-        {token.accent ? (
-          <span className={accentClass} data-tone={useTone ? token.accent : undefined}>
-            {token.text}
-          </span>
-        ) : (
-          token.text
-        )}
+        {token.accent ? <span className={accentClass}>{token.text}</span> : token.text}
       </Fragment>
     )
   })
@@ -48,7 +47,7 @@ export function Hero() {
               <h1 className="hero-title">
                 {hero.title.map((line, i) => (
                   <span className="hero-title-line" key={i}>
-                    <Tokens tokens={line} accentClass="hero-title-accent" useTone />
+                    <Tokens tokens={line} accentClass="hero-title-accent" />
                   </span>
                 ))}
               </h1>

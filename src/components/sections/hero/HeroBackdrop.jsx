@@ -20,22 +20,25 @@ export function HeroBackdrop() {
   return (
     <div className="hero-bg" aria-hidden="true">
       <div className="hero-halo hero-halo--main" />
-      <div className="hero-halo hero-halo--cyan" />
-      <div className="hero-halo hero-halo--violet" />
+      <div className="hero-halo hero-halo--low" />
+      <div className="hero-halo hero-halo--left" />
 
       {/* Arcos que contornam o dashboard e convergem para a plataforma */}
       <svg className="hero-arcs" viewBox="0 0 600 640" fill="none" preserveAspectRatio="xMidYMid slice">
         <defs>
+          {/* Os arcos eram gradientes de MATIZ (violeta → azul → ciano) que
+              apareciam e desapareciam pelo alfa. Sem matiz, sobra o alfa: um
+              branco só, aceso no meio do arco e dissolvido nas duas pontas. */}
           <linearGradient id="hero-arc-a" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#7c3aed" stopOpacity="0" />
-            <stop offset="38%" stopColor="#a78bfa" stopOpacity="0.5" />
-            <stop offset="72%" stopColor="#60a5fa" stopOpacity="0.42" />
-            <stop offset="100%" stopColor="#22d3ee" stopOpacity="0" />
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0" />
+            <stop offset="38%" stopColor="#ffffff" stopOpacity="0.45" />
+            <stop offset="72%" stopColor="#ffffff" stopOpacity="0.38" />
+            <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
           </linearGradient>
           <linearGradient id="hero-arc-b" x1="1" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#22d3ee" stopOpacity="0" />
-            <stop offset="45%" stopColor="#818cf8" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#7c3aed" stopOpacity="0" />
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0" />
+            <stop offset="45%" stopColor="#ffffff" stopOpacity="0.36" />
+            <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
           </linearGradient>
         </defs>
 
@@ -61,11 +64,12 @@ export function HeroBackdrop() {
           opacity="0.5"
         />
 
-        {/* Brilhos nas interseções dos arcos */}
-        <circle cx="396" cy="52" r="2.6" fill="#ede9fe" opacity="0.95" />
-        <circle cx="588" cy="346" r="2.2" fill="#a5f3fc" opacity="0.8" />
-        <circle cx="74" cy="402" r="2" fill="#c4b5fd" opacity="0.75" />
-        <circle cx="366" cy="606" r="2.2" fill="#bfdbfe" opacity="0.7" />
+        {/* Brilhos nas interseções dos arcos — o mesmo branco, escalonado pela
+            opacidade que já existia em cada ponto. */}
+        <circle cx="396" cy="52" r="2.6" fill="#ffffff" opacity="0.95" />
+        <circle cx="588" cy="346" r="2.2" fill="#ffffff" opacity="0.8" />
+        <circle cx="74" cy="402" r="2" fill="#ffffff" opacity="0.75" />
+        <circle cx="366" cy="606" r="2.2" fill="#ffffff" opacity="0.7" />
       </svg>
 
       {SPARKS.map((spark) => (

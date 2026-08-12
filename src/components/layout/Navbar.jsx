@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { navLinks } from '../../data/site'
+import { usePageProgress } from '../../hooks/usePageProgress'
 import { useScrolled } from '../../hooks/useScrolled'
 import { Button } from '../primitives/Button'
 import { Icon } from '../primitives/Icon'
@@ -7,6 +8,7 @@ import { Logo } from './Logo'
 
 export function Navbar() {
   const scrolled = useScrolled(20)
+  const progress = usePageProgress()
   const [open, setOpen] = useState(false)
   const panelRef = useRef(null)
   const triggerRef = useRef(null)
@@ -71,7 +73,7 @@ export function Navbar() {
             <li key={link.href}>
               <a
                 href={link.href}
-                className="relative rounded-lg px-3.5 py-2 text-sm font-medium text-muted transition-colors duration-300 hover:text-ink after:absolute after:inset-x-3.5 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-gradient-to-r after:from-brand after:to-accent after:transition-transform after:duration-300 hover:after:scale-x-100"
+                className="relative rounded-lg px-3.5 py-2 text-sm font-medium text-muted transition-colors duration-300 hover:text-ink after:absolute after:inset-x-3.5 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-gradient-to-r after:from-cat-1 after:to-cat-2 after:transition-transform after:duration-300 hover:after:scale-x-100"
               >
                 {link.label}
               </a>
@@ -101,6 +103,17 @@ export function Navbar() {
           </button>
         </div>
       </nav>
+
+      {/* Barra de progresso da leitura. Só aparece depois que a navbar ganha
+          fundo, senão flutuaria sozinha sobre o hero. `scaleX` a partir da
+          esquerda: anima no compositor, sem recalcular layout a cada quadro. */}
+      <div
+        className={`pointer-events-none absolute inset-x-0 bottom-0 h-px origin-left bg-gradient-to-r from-cat-1 via-cat-2 to-cat-3 transition-opacity duration-500 ${
+          scrolled ? 'opacity-100' : 'opacity-0'
+        }`}
+        style={{ transform: `scaleX(${progress})` }}
+        aria-hidden="true"
+      />
 
       {/* Drawer — mobile/tablet */}
       <div

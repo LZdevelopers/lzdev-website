@@ -1,5 +1,5 @@
 import { tools } from '../../data/site'
-import { Icon } from '../primitives/Icon'
+import { brandColors, Icon } from '../primitives/Icon'
 import { Reveal } from '../primitives/Reveal'
 import { Section, SectionHeader } from '../primitives/Section'
 
@@ -7,10 +7,16 @@ import { Section, SectionHeader } from '../primitives/Section'
  * Ferramentas agrupadas por camada (front-end · back-end e dados · design).
  * O agrupamento é o que dá a leitura: a stack cobre o projeto de ponta a ponta.
  *
- * Em repouso o grid é monocromático e silencioso. No hover — ou no foco por
- * teclado — o ícone assume a cor da marca, o tile se acende e o card sobe 4px.
- * Nada acompanha o cursor: são transições de cor e transform disparadas apenas
- * pelo estado de hover/foco.
+ * Cada tecnologia é identificada pela COR OFICIAL dela — o laranja do HTML, o
+ * ciano do React, o amarelo do JavaScript. É o único lugar da página onde a cor
+ * não é semântica nem de marca própria: um dev reconhece a stack varrendo os
+ * ícones, sem ler um nome sequer, e isso só funciona com as cores certas. O hex
+ * vem de `brandColors` (Icon.jsx), junto da geometria — não duplicado aqui.
+ *
+ * A cor entra na variável `--tool` e daí tinge tile, anel e halo por
+ * `color-mix`, então não existe uma classe do Tailwind por tecnologia. No hover
+ * (ou no foco por teclado) as três misturas ficam mais fortes, o ícone cresce
+ * e o card sobe 4px.
  *
  * O card é horizontal (ícone à esquerda, texto à direita) em vez de empilhado:
  * assim a altura passa a ser a do bloco de texto, e não "tile + texto". Cada
@@ -21,23 +27,21 @@ function ToolCard({ tool }) {
   return (
     <div
       tabIndex={0}
-      className="group relative flex h-full w-full items-start gap-3.5 overflow-hidden rounded-[var(--radius-card)] border border-white/8 bg-surface/40 p-4 transition-[border-color,background-color,transform] duration-400 ease-[var(--ease-out-soft)] hover:-translate-y-1 hover:border-[color-mix(in_oklab,var(--tool)_40%,transparent)] hover:bg-surface/70 focus-visible:-translate-y-1"
-      style={{ '--tool': tool.color }}
+      style={{ '--tool': brandColors[tool.icon] }}
+      className="group relative flex h-full w-full items-start gap-3.5 overflow-hidden rounded-[var(--radius-card)] border border-white/8 bg-surface/40 p-4 transition-[border-color,background-color,transform] duration-400 ease-[var(--ease-out-soft)] hover:-translate-y-1 hover:border-[color-mix(in_oklab,var(--tool)_45%,transparent)] hover:bg-surface/70 focus-visible:-translate-y-1"
     >
-      {/* Halo na cor da marca — posição fixa, só a opacidade cresce */}
+      {/* Halo na cor da tecnologia — posição fixa, só a opacidade cresce */}
       <span
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 transition-opacity duration-400 group-hover:opacity-100 group-focus-visible:opacity-100"
         style={{
           background:
-            'radial-gradient(130% 85% at 50% 0%, color-mix(in oklab, var(--tool) 15%, transparent), transparent 68%)',
+            'radial-gradient(130% 85% at 50% 0%, color-mix(in oklab, var(--tool) 20%, transparent), transparent 68%)',
         }}
       />
 
-      {/* Tile, ícone e anel puxam a cor de --tool, então não existe uma
-          classe do Tailwind por tecnologia — só a variável no card. */}
-      <span className="relative grid size-10 shrink-0 place-items-center rounded-xl bg-white/[0.04] text-muted ring-1 ring-white/8 transition-[color,background-color,box-shadow] duration-400 group-hover:bg-[color-mix(in_oklab,var(--tool)_14%,transparent)] group-hover:text-[var(--tool)] group-hover:ring-[color-mix(in_oklab,var(--tool)_32%,transparent)] group-focus-visible:bg-[color-mix(in_oklab,var(--tool)_14%,transparent)] group-focus-visible:text-[var(--tool)]">
-        <Icon name={tool.icon} size={22} />
+      <span className="relative grid size-10 shrink-0 place-items-center rounded-xl bg-[color-mix(in_oklab,var(--tool)_12%,transparent)] ring-1 ring-[color-mix(in_oklab,var(--tool)_28%,transparent)] transition-[background-color,box-shadow,transform] duration-400 group-hover:bg-[color-mix(in_oklab,var(--tool)_22%,transparent)] group-hover:ring-[color-mix(in_oklab,var(--tool)_50%,transparent)] group-focus-visible:ring-[color-mix(in_oklab,var(--tool)_50%,transparent)] desktop:group-hover:scale-110">
+        <Icon name={tool.icon} size={22} colored />
       </span>
 
       <div className="relative min-w-0">

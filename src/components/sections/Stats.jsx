@@ -15,7 +15,7 @@ import { Section, SectionHeader } from '../primitives/Section'
 function StatTile({ item }) {
   return (
     <div className="group flex h-full w-full flex-col items-center gap-3 rounded-[var(--radius-card)] border border-white/8 bg-white/[0.02] px-4 py-7 text-center transition-[border-color,background-color,transform] duration-400 ease-[var(--ease-out-soft)] hover:-translate-y-1 hover:border-brand/35 hover:bg-white/[0.045]">
-      <span className="grid size-11 place-items-center rounded-xl bg-brand/10 text-brand-soft ring-1 ring-brand/22 transition-colors duration-400 group-hover:text-accent">
+      <span className="grid size-11 place-items-center rounded-xl bg-info/12 text-info ring-1 ring-info/25 transition-[color,transform] duration-400 ease-[var(--ease-out-soft)] desktop:group-hover:scale-110">
         <Icon name={item.icon} size={20} />
       </span>
 
@@ -34,7 +34,7 @@ export function Stats() {
     <Section id="numeros" tight>
       <div className="relative overflow-hidden rounded-[var(--radius-xl2)] border border-white/8 bg-surface/40 px-5 py-12 sm:px-8 sm:py-14 border-gradient">
         <div
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_120%_at_50%_0%,rgb(124_58_237/0.14),transparent_70%)]"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_120%_at_50%_0%,rgb(255_255_255/0.06),transparent_70%)]"
           aria-hidden="true"
         />
 

@@ -1,70 +1,140 @@
 import { projects } from '../../data/site'
-import { Card } from '../primitives/Card'
-import { Icon } from '../primitives/Icon'
+import { Button } from '../primitives/Button'
+import { Carousel } from '../primitives/Carousel'
+import { brandColors, Icon } from '../primitives/Icon'
 import { Reveal } from '../primitives/Reveal'
 import { Section, SectionHeader } from '../primitives/Section'
-import { ProjectPreview } from './ProjectPreview'
+
+/**
+ * Projetos em carrossel: UM card grande por vez, em vez da grade de dois.
+ *
+ * A troca resolve dois problemas de uma vez. A seção passa a ocupar a altura de
+ * um card (antes, a de dois) e cada projeto ganha espaço para a tela cheia, o
+ * texto inteiro e a stack — o card pequeno cortava a descrição em três linhas.
+ *
+ * Os mockups desenhados em SVG saíram: as capturas reais entram em `image` no
+ * data/site.js e ocupam exatamente a mesma moldura, então nada aqui muda quando
+ * elas chegarem.
+ */
+
+/**
+ * Rótulo da stack → ícone da tecnologia. Só o que temos geometria para
+ * desenhar; o resto (Bootstrap, Tailwind…) vira um chip neutro, que continua
+ * legível — o nome escrito é a informação, o ícone é o reforço.
+ */
+const STACK_ICONS = {
+  HTML: 'html',
+  CSS: 'css',
+  JavaScript: 'javascript',
+  React: 'react',
+  PHP: 'php',
+  Laravel: 'laravel',
+  'Node.js': 'nodejs',
+  MySQL: 'mysql',
+  Figma: 'figma',
+  Git: 'git',
+}
+
+/** Moldura da captura. Mostra a imagem real quando existe; senão, espera. */
+function ProjectShot({ image, name }) {
+  return (
+    <div className="relative aspect-16/10 overflow-hidden rounded-[1rem] border border-white/10 bg-surface-2 lg:aspect-auto lg:h-full">
+      {image ? (
+        <img
+          src={image}
+          alt={`Interface do projeto ${name}`}
+          loading="lazy"
+          decoding="async"
+          className="size-full object-cover transition-transform duration-700 ease-[var(--ease-out-soft)] group-hover:scale-[1.03]"
+        />
+      ) : (
+        <div className="grid size-full place-items-center bg-[radial-gradient(120%_90%_at_50%_0%,rgb(255_255_255/0.05),transparent_65%)] p-6 text-center">
+          <div>
+            <span className="mx-auto grid size-12 place-items-center rounded-2xl border border-white/10 bg-white/[0.04] text-faint">
+              <Icon name="globe" size={22} />
+            </span>
+            <p className="mt-3 font-display text-sm font-bold text-muted">{name}</p>
+            <p className="mt-1 text-xs text-faint">Captura em breve</p>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function ProjectSlide({ project }) {
+  const external = project.url.startsWith('http')
+
+  return (
+    <article className="group grid gap-6 rounded-[var(--radius-xl2)] border border-white/8 bg-surface/40 p-5 border-gradient sm:p-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-stretch lg:gap-8 lg:p-7">
+      <ProjectShot image={project.image} name={project.name} />
+
+      <div className="flex flex-col">
+        <p className="text-xs font-semibold tracking-[0.16em] text-accent uppercase">
+          {project.category}
+        </p>
+        <h3 className="mt-2 text-[clamp(1.5rem,3.4vw,2.1rem)] text-ink">{project.name}</h3>
+
+        <p className="mt-4 text-[0.95rem] leading-relaxed text-muted">{project.text}</p>
+
+        <div className="mt-6">
+          <p className="text-[0.7rem] font-semibold tracking-[0.16em] text-faint uppercase">
+            Tecnologias
+          </p>
+          {/* Chips na cor de cada tecnologia — mesma leitura da seção de
+              ferramentas, então a stack do projeto é reconhecida de relance. */}
+          <ul className="mt-3 flex flex-wrap gap-2">
+            {project.stack.map((tech) => {
+              const icon = STACK_ICONS[tech]
+              const color = icon ? brandColors[icon] : null
+
+              return (
+                <li
+                  key={tech}
+                  style={color ? { '--tech': color } : undefined}
+                  className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[0.75rem] font-medium ring-1 transition-colors duration-300 ${
+                    color
+                      ? 'bg-[color-mix(in_oklab,var(--tech)_10%,transparent)] text-ink ring-[color-mix(in_oklab,var(--tech)_28%,transparent)]'
+                      : 'bg-white/[0.05] text-muted ring-white/10'
+                  }`}
+                >
+                  {icon ? <Icon name={icon} size={13} colored /> : null}
+                  {tech}
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+
+        <div className="mt-auto pt-7">
+          <Button
+            href={project.url}
+            target={external ? '_blank' : undefined}
+            rel={external ? 'noopener noreferrer' : undefined}
+            variant="outline"
+            icon="arrowUpRight"
+          >
+            {projects.cta}
+          </Button>
+        </div>
+      </div>
+    </article>
+  )
+}
 
 export function Projects() {
   return (
     <Section id="projetos">
       <SectionHeader eyebrow={projects.eyebrow} title={projects.title} subtitle={projects.subtitle} />
 
-      <div className="mt-14 grid gap-5 lg:grid-cols-2">
-        {projects.items.map((project, i) => {
-          const external = project.url.startsWith('http')
-
-          return (
-            <Reveal key={project.name} delay={i * 90} className="h-full">
-              <Card
-                as="article"
-                className="h-full"
-                innerClassName="flex h-full flex-col gap-5 p-5 sm:p-6"
-              >
-                {/* Imagem real quando existe; caso contrário, o mockup desenhado */}
-                <ProjectPreview kind={project.mockup} image={project.image} name={project.name} />
-
-                <div className="flex flex-1 flex-col gap-4">
-                  <div>
-                    <p className="text-xs font-semibold tracking-[0.16em] text-accent uppercase">
-                      {project.category}
-                    </p>
-                    <h3 className="mt-1.5 text-xl font-bold text-ink">{project.name}</h3>
-                  </div>
-
-                  <p className="text-sm leading-relaxed text-muted">{project.text}</p>
-
-                  <div>
-                    <p className="text-[0.7rem] font-semibold tracking-[0.16em] text-faint uppercase">
-                      Tecnologias
-                    </p>
-                    <ul className="mt-2.5 flex flex-wrap gap-1.5">
-                      {project.stack.map((tech) => (
-                        <li
-                          key={tech}
-                          className="rounded-md bg-white/[0.05] px-2.5 py-1 text-[0.7rem] font-medium text-muted ring-1 ring-white/8"
-                        >
-                          {tech}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <a
-                    href={project.url}
-                    target={external ? '_blank' : undefined}
-                    rel={external ? 'noopener noreferrer' : undefined}
-                    className="mt-auto inline-flex w-fit items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm font-semibold text-ink transition-[border-color,background-color,gap] duration-300 hover:gap-3 hover:border-brand/45 hover:bg-brand/12"
-                  >
-                    {projects.cta}
-                    <Icon name="arrowUpRight" size={16} className="text-accent" />
-                  </a>
-                </div>
-              </Card>
-            </Reveal>
-          )
-        })}
-      </div>
+      <Reveal variant="scale" className="mt-12 block">
+        <Carousel
+          items={projects.items}
+          label="Projetos em destaque"
+          slideKey={(project) => project.name}
+          renderSlide={(project) => <ProjectSlide project={project} />}
+        />
+      </Reveal>
     </Section>
   )
 }

@@ -1,7 +1,10 @@
+import { useId } from 'react'
+
 /**
  * Conjunto de ícones SVG inline.
  * Evita uma dependência de biblioteca de ícones inteira (~50 kB) e mantém
- * controle total sobre traço, tamanho e cor (herda currentColor).
+ * controle total sobre traço, tamanho e cor (herda currentColor, ou a cor
+ * oficial da marca quando recebe `colored`).
  */
 
 const stroke = {
@@ -213,6 +216,12 @@ const stroke = {
       <path d="m12 5 7 7-7 7" />
     </>
   ),
+  arrowLeft: (
+    <>
+      <path d="M19 12H5" />
+      <path d="m12 19-7-7 7-7" />
+    </>
+  ),
   arrowUpRight: (
     <>
       <path d="M7 17 17 7" />
@@ -287,13 +296,58 @@ const brand = {
 }
 
 /**
+ * Cor OFICIAL de cada marca, usada quando o ícone é renderizado com `colored`.
+ * Aqui a cor é identidade, não estilo: um WhatsApp cinza ou um React sem o
+ * ciano deixam de ser reconhecíveis à distância, que é a única função de um
+ * logo pequeno. Por isso estas cores não passam pelos tokens do tema.
+ *
+ * Duas exceções deliberadas:
+ *   github    · a marca oficial é #181717, invisível sobre o nosso fundo. A
+ *               própria GitHub especifica o branco em fundo escuro.
+ *   instagram · a marca é um gradiente, não uma cor — tratado à parte abaixo.
+ */
+export const brandColors = {
+  html: '#E34F26',
+  css: '#1572B6',
+  javascript: '#F7DF1E',
+  react: '#61DAFB',
+  php: '#777BB4',
+  laravel: '#FF2D20',
+  nodejs: '#5FA04E',
+  mysql: '#4479A1',
+  git: '#F05032',
+  figma: '#F24E1E',
+  whatsapp: '#25D366',
+  linkedin: '#0A66C2',
+  github: '#FFFFFF',
+}
+
+/** Paradas do gradiente oficial do Instagram, do canto inferior esquerdo. */
+const INSTAGRAM_STOPS = [
+  ['0%', '#FFDD55'],
+  ['25%', '#FF543E'],
+  ['60%', '#C837AB'],
+  ['100%', '#3771C8'],
+]
+
+/**
  * @param {object} props
  * @param {keyof typeof stroke | keyof typeof brand} props.name
  * @param {number|string} [props.size=24]
  * @param {string} [props.className]
+ * @param {boolean} [props.colored] Pinta a marca na cor oficial dela.
  * @param {string} [props.title] Rótulo acessível; sem ele o ícone é decorativo.
  */
-export function Icon({ name, size = 24, className = '', title, strokeWidth = 1.6, ...rest }) {
+export function Icon({
+  name,
+  size = 24,
+  className = '',
+  title,
+  colored = false,
+  strokeWidth = 1.6,
+  ...rest
+}) {
+  const gradientId = useId()
   const isBrand = name in brand
   const shape = isBrand ? brand[name] : stroke[name]
 
@@ -301,13 +355,18 @@ export function Icon({ name, size = 24, className = '', title, strokeWidth = 1.6
 
   const a11y = title ? { role: 'img', 'aria-label': title } : { 'aria-hidden': 'true' }
 
+  // Gradiente só entra no caminho colorido; fora dele o ícone herda currentColor
+  // e continua servindo aos usos monocromáticos (rodapé em repouso, botões).
+  const useGradient = colored && name === 'instagram'
+  const flatColor = colored ? brandColors[name] : undefined
+
   return (
     <svg
       viewBox="0 0 24 24"
       width={size}
       height={size}
       className={className}
-      fill={isBrand ? 'currentColor' : 'none'}
+      fill={isBrand ? (useGradient ? `url(#${gradientId})` : flatColor || 'currentColor') : 'none'}
       stroke={isBrand ? 'none' : 'currentColor'}
       strokeWidth={isBrand ? undefined : strokeWidth}
       strokeLinecap={isBrand ? undefined : 'round'}
@@ -317,6 +376,15 @@ export function Icon({ name, size = 24, className = '', title, strokeWidth = 1.6
       {...rest}
     >
       {title ? <title>{title}</title> : null}
+      {useGradient ? (
+        <defs>
+          <linearGradient id={gradientId} x1="0" y1="1" x2="1" y2="0">
+            {INSTAGRAM_STOPS.map(([offset, color]) => (
+              <stop key={offset} offset={offset} stopColor={color} />
+            ))}
+          </linearGradient>
+        </defs>
+      ) : null}
       {isBrand ? <path d={shape} /> : shape}
     </svg>
   )

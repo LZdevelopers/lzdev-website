@@ -276,7 +276,7 @@ function contrast(rgba, lo, hi) {
  * placa resolve isso — e preto/branco puros dão o par de contraste máximo
  * possível, que é o que a estrela precisa a 16px.
  *
- *   'black' → placa #09090B (o mesmo preto do site), arte forçada a branco puro.
+ *   'black' → placa #000000 (o mesmo preto do site), arte forçada a branco puro.
  *   'white' → placa branca, arte forçada a preto.
  *
  * `ink` recolore a arte mantendo o alpha, e nos dois temas vale a pena: o branco
@@ -289,7 +289,7 @@ function contrast(rgba, lo, hi) {
 const ICON_THEME = process.env.ICON_THEME ?? 'black'
 
 const THEMES = {
-  black: { plate: [0x09, 0x09, 0x0b], ink: [0xff, 0xff, 0xff] },
+  black: { plate: [0x00, 0x00, 0x00], ink: [0xff, 0xff, 0xff] },
   white: { plate: [0xff, 0xff, 0xff], ink: [0, 0, 0] },
 }
 

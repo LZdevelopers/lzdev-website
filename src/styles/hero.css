@@ -14,8 +14,8 @@
 
 .hero {
   /* — superfícies e traços — */
-  --hero-bg: #05050b;
-  --hero-surface: rgb(9 10 18 / 0.72); /* vidro dos cards flutuantes */
+  --hero-bg: #000000;
+  --hero-surface: rgb(8 8 8 / 0.72); /* vidro dos cards flutuantes */
   --hero-surface-2: rgb(255 255 255 / 0.03); /* cards internos do dashboard */
   --hero-border: rgb(255 255 255 / 0.08);
   --hero-border-strong: rgb(255 255 255 / 0.16);
@@ -24,15 +24,19 @@
   --hero-text: var(--color-ink);
   --hero-muted: var(--color-muted);
   --hero-faint: var(--color-faint);
+  /* Corpo do título um passo abaixo do branco puro, de propósito: é o que deixa
+     as palavras de destaque (.hero-title-accent, branco pleno) serem as mais
+     claras da tela. Sem matiz não há como o destaque "mudar de cor" — ele só
+     pode ser mais claro que o resto. */
+  --hero-title-text: #d6d6d6;
 
-  /* — cores de marca — */
-  --hero-purple: var(--color-brand);
-  --hero-purple-soft: var(--color-brand-soft);
-  --hero-blue: #4c7dff;
-  --hero-cyan: var(--color-accent);
+  /* — luz da marca: um branco só, dosado pelo alfa — */
+  --hero-key: var(--color-ink); /* branco pleno: destaque, ativo, ícones */
 
   /* — luz, raio e ritmo — */
-  --hero-glow: 0 0 140px -30px rgb(124 58 237 / 0.78);
+  /* alfa muito abaixo do violeta que substituiu: branco a 0.78 apagaria o
+     painel inteiro num borrão claro */
+  --hero-glow: 0 0 140px -30px rgb(255 255 255 / 0.22);
   --hero-shadow: 0 48px 110px -40px rgb(0 0 0 / 0.95);
   --hero-radius: 1.05rem;
   --hero-radius-sm: 0.7rem;
@@ -74,10 +78,10 @@
   pointer-events: none;
   overflow: hidden;
   background:
-    radial-gradient(70% 55% at 78% 30%, rgb(46 22 120 / 0.42), transparent 68%),
-    radial-gradient(45% 40% at 96% 74%, rgb(20 70 130 / 0.22), transparent 70%),
-    radial-gradient(38% 34% at 4% 8%, rgb(70 34 160 / 0.2), transparent 72%),
-    linear-gradient(180deg, rgb(5 5 11 / 0.35), rgb(5 5 11 / 0.9));
+    radial-gradient(70% 55% at 78% 30%, rgb(255 255 255 / 0.1), transparent 68%),
+    radial-gradient(45% 40% at 96% 74%, rgb(255 255 255 / 0.05), transparent 70%),
+    radial-gradient(38% 34% at 4% 8%, rgb(255 255 255 / 0.045), transparent 72%),
+    linear-gradient(180deg, rgb(0 0 0 / 0.35), rgb(0 0 0 / 0.9));
 }
 
 /* Halo principal, atrás do dashboard */
@@ -91,23 +95,23 @@
   right: 2%;
   width: min(46rem, 62%);
   aspect-ratio: 1;
-  background: radial-gradient(circle, rgb(96 44 214 / 0.4), rgb(76 36 180 / 0.16) 46%, transparent 70%);
+  background: radial-gradient(circle, rgb(255 255 255 / 0.11), rgb(255 255 255 / 0.04) 46%, transparent 70%);
   animation: hero-breathe 14s ease-in-out infinite alternate;
 }
-.hero-halo--cyan {
+.hero-halo--low {
   right: -6%;
   bottom: 6%;
   width: min(28rem, 40%);
   aspect-ratio: 1;
-  background: radial-gradient(circle, rgb(34 211 238 / 0.16), transparent 68%);
+  background: radial-gradient(circle, rgb(255 255 255 / 0.055), transparent 68%);
   animation: hero-breathe 18s ease-in-out -6s infinite alternate;
 }
-.hero-halo--violet {
+.hero-halo--left {
   top: 30%;
   left: -12%;
   width: min(24rem, 36%);
   aspect-ratio: 1;
-  background: radial-gradient(circle, rgb(124 58 237 / 0.2), transparent 70%);
+  background: radial-gradient(circle, rgb(255 255 255 / 0.05), transparent 70%);
 }
 
 /* Arcos orbitais decorativos que contornam o dashboard.
@@ -128,22 +132,22 @@
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: #e9d5ff;
-  box-shadow: 0 0 10px 2px rgb(167 139 250 / 0.9);
+  background: #ffffff;
+  box-shadow: 0 0 10px 2px rgb(255 255 255 / 0.75);
   animation: hero-twinkle 4.5s ease-in-out infinite;
 }
 .hero-spark--sm {
   width: 2px;
   height: 2px;
-  box-shadow: 0 0 8px 1px rgb(96 165 250 / 0.8);
-  background: #bfdbfe;
+  box-shadow: 0 0 8px 1px rgb(255 255 255 / 0.55);
+  background: #e5e5e5;
 }
 
 /* Vinheta que fecha as bordas da seção */
 .hero-vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 118% 92% at 52% 46%, transparent 42%, rgb(5 5 11 / 0.82) 100%);
+  background: radial-gradient(ellipse 118% 92% at 52% 46%, transparent 42%, rgb(0 0 0 / 0.82) 100%);
 }
 
 /* ==========================================================================
@@ -181,24 +185,22 @@
   font-size: clamp(1.85rem, min(9.6cqw, 5.4svh), 3.4rem);
   line-height: 1.16;
   letter-spacing: -0.035em;
-  color: var(--hero-text);
+  color: var(--hero-title-text);
   /* as quebras vêm do conteúdo; `balance` (herdado do h1 global) não se aplica */
   text-wrap: wrap;
 }
 .hero-title-line {
   display: block;
 }
+/* Destaque do título: branco pleno com um fio de prata na descida, contra o
+   cinza-claro do resto da frase. Antes eram três gradientes (violeta, azul,
+   ciano) — sem matiz eles seriam o mesmo desenho três vezes, então virou um
+   tratamento único. */
 .hero-title-accent {
-  background-image: linear-gradient(96deg, var(--hero-purple-soft), var(--hero-blue));
+  background-image: linear-gradient(96deg, #ffffff 0%, #ffffff 55%, #d0d0d0 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-}
-.hero-title-accent[data-tone='blue'] {
-  background-image: linear-gradient(96deg, #60a5fa, #3b82f6);
-}
-.hero-title-accent[data-tone='cyan'] {
-  background-image: linear-gradient(96deg, #a78bfa, var(--hero-cyan));
 }
 
 /* 3.3 · Parágrafo */
@@ -256,11 +258,11 @@
   border: 1px solid var(--hero-border-strong);
   border-radius: calc(22 * var(--s));
   background:
-    radial-gradient(120% 90% at 82% -12%, rgb(68 44 156 / 0.34), transparent 62%),
-    linear-gradient(180deg, #0d1020, #06070f);
+    radial-gradient(120% 90% at 82% -12%, rgb(255 255 255 / 0.09), transparent 62%),
+    linear-gradient(180deg, #101010, #050505);
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.07),
-    0 0 0 1px color-mix(in oklab, var(--hero-purple) 30%, transparent),
+    0 0 0 1px rgb(255 255 255 / 0.14),
     var(--hero-shadow),
     var(--hero-glow);
   font-size: calc(13 * var(--s));
@@ -293,8 +295,10 @@
   width: calc(21 * var(--s));
   height: calc(21 * var(--s));
   border-radius: calc(7 * var(--s));
-  background: linear-gradient(140deg, #8b5cf6, #6d28d9 55%, #22d3ee);
-  color: #fff;
+  /* placa branca com o glifo em preto: a mesma inversão do favicon, e o único
+     jeito de a marquinha do painel ser o ponto mais claro da barra */
+  background: #ffffff;
+  color: #000000;
 }
 .hero-panel-tab {
   display: inline-flex;
@@ -306,7 +310,7 @@
   padding: calc(5 * var(--s)) calc(9 * var(--s));
   font-size: calc(9.5 * var(--s));
   font-weight: 600;
-  color: #dbe2ef;
+  color: #e0e0e0;
   white-space: nowrap;
 }
 .hero-panel-tab svg {
@@ -350,12 +354,12 @@
   width: calc(23 * var(--s));
   height: calc(23 * var(--s));
   border-radius: 50%;
-  background: linear-gradient(140deg, #a78bfa, #4c1d95);
+  background: linear-gradient(140deg, #f5f5f5, #6b6b6b);
   box-shadow: 0 0 0 calc(1.5 * var(--s)) rgb(255 255 255 / 0.1);
   font-family: var(--font-display);
   font-size: calc(9 * var(--s));
   font-weight: 800;
-  color: #fff;
+  color: #000000;
 }
 
 /* — corpo — */
@@ -380,12 +384,12 @@
   width: calc(22 * var(--s));
   height: calc(22 * var(--s));
   border-radius: calc(7 * var(--s));
-  color: #4b5468;
+  color: #5c5c5c;
 }
 .hero-panel-rail li[data-active='true'] {
-  background: rgb(124 58 237 / 0.22);
-  box-shadow: inset 0 0 0 1px rgb(167 139 250 / 0.4);
-  color: #ddd6fe;
+  background: rgb(255 255 255 / 0.14);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.28);
+  color: var(--hero-key);
 }
 
 .hero-panel-main {
@@ -439,11 +443,13 @@
   font-weight: 800;
   letter-spacing: -0.02em;
 }
+/* Verde: todos os deltas do mockup são de alta, e é o sinal que um painel real
+   daria. O número do KPI continua branco e mais claro que ele. */
 .hero-kpi-delta {
   margin-top: calc(4 * var(--s));
   font-size: calc(8 * var(--s));
   font-weight: 600;
-  color: #6ee7b7;
+  color: var(--color-success);
 }
 
 /* linha inferior: gráfico + atividades */
@@ -473,7 +479,7 @@
   position: absolute;
   top: calc(10 * var(--s));
   right: calc(10 * var(--s));
-  color: #3f4757;
+  color: #4d4d4d;
 }
 
 /* gráfico de linha */
@@ -488,7 +494,7 @@
   flex-direction: column;
   justify-content: space-between;
   font-size: calc(7.2 * var(--s));
-  color: #3f4757;
+  color: #4d4d4d;
   text-align: right;
 }
 .hero-chart-plot {
@@ -503,7 +509,7 @@
   grid-column: 2;
   margin-top: calc(5 * var(--s));
   font-size: calc(7.2 * var(--s));
-  color: #3f4757;
+  color: #4d4d4d;
 }
 
 /* atividades recentes */
@@ -518,8 +524,12 @@
   align-items: center;
   gap: calc(7 * var(--s));
   font-size: calc(8.6 * var(--s));
-  color: #c3ccdb;
+  color: #c9c9c9;
 }
+/* Um tratamento só. Os quatro tons de antes (violeta, ciano, esmeralda, azul)
+   distinguiam os tipos de atividade por matiz; traduzidos para quatro níveis de
+   cinza eles pareceriam variação acidental, não código de cor. Uniforme lê como
+   decisão. */
 .hero-act-icon {
   display: grid;
   place-items: center;
@@ -527,24 +537,9 @@
   width: calc(17 * var(--s));
   height: calc(17 * var(--s));
   border-radius: 50%;
-  background: color-mix(in oklab, var(--hero-purple) 16%, transparent);
-  box-shadow: inset 0 0 0 1px rgb(167 139 250 / 0.28);
-  color: var(--hero-purple-soft);
-}
-.hero-act-icon[data-tone='cyan'] {
-  background: rgb(34 211 238 / 0.14);
-  box-shadow: inset 0 0 0 1px rgb(34 211 238 / 0.3);
-  color: #67e8f9;
-}
-.hero-act-icon[data-tone='emerald'] {
-  background: rgb(52 211 153 / 0.14);
-  box-shadow: inset 0 0 0 1px rgb(52 211 153 / 0.3);
-  color: #6ee7b7;
-}
-.hero-act-icon[data-tone='blue'] {
-  background: rgb(59 130 246 / 0.16);
-  box-shadow: inset 0 0 0 1px rgb(96 165 250 / 0.32);
-  color: #93c5fd;
+  background: rgb(255 255 255 / 0.1);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.2);
+  color: var(--hero-key);
 }
 .hero-act-text {
   min-width: 0;
@@ -556,7 +551,7 @@
 .hero-act time {
   flex: none;
   font-size: calc(7.4 * var(--s));
-  color: #3f4757;
+  color: #4d4d4d;
 }
 .hero-acts-more {
   align-self: flex-end;
@@ -567,7 +562,7 @@
   padding: calc(4 * var(--s)) calc(9 * var(--s));
   font-size: calc(8 * var(--s));
   font-weight: 600;
-  color: #c3ccdb;
+  color: #c9c9c9;
 }
 
 /* 4.3 · Cards flutuantes */
@@ -598,12 +593,13 @@
   animation: hero-card-float 11s ease-in-out infinite alternate;
 }
 .hero-card:hover {
-  border-color: rgb(167 139 250 / 0.4);
+  border-color: rgb(255 255 255 / 0.34);
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.09),
     0 30px 70px -26px rgb(0 0 0 / 0.95),
-    0 0 44px -14px rgb(124 58 237 / 0.7);
+    0 0 44px -14px rgb(255 255 255 / 0.2);
 }
+/* Como em .hero-act-icon: os três tons por matiz viraram um tratamento único. */
 .hero-card-icon {
   display: grid;
   place-items: center;
@@ -611,19 +607,9 @@
   width: 2.5em;
   height: 2.5em;
   border-radius: var(--hero-radius-sm);
-  background: color-mix(in oklab, var(--hero-purple) 16%, transparent);
-  box-shadow: inset 0 0 0 1px rgb(167 139 250 / 0.3);
-  color: var(--hero-purple-soft);
-}
-.hero-card-icon[data-tone='blue'] {
-  background: rgb(59 130 246 / 0.16);
-  box-shadow: inset 0 0 0 1px rgb(96 165 250 / 0.32);
-  color: #93c5fd;
-}
-.hero-card-icon[data-tone='cyan'] {
-  background: rgb(34 211 238 / 0.14);
-  box-shadow: inset 0 0 0 1px rgb(34 211 238 / 0.32);
-  color: #67e8f9;
+  background: rgb(255 255 255 / 0.1);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.22);
+  color: var(--hero-key);
 }
 .hero-card strong {
   display: block;
@@ -677,7 +663,7 @@
   aspect-ratio: 1 / 0.5;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  background: radial-gradient(circle, rgb(233 213 255 / 0.85), rgb(124 58 237 / 0.5) 38%, transparent 72%);
+  background: radial-gradient(circle, rgb(255 255 255 / 0.8), rgb(255 255 255 / 0.26) 38%, transparent 72%);
   filter: blur(16px);
   animation: hero-core-pulse 6.5s ease-in-out infinite alternate;
 }
@@ -697,7 +683,7 @@
   height: 26%;
   transform: translateX(-50%);
   border-radius: 50%;
-  background: radial-gradient(ellipse, rgb(124 58 237 / 0.35), transparent 70%);
+  background: radial-gradient(ellipse, rgb(255 255 255 / 0.14), transparent 70%);
   filter: blur(22px);
 }
 /* Marca d'água da LZdev projetada pela plataforma */
@@ -742,13 +728,15 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #f5f3ff;
-  box-shadow: 0 0 12px 3px rgb(167 139 250 / 0.95);
+  background: #ffffff;
+  box-shadow: 0 0 12px 3px rgb(255 255 255 / 0.8);
   transform: translate(-50%, -50%) scaleY(calc(1 / var(--squash)));
 }
+/* O ponto da órbita interna fica um passo abaixo do externo: é o que ainda
+   separa os dois anéis agora que os dois são brancos. */
 .hero-orbit--tight .hero-orbit-dot {
-  background: #cffafe;
-  box-shadow: 0 0 12px 3px rgb(34 211 238 / 0.9);
+  background: #e0e0e0;
+  box-shadow: 0 0 12px 3px rgb(255 255 255 / 0.55);
 }
 
 /* ==========================================================================

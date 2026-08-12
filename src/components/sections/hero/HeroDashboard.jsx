@@ -37,12 +37,14 @@ const CHART_LINE =
   'M0,88 C16,82 26,94 44,89 C62,84 70,66 88,62 C104,58 112,75 128,72 C146,69 156,44 176,42 C192,40 200,58 216,54 C232,50 240,29 258,25 C272,22 285,13 300,9'
 const CHART_AREA = `${CHART_LINE} L300,110 L0,110 Z`
 
+// Sem `tone`: os cinco chips usam o mesmo branco translúcido (.hero-act-icon).
+// Os quatro matizes de antes não têm tradução em cinza que não pareça acidente.
 const ACTIVITIES = [
-  { icon: 'cart', tone: 'violet', text: 'Novo pedido #1254', time: '2 min' },
-  { icon: 'users', tone: 'cyan', text: 'Cliente Kimori Food', time: '15 min' },
-  { icon: 'checkCircle', tone: 'emerald', text: 'Pagamento aprovado', time: '1 h' },
-  { icon: 'users', tone: 'blue', text: 'Novo cliente cadastrado', time: '2 h' },
-  { icon: 'blocks', tone: 'violet', text: 'Atualização de produto', time: '5 h' },
+  { icon: 'cart', text: 'Novo pedido #1254', time: '2 min' },
+  { icon: 'users', text: 'Cliente Kimori Food', time: '15 min' },
+  { icon: 'checkCircle', text: 'Pagamento aprovado', time: '1 h' },
+  { icon: 'users', text: 'Novo cliente cadastrado', time: '2 h' },
+  { icon: 'blocks', text: 'Atualização de produto', time: '5 h' },
 ]
 
 export function HeroDashboard() {
@@ -123,14 +125,18 @@ export function HeroDashboard() {
                   aria-hidden="true"
                 >
                   <defs>
+                    {/* O gráfico é o único elemento de DADO do painel, e é onde
+                        a cor volta: azul → ciano, a mesma dupla do trilho do
+                        processo. Sem ela a curva se perdia entre os cinzas do
+                        mockup. */}
                     <linearGradient id="hero-chart-area" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.42" />
-                      <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0" />
+                      <stop offset="0%" stopColor="#60a5fa" stopOpacity="0.32" />
+                      <stop offset="100%" stopColor="#60a5fa" stopOpacity="0" />
                     </linearGradient>
                     <linearGradient id="hero-chart-stroke" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%" stopColor="#7c3aed" />
-                      <stop offset="55%" stopColor="#a78bfa" />
-                      <stop offset="100%" stopColor="#c4b5fd" />
+                      <stop offset="0%" stopColor="#3b82f6" />
+                      <stop offset="55%" stopColor="#60a5fa" />
+                      <stop offset="100%" stopColor="#22d3ee" />
                     </linearGradient>
                   </defs>
 
@@ -156,7 +162,7 @@ export function HeroDashboard() {
                     strokeLinecap="round"
                     vectorEffect="non-scaling-stroke"
                   />
-                  <circle cx="176" cy="42" r="3" fill="#f5f3ff" vectorEffect="non-scaling-stroke" />
+                  <circle cx="176" cy="42" r="3" fill="#a5f3fc" vectorEffect="non-scaling-stroke" />
                 </svg>
 
                 <div className="hero-chart-x" aria-hidden="true">
@@ -174,7 +180,7 @@ export function HeroDashboard() {
               <div className="hero-acts">
                 {ACTIVITIES.map((item) => (
                   <p className="hero-act" key={item.text}>
-                    <span className="hero-act-icon" data-tone={item.tone} aria-hidden="true">
+                    <span className="hero-act-icon" aria-hidden="true">
                       <Icon name={item.icon} size="62%" strokeWidth={2} />
                     </span>
                     <span className="hero-act-text">{item.text}</span>

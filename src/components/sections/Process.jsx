@@ -48,8 +48,10 @@ function Step({ step, index, progress }) {
           {/* O eixo do preenchimento muda com o breakpoint, então quem resolve
               altura/largura é a utility `timeline-fill` — um transform não dá
               para trocar de eixo inline. */}
+          {/* Azul → ciano: o trilho preenchido é PROGRESSO, e cor faz esse
+              estado ser lido de relance contra o traço apagado do que falta. */}
           <span
-            className="block timeline-fill bg-gradient-to-b from-brand to-accent lg:bg-gradient-to-r"
+            className="block timeline-fill bg-gradient-to-b from-cat-1 to-cat-2 lg:bg-gradient-to-r"
             style={{ '--fill': fill }}
           />
         </span>
@@ -60,14 +62,14 @@ function Step({ step, index, progress }) {
         <span
           className={`relative grid size-13 place-items-center rounded-2xl border transition-[background-color,border-color,color,box-shadow] duration-500 ease-[var(--ease-out-soft)] ${
             lit
-              ? 'border-brand/50 bg-brand/18 text-ink shadow-[0_0_28px_-8px_rgb(124_58_237/0.85)]'
+              ? 'border-brand/50 bg-brand/18 text-ink shadow-[0_0_28px_-8px_rgb(255_255_255/0.35)]'
               : 'border-white/10 bg-surface text-faint'
           }`}
         >
           <Icon name={step.icon} size={21} />
           <span
             className={`absolute -top-2 -right-2 grid size-5.5 place-items-center rounded-full text-[0.62rem] font-bold tabular-nums transition-colors duration-500 ${
-              lit ? 'bg-brand text-white' : 'bg-surface-2 text-faint ring-1 ring-white/10'
+              lit ? 'bg-brand text-bg' : 'bg-surface-2 text-faint ring-1 ring-white/10'
             }`}
           >
             {index + 1}
@@ -82,7 +84,7 @@ function Step({ step, index, progress }) {
         {/* mt-auto no invólucro encosta os blocos de todas as etapas na mesma
             linha de base, apesar de as descrições terem alturas diferentes. */}
         <div className="mt-auto flex flex-col gap-2 pt-4">
-          <p className="flex items-start gap-1.5 text-xs leading-snug font-semibold text-accent">
+          <p className="flex items-start gap-1.5 text-xs leading-snug font-semibold text-success">
             <Icon name="check" size={13} className="mt-px shrink-0" />
             {step.deliverable}
           </p>
@@ -115,11 +117,11 @@ export function Process() {
       <Reveal variant="scale" delay={100}>
         <div className="relative mt-16 overflow-hidden rounded-[var(--radius-xl2)] border border-brand/25 bg-brand/[0.07] px-6 py-10 text-center sm:px-12 border-gradient">
           <div
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_140%_at_50%_0%,rgb(124_58_237/0.16),transparent_70%)]"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_140%_at_50%_0%,rgb(255_255_255/0.07),transparent_70%)]"
             aria-hidden="true"
           />
           <div className="relative mx-auto max-w-2xl">
-            <span className="grid size-12 place-items-center rounded-2xl bg-accent/12 text-accent ring-1 ring-accent/25 mx-auto">
+            <span className="grid size-12 place-items-center rounded-2xl bg-success/12 text-success ring-1 ring-success/25 mx-auto">
               <Icon name="checkCircle" size={24} />
             </span>
             <p className="mt-5 font-display text-[clamp(1.25rem,3vw,1.85rem)] leading-snug font-extrabold text-ink">

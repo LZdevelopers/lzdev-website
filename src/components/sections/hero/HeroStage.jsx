@@ -20,16 +20,19 @@ function Platform() {
 
       <svg className="hero-platform-rings" viewBox="0 0 400 140" fill="none">
         <defs>
+          {/* O anel já nascia claro no centro (#ede9fe) e sumia nas pontas: o
+              desenho era de LUZ, não de matiz, então em branco puro ele é o
+              mesmo traço — só perdeu o violeta e o ciano das extremidades. */}
           <linearGradient id="hero-ring" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#7c3aed" stopOpacity="0" />
-            <stop offset="22%" stopColor="#a78bfa" stopOpacity="0.75" />
-            <stop offset="50%" stopColor="#ede9fe" stopOpacity="1" />
-            <stop offset="78%" stopColor="#60a5fa" stopOpacity="0.75" />
-            <stop offset="100%" stopColor="#22d3ee" stopOpacity="0" />
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0" />
+            <stop offset="22%" stopColor="#ffffff" stopOpacity="0.7" />
+            <stop offset="50%" stopColor="#ffffff" stopOpacity="1" />
+            <stop offset="78%" stopColor="#ffffff" stopOpacity="0.7" />
+            <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
           </linearGradient>
           <radialGradient id="hero-ring-fill" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.35" />
-            <stop offset="100%" stopColor="#7c3aed" stopOpacity="0" />
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.16" />
+            <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
           </radialGradient>
         </defs>
 
@@ -68,7 +71,7 @@ export function HeroStage() {
 
         {hero.floatingCards.map((card) => (
           <article className={`hero-card hero-card--${card.at}`} key={card.title}>
-            <span className="hero-card-icon" data-tone={card.tone} aria-hidden="true">
+            <span className="hero-card-icon" aria-hidden="true">
               <Icon name={card.icon} size="52%" strokeWidth={1.8} />
             </span>
             <div>

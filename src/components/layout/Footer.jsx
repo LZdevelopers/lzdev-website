@@ -1,5 +1,5 @@
 import { activeSocials, contact, footer, whatsappLink } from '../../data/site'
-import { Icon } from '../primitives/Icon'
+import { brandColors, Icon } from '../primitives/Icon'
 import { Logo } from './Logo'
 
 const YEAR = new Date().getFullYear()
@@ -25,6 +25,8 @@ export function Footer() {
             <Logo />
             <p className="mt-5 text-sm leading-relaxed text-muted">{footer.tagline}</p>
 
+            {/* Cada rede na cor oficial dela. `--net` alimenta borda e fundo do
+                hover; o e-mail não é marca (ícone de traço) e cai no branco. */}
             <ul className="mt-6 flex gap-2">
               {SOCIALS.map((social) => (
                 <li key={social.label}>
@@ -33,9 +35,10 @@ export function Footer() {
                     target={social.external ? '_blank' : undefined}
                     rel={social.external ? 'noopener noreferrer' : undefined}
                     aria-label={social.label}
-                    className="grid size-10 place-items-center rounded-xl border border-white/10 bg-white/[0.03] text-muted transition-[border-color,color,background-color,transform] duration-300 hover:-translate-y-0.5 hover:border-brand/45 hover:bg-brand/10 hover:text-ink"
+                    style={{ '--net': brandColors[social.icon] || '#ffffff' }}
+                    className="grid size-10 place-items-center rounded-xl border border-white/10 bg-white/[0.03] text-muted transition-[border-color,color,background-color,transform] duration-300 hover:-translate-y-0.5 hover:border-[color-mix(in_oklab,var(--net)_50%,transparent)] hover:bg-[color-mix(in_oklab,var(--net)_14%,transparent)] hover:text-ink"
                   >
-                    <Icon name={social.icon} size={17} />
+                    <Icon name={social.icon} size={17} colored />
                   </a>
                 </li>
               ))}

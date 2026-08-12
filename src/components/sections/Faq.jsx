@@ -55,10 +55,10 @@ export function Faq() {
                     open ? 'border-brand/35 bg-brand/[0.05]' : 'border-white/8 hover:border-white/18'
                   }`}
                 >
-                  {/* Barra de acento do item aberto: ciano→violeta, dado→ação, a
-                      mesma direção do gradiente que assina o resto da página. */}
+                  {/* Barra de acento do item aberto: ciano→azul, a mesma dupla
+                      do trilho do processo, marcando "este é o item ativo". */}
                   <span
-                    className={`absolute inset-y-0 left-0 w-[3px] bg-gradient-to-b from-accent to-brand transition-opacity duration-400 ${
+                    className={`absolute inset-y-0 left-0 w-[3px] bg-gradient-to-b from-cat-2 to-cat-1 transition-opacity duration-400 ${
                       open ? 'opacity-100' : 'opacity-0'
                     }`}
                     aria-hidden="true"

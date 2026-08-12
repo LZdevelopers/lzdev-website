@@ -57,15 +57,16 @@ export const navLinks = [
 export const hero = {
   /**
    * Título em linhas controladas: cada item externo é uma linha do <h1> e cada
-   * token interno uma palavra/trecho. `accent` aplica o gradiente da marca
-   * ('violet' | 'blue' | 'cyan'). Ajustar a quebra é mudar o array — o CSS
-   * escala a fonte pela largura da coluna, então nada estoura em tela estreita.
+   * token interno uma palavra/trecho. `accent: true` marca a palavra em branco
+   * pleno, contra o cinza-claro do resto da frase. Ajustar a quebra é mudar o
+   * array — o CSS escala a fonte pela largura da coluna, então nada estoura em
+   * tela estreita.
    */
   title: [
     [{ text: 'Transformamos' }],
-    [{ text: 'desafios em ' }, { text: 'soluções', accent: 'violet' }],
-    [{ text: 'digitais que ' }, { text: 'geram', accent: 'blue' }],
-    [{ text: 'resultado.', accent: 'cyan' }],
+    [{ text: 'desafios em ' }, { text: 'soluções', accent: true }],
+    [{ text: 'digitais que ' }, { text: 'geram', accent: true }],
+    [{ text: 'resultado.', accent: true }],
   ],
 
   subtitle:
@@ -73,11 +74,12 @@ export const hero = {
   primaryCta: 'Solicitar projeto',
   secondaryCta: 'Conhecer projetos',
 
-  /** Cards flutuantes ao redor do painel — recortes de `why.items`. */
+  /** Cards flutuantes ao redor do painel — recortes de `why.items`.
+   *  Sem `tone`: os três chips compartilham o mesmo branco translúcido. */
   floatingCards: [
-    { icon: 'gauge', tone: 'blue', title: 'Performance', text: 'Sistemas rápidos e otimizados', at: 'perf' },
-    { icon: 'code', tone: 'violet', title: 'Código limpo', text: 'Escalável, organizado e sustentável', at: 'code' },
-    { icon: 'shield', tone: 'cyan', title: 'Segurança', text: 'Seus dados sempre protegidos', at: 'secure' },
+    { icon: 'gauge', title: 'Performance', text: 'Sistemas rápidos e otimizados', at: 'perf' },
+    { icon: 'code', title: 'Código limpo', text: 'Escalável, organizado e sustentável', at: 'code' },
+    { icon: 'shield', title: 'Segurança', text: 'Seus dados sempre protegidos', at: 'secure' },
   ],
 
 }
@@ -92,15 +94,15 @@ export const projects = {
 
   /**
    * `image`: caminho de uma imagem em /public (ex.: '/projetos/sprint-max.png').
-   * Enquanto estiver vazio, o card desenha o mockup de `mockup` em CSS — assim
-   * nunca existe imagem quebrada nem espaço vazio antes das telas reais.
+   * Enquanto estiver vazio, o card mostra uma moldura de espera com o nome do
+   * projeto — nunca uma imagem quebrada. Basta preencher o caminho quando o
+   * screenshot existir; nenhum outro ajuste é necessário.
    */
   items: [
     {
       name: 'Sprint Max',
       category: 'Sistema de gestão',
       image: '', // TODO: screenshot real
-      mockup: 'dashboard',
       text: 'Sistema completo de gestão de produtos, usuários e vendas. Substituiu o controle por planilha por um painel único, com permissões por perfil e relatórios que fecham sozinhos.',
       stack: ['PHP', 'Laravel', 'MySQL', 'Bootstrap'],
       url: '#', // TODO: link real
@@ -109,7 +111,6 @@ export const projects = {
       name: 'Kimori Korean Food',
       category: 'Website',
       image: '', // TODO
-      mockup: 'restaurant',
       text: 'Presença digital para restaurante de comida coreana: cardápio navegável, identidade marcante e caminho curto até o pedido pelo WhatsApp.',
       stack: ['HTML', 'CSS', 'JavaScript', 'Tailwind CSS'],
       url: '#', // TODO
@@ -118,7 +119,6 @@ export const projects = {
       name: 'Horário de Brasília',
       category: 'Ferramenta online',
       image: '', // TODO
-      mockup: 'clock',
       text: 'Ferramenta pública de consulta ao horário oficial de Brasília. Interface direta, precisa e leve o bastante para abrir instantaneamente em qualquer conexão.',
       stack: ['JavaScript', 'HTML', 'CSS'],
       url: '#', // TODO
@@ -127,7 +127,6 @@ export const projects = {
       name: 'Portfólio',
       category: 'Site pessoal',
       image: '', // TODO
-      mockup: 'portfolio',
       text: 'Site pessoal moderno com foco em experiência e desempenho: animações refinadas, navegação fluida e apresentação clara de projetos e competências.',
       stack: ['React', 'Tailwind CSS', 'JavaScript'],
       url: '#', // TODO
@@ -155,28 +154,28 @@ export const tools = {
       label: 'Front-end',
       caption: 'O que o seu cliente vê e usa',
       items: [
-        { name: 'HTML', icon: 'html', color: '#E34F26', text: 'Marcação semântica: a base do SEO e da acessibilidade.' },
-        { name: 'CSS', icon: 'css', color: '#8B5CF6', text: 'Layouts fluidos e animações leves, sem peso extra.' },
-        { name: 'JavaScript', icon: 'javascript', color: '#F7DF1E', text: 'A linguagem que dá vida à interface no navegador.' },
-        { name: 'React', icon: 'react', color: '#61DAFB', text: 'Interfaces componentizadas, rápidas e fáceis de evoluir.' },
+        { name: 'HTML', icon: 'html', text: 'Marcação semântica: a base do SEO e da acessibilidade.' },
+        { name: 'CSS', icon: 'css', text: 'Layouts fluidos e animações leves, sem peso extra.' },
+        { name: 'JavaScript', icon: 'javascript', text: 'A linguagem que dá vida à interface no navegador.' },
+        { name: 'React', icon: 'react', text: 'Interfaces componentizadas, rápidas e fáceis de evoluir.' },
       ],
     },
     {
       label: 'Back-end e dados',
       caption: 'A regra de negócio e a informação',
       items: [
-        { name: 'PHP', icon: 'php', color: '#8B8FD1', text: 'Maturidade e hospedagem acessível para regras de negócio.' },
-        { name: 'Laravel', icon: 'laravel', color: '#FF4530', text: 'Estrutura robusta com segurança e autenticação prontas.' },
-        { name: 'Node.js', icon: 'nodejs', color: '#6FBF5A', text: 'APIs e automações de alta performance em tempo real.' },
-        { name: 'MySQL', icon: 'mysql', color: '#5B95C4', text: 'Dados íntegros, consultas rápidas e backup confiável.' },
+        { name: 'PHP', icon: 'php', text: 'Maturidade e hospedagem acessível para regras de negócio.' },
+        { name: 'Laravel', icon: 'laravel', text: 'Estrutura robusta com segurança e autenticação prontas.' },
+        { name: 'Node.js', icon: 'nodejs', text: 'APIs e automações de alta performance em tempo real.' },
+        { name: 'MySQL', icon: 'mysql', text: 'Dados íntegros, consultas rápidas e backup confiável.' },
       ],
     },
     {
       label: 'Design e versionamento',
       caption: 'Como o projeto nasce e fica rastreável',
       items: [
-        { name: 'Figma', icon: 'figma', color: '#F24E1E', text: 'Protótipo navegável aprovado antes da primeira linha de código.' },
-        { name: 'Git', icon: 'git', color: '#F0503E', text: 'Histórico completo: qualquer mudança é reversível.' },
+        { name: 'Figma', icon: 'figma', text: 'Protótipo navegável aprovado antes da primeira linha de código.' },
+        { name: 'Git', icon: 'git', text: 'Histórico completo: qualquer mudança é reversível.' },
       ],
     },
   ],

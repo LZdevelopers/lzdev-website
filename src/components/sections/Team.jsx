@@ -1,25 +1,34 @@
 import { team, whatsappLink } from '../../data/site'
 import { Card } from '../primitives/Card'
-import { Icon } from '../primitives/Icon'
+import { brandColors, Icon } from '../primitives/Icon'
 import { Reveal } from '../primitives/Reveal'
 import { Section, SectionHeader } from '../primitives/Section'
 
+/**
+ * Cada link puxa a cor da própria rede por `--net`: o ícone já nasce colorido e
+ * o hover tinge borda e fundo no mesmo tom. É o que diferencia os três botões
+ * de relance, sem precisar ler o rótulo.
+ */
 const SOCIAL_BASE =
-  'inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-3.5 py-2 text-sm font-medium text-muted transition-[border-color,background-color,color] duration-300 hover:text-ink'
+  'inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-3.5 py-2 text-sm font-medium text-muted transition-[border-color,background-color,color,transform] duration-300 hover:-translate-y-0.5 hover:border-[color-mix(in_oklab,var(--net)_50%,transparent)] hover:bg-[color-mix(in_oklab,var(--net)_12%,transparent)] hover:text-ink'
 
 /**
- * Retrato do membro: painel vertical no gradiente da marca, com as iniciais e o
- * selo da função. Com `photo` preenchido em data/site.js a foto entra no lugar
- * do gradiente — mesma moldura e mesmo peso visual, então o layout não muda
+ * Retrato do membro: painel vertical em grafite, com as iniciais e o selo da
+ * função. Com `photo` preenchido em data/site.js a foto entra no lugar do
+ * gradiente — mesma moldura e mesmo peso visual, então o layout não muda
  * quando as fotos chegarem.
  *
  * No mobile vira uma faixa larga no topo do card; a partir de sm ele estica na
  * altura do conteúdo ao lado (é o flex item que o `items-stretch` da linha
  * acompanha), que é o que mantém as duas colunas do card alinhadas.
+ *
+ * A placa é grafite, não branca: ela ocupa meia largura do card e em branco
+ * roubaria o destaque dos CTAs. O cinza médio ainda deixa as iniciais brancas
+ * legíveis e separa o retrato do fundo do card.
  */
 function Portrait({ member }) {
   return (
-    <div className="relative h-40 w-full shrink-0 overflow-hidden rounded-2xl bg-[linear-gradient(165deg,#8b5cf6_0%,#6366f1_50%,#38bdf8_100%)] ring-1 ring-white/12 sm:h-auto sm:w-48 lg:w-56">
+    <div className="relative h-40 w-full shrink-0 overflow-hidden rounded-2xl bg-[linear-gradient(165deg,#4a4a4a_0%,#2a2a2a_50%,#141414_100%)] ring-1 ring-white/12 sm:h-auto sm:w-48 lg:w-56">
       {member.photo ? (
         <img
           src={member.photo}
@@ -38,7 +47,7 @@ function Portrait({ member }) {
       )}
 
       <span className="absolute inset-x-3 bottom-3 flex items-center gap-2 rounded-lg border border-white/15 bg-black/45 px-3 py-1.5 text-[0.65rem] font-bold tracking-[0.16em] text-white uppercase backdrop-blur-sm">
-        <span className="size-1.5 shrink-0 rounded-full bg-[#4ade80]" aria-hidden="true" />
+        <span className="size-1.5 shrink-0 rounded-full bg-success" aria-hidden="true" />
         {member.tag}
       </span>
     </div>
@@ -70,18 +79,20 @@ function MemberCard({ member, delay }) {
               href={member.links.github}
               target="_blank"
               rel="noopener noreferrer"
-              className={`${SOCIAL_BASE} hover:border-white/25`}
+              style={{ '--net': brandColors.github }}
+              className={SOCIAL_BASE}
             >
-              <Icon name="github" size={16} />
+              <Icon name="github" size={16} colored />
               GitHub
             </a>
             <a
               href={whatsappLink(message)}
               target="_blank"
               rel="noopener noreferrer"
-              className={`${SOCIAL_BASE} hover:border-[#25D366]/45 hover:bg-[#25D366]/10`}
+              style={{ '--net': brandColors.whatsapp }}
+              className={SOCIAL_BASE}
             >
-              <Icon name="whatsapp" size={16} />
+              <Icon name="whatsapp" size={16} colored />
               WhatsApp
             </a>
             {/* O botão de LinkedIn só existe quando a URL é preenchida em data/site.js */}
@@ -90,9 +101,10 @@ function MemberCard({ member, delay }) {
                 href={member.links.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`${SOCIAL_BASE} hover:border-[#0A66C2]/55 hover:bg-[#0A66C2]/12`}
+                style={{ '--net': brandColors.linkedin }}
+                className={SOCIAL_BASE}
               >
-                <Icon name="linkedin" size={16} />
+                <Icon name="linkedin" size={16} colored />
                 LinkedIn
               </a>
             ) : null}
