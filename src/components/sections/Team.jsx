@@ -64,7 +64,19 @@ function MemberCard({ member, delay }) {
 
         <div className="flex min-w-0 flex-1 flex-col">
           <h3 className="text-lg leading-tight font-bold text-ink">{member.name}</h3>
-          <p className="mt-1.5 text-sm font-medium text-accent">{member.role}</p>
+          {/* Função e idade na mesma linha, separadas por um ponto: a idade é
+              dado de apoio e não merece uma linha própria puxando o olho. */}
+          <p className="mt-1.5 flex flex-wrap items-center gap-x-2 text-sm font-medium text-accent">
+            {member.role}
+            {member.age ? (
+              <>
+                <span className="text-white/25" aria-hidden="true">
+                  ·
+                </span>
+                <span className="font-normal text-muted">{member.age} anos</span>
+              </>
+            ) : null}
+          </p>
 
           {/* A especialidade sai da bio e vira o destaque do card: é a linha que
               responde "para o que eu chamo esta pessoa?" antes do texto corrido. */}
@@ -85,8 +97,22 @@ function MemberCard({ member, delay }) {
               <Icon name="github" size={16} colored />
               GitHub
             </a>
+            {/* Instagram não entra em `brandColors`: a marca é um gradiente, que
+                o próprio Icon desenha. O hover cai no branco, como no rodapé. */}
             <a
-              href={whatsappLink(message)}
+              href={member.links.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ '--net': '#ffffff' }}
+              className={SOCIAL_BASE}
+            >
+              <Icon name="instagram" size={16} colored />
+              Instagram
+            </a>
+            {/* Cada pessoa com o SEU número — antes os dois botões caíam no
+                canal principal da empresa e `links.whatsapp` não era usado. */}
+            <a
+              href={whatsappLink(message, member.links.whatsapp)}
               target="_blank"
               rel="noopener noreferrer"
               style={{ '--net': brandColors.whatsapp }}

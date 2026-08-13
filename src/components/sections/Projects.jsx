@@ -1,7 +1,7 @@
 import { projects } from '../../data/site'
 import { Button } from '../primitives/Button'
 import { Carousel } from '../primitives/Carousel'
-import { brandColors, Icon } from '../primitives/Icon'
+import { brandColors, Icon, techIcons } from '../primitives/Icon'
 import { Reveal } from '../primitives/Reveal'
 import { Section, SectionHeader } from '../primitives/Section'
 
@@ -16,27 +16,6 @@ import { Section, SectionHeader } from '../primitives/Section'
  * data/site.js e ocupam exatamente a mesma moldura, então nada aqui muda quando
  * elas chegarem.
  */
-
-/**
- * Rótulo da stack → ícone da tecnologia. Toda tecnologia usada nos projetos tem
- * geometria e cor oficial em Icon.jsx, então nenhum chip fica sem ícone. Um
- * rótulo fora deste mapa continua funcionando: vira um chip neutro, só sem o
- * reforço visual — o nome escrito é que carrega a informação.
- */
-const STACK_ICONS = {
-  HTML: 'html',
-  CSS: 'css',
-  JavaScript: 'javascript',
-  React: 'react',
-  PHP: 'php',
-  Laravel: 'laravel',
-  'Node.js': 'nodejs',
-  MySQL: 'mysql',
-  Figma: 'figma',
-  Git: 'git',
-  Bootstrap: 'bootstrap',
-  'Tailwind CSS': 'tailwind',
-}
 
 /** Moldura da captura. Mostra a imagem real quando existe; senão, espera. */
 function ProjectShot({ image, name }) {
@@ -88,7 +67,7 @@ function ProjectSlide({ project }) {
               ferramentas, então a stack do projeto é reconhecida de relance. */}
           <ul className="mt-3 flex flex-wrap gap-2">
             {project.stack.map((tech) => {
-              const icon = STACK_ICONS[tech]
+              const icon = techIcons[tech]
               const color = icon ? brandColors[icon] : null
 
               return (

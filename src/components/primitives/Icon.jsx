@@ -342,6 +342,31 @@ export const brandColors = {
   github: '#FFFFFF',
 }
 
+/**
+ * Rótulo da tecnologia → nome do ícone, usado pelos chips de stack dos projetos.
+ * Mora aqui, junto da geometria e da cor, e não dentro da seção: a tradução é
+ * conhecimento de ícone, e qualquer lugar que precise mostrar uma tecnologia
+ * pela etiqueta escrita chega nele por aqui. Um rótulo fora deste mapa continua
+ * funcionando — vira um chip neutro, só sem o reforço visual, e o nome escrito é
+ * que carrega a informação.
+ */
+export const techIcons = {
+  HTML: 'html',
+  CSS: 'css',
+  JavaScript: 'javascript',
+  TypeScript: 'typescript',
+  React: 'react',
+  'Tailwind CSS': 'tailwind',
+  Bootstrap: 'bootstrap',
+  PHP: 'php',
+  Laravel: 'laravel',
+  'Node.js': 'nodejs',
+  MySQL: 'mysql',
+  Composer: 'composer',
+  Figma: 'figma',
+  Git: 'git',
+}
+
 /** Paradas do gradiente oficial do Instagram, do canto inferior esquerdo. */
 const INSTAGRAM_STOPS = [
   ['0%', '#FFDD55'],

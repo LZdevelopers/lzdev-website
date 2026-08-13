@@ -6,38 +6,103 @@
  *   1 Hero · 2 Projetos · 3 Ferramentas · 4 Custo invisível · 5 Diferenciais
  *   6 Processo · 7 Equipe · 8 Números · 9 FAQ · 10 Contato
  *
- * ⚠️  TODO: substituir os placeholders marcados abaixo pelos dados reais.
+ * ⚠️  Ainda pendente de dado real (nada foi inventado; cada ponto está marcado
+ *     com `// FALTA` no lugar exato):
+ *       · URLs e screenshots dos projetos
+ *       · fotos do time
+ *       · LinkedIn dos dois desenvolvedores
+ *       · perfis próprios da LZdev (hoje o site usa os pessoais)
+ *       · os números de `stats` e os valores do FAQ, que ninguém confirmou
  */
 
 /* -------------------------------------------------------------------------- */
-/*  CONTATO — TODO: trocar por dados reais                                    */
+/*  PERFIS DO TIME                                                            */
+/*                                                                            */
+/*  Fonte ÚNICA dos contatos pessoais. Cada link aparece em mais de um lugar   */
+/*  (cartão da pessoa na Equipe, redes do rodapé e da seção de contato, canais */
+/*  diretos), e repetir a URL em cada um deles é o caminho garantido para um    */
+/*  ficar velho quando alguém trocar de usuário.                              */
+/*                                                                            */
+/*  `whatsapp`: formato internacional, só dígitos (55 + DDD + número).         */
+/*  `phone`: o mesmo número como se lê na tela.                               */
+/* -------------------------------------------------------------------------- */
+const enzo = {
+  first: 'Enzo',
+  github: 'https://github.com/destypc',
+  instagram: 'https://www.instagram.com/enzinxz2',
+  whatsapp: '5545998507429',
+  phone: '(45) 99850-7429',
+  linkedin: '', // FALTA: perfil não informado — o botão só aparece quando preenchido
+}
+
+const luis = {
+  first: 'Luis',
+  github: 'https://github.com/luizeh',
+  instagram: 'https://www.instagram.com/luizehofwgkta',
+  whatsapp: '5544998483756',
+  phone: '(44) 99848-3756',
+  linkedin: '', // FALTA: perfil não informado
+}
+
+/* -------------------------------------------------------------------------- */
+/*  CONTATO                                                                   */
 /* -------------------------------------------------------------------------- */
 export const contact = {
-  email: 'contato@lzdev.com.br', // TODO: e-mail comercial real
-  whatsapp: {
-    // Formato internacional, apenas dígitos (55 + DDD + número)
-    number: '5544999999999', // TODO: WhatsApp comercial real
-    display: '(44) 99999-9999', // TODO
-  },
+  email: 'suporte@lzdev.com.br',
+
+  /**
+   * Os dois WhatsApp do time, exibidos lado a lado nos canais diretos.
+   * O PRIMEIRO da lista é o canal principal: o botão flutuante e o envio do
+   * formulário precisam de um destino só, e é dele que eles saem.
+   */
+  whatsapps: [
+    { person: enzo.first, number: enzo.whatsapp, display: enzo.phone },
+    { person: luis.first, number: luis.whatsapp, display: luis.phone },
+  ],
+
   location: 'Atendimento remoto em todo o Brasil',
   hours: 'Segunda a sexta, 08h às 18h',
 
   /**
-   * Redes sociais exibidas na seção de contato e no footer.
+   * Redes exibidas na seção de contato e no rodapé.
+   * A LZdev ainda não tem perfis próprios (FALTA), então estas são as contas
+   * pessoais dos dois desenvolvedores — os mesmos links dos cartões da Equipe.
+   * O rótulo diz de quem é cada uma: são dois ícones iguais lado a lado, e sem
+   * ele o visitante não teria como saber qual GitHub está clicando.
    * Deixar `href` vazio esconde o botão — nada de link morto no ar.
    */
   socials: [
-    { icon: 'github', label: 'GitHub', href: 'https://github.com/lzdev' }, // TODO
-    { icon: 'instagram', label: 'Instagram', href: 'https://instagram.com/lzdev' }, // TODO
-    { icon: 'linkedin', label: 'LinkedIn', href: '' }, // TODO: preencher para exibir
+    { icon: 'github', person: enzo.first, label: `GitHub do ${enzo.first}`, href: enzo.github },
+    { icon: 'instagram', person: enzo.first, label: `Instagram do ${enzo.first}`, href: enzo.instagram },
+    { icon: 'github', person: luis.first, label: `GitHub do ${luis.first}`, href: luis.github },
+    { icon: 'instagram', person: luis.first, label: `Instagram do ${luis.first}`, href: luis.instagram },
   ],
 }
 
-export const whatsappLink = (message) =>
-  `https://wa.me/${contact.whatsapp.number}?text=${encodeURIComponent(message)}`
+/** Canal principal — botão flutuante, rodapé e envio do formulário. */
+export const primaryWhatsapp = contact.whatsapps[0]
 
-/** Redes com link preenchido — usado por Contact e Footer. */
+/** Link de conversa. Sem `number`, vai para o canal principal. */
+export const whatsappLink = (message, number = primaryWhatsapp.number) =>
+  `https://wa.me/${number}?text=${encodeURIComponent(message)}`
+
+/** Redes com link preenchido — usado pelo rodapé. */
 export const activeSocials = contact.socials.filter((social) => social.href)
+
+/**
+ * As mesmas redes, agrupadas por dono — é assim que a seção de contato lista.
+ * Sem o agrupamento, os quatro ícones ficam em fileira única com dois GitHub e
+ * dois Instagram idênticos, e não há como saber de quem é cada um antes de
+ * clicar. Uma rede sem `person` (um perfil da LZdev, quando existir) cai num
+ * grupo sem rótulo e continua aparecendo.
+ */
+export const socialsByPerson = activeSocials.reduce((groups, social) => {
+  const person = social.person || ''
+  const group = groups.find((item) => item.person === person)
+  if (group) group.links.push(social)
+  else groups.push({ person, links: [social] })
+  return groups
+}, [])
 
 /* -------------------------------------------------------------------------- */
 /*  NAVEGAÇÃO                                                                 */
@@ -85,7 +150,7 @@ export const hero = {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  2 · PROJETOS — TODO: substituir as URLs pelos links reais                 */
+/*  2 · PROJETOS — FALTA: URLs reais e screenshots                            */
 /* -------------------------------------------------------------------------- */
 export const projects = {
   eyebrow: 'Projetos em destaque',
@@ -102,34 +167,34 @@ export const projects = {
     {
       name: 'Sprint Max',
       category: 'Sistema de gestão',
-      image: '', // TODO: screenshot real
+      image: '', // FALTA: screenshot real
       text: 'Sistema completo de gestão de produtos, usuários e vendas. Substituiu o controle por planilha por um painel único, com permissões por perfil e relatórios que fecham sozinhos.',
       stack: ['PHP', 'Laravel', 'MySQL', 'Bootstrap'],
-      url: '#', // TODO: link real
+      url: '#', // FALTA: link real
     },
     {
       name: 'Kimori Korean Food',
       category: 'Website',
-      image: '', // TODO
+      image: '', // FALTA: screenshot real
       text: 'Presença digital para restaurante de comida coreana: cardápio navegável, identidade marcante e caminho curto até o pedido pelo WhatsApp.',
       stack: ['HTML', 'CSS', 'JavaScript', 'Tailwind CSS'],
-      url: '#', // TODO
+      url: '#', // FALTA: link real
     },
     {
       name: 'Horário de Brasília',
       category: 'Ferramenta online',
-      image: '', // TODO
+      image: '', // FALTA: screenshot real
       text: 'Ferramenta pública de consulta ao horário oficial de Brasília. Interface direta, precisa e leve o bastante para abrir instantaneamente em qualquer conexão.',
       stack: ['JavaScript', 'HTML', 'CSS'],
-      url: '#', // TODO
+      url: '#', // FALTA: link real
     },
     {
       name: 'Portfólio',
       category: 'Site pessoal',
-      image: '', // TODO
+      image: '', // FALTA: screenshot real
       text: 'Site pessoal moderno com foco em experiência e desempenho: animações refinadas, navegação fluida e apresentação clara de projetos e competências.',
       stack: ['React', 'Tailwind CSS', 'JavaScript'],
-      url: '#', // TODO
+      url: '#', // FALTA: link real
     },
   ],
   cta: 'Visualizar projeto',
@@ -364,8 +429,15 @@ export const process = {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  7 · EQUIPE — TODO: substituir usuários/números reais                      */
+/*  7 · EQUIPE                                                                */
 /* -------------------------------------------------------------------------- */
+
+/**
+ * A stack dos dois (os dois são full stack e dominam o mesmo conjunto) NÃO é
+ * listada aqui de propósito: quem apresenta tecnologia no site é a seção
+ * Ferramentas, uma vez e com descrição. No cartão da pessoa a lista virava
+ * repetição — o que importa aqui é quem é, o que faz e como falar com ela.
+ */
 export const team = {
   eyebrow: 'Quem constrói',
   title: 'Você fala direto com quem escreve o código',
@@ -375,36 +447,44 @@ export const team = {
   /**
    * `photo`: caminho de uma imagem em /public (ex.: '/equipe/enzo.jpg').
    * Vazio → o card usa o avatar de iniciais, mantendo a identidade visual.
-   * `tag`: selo sobre o retrato. `focus`: a linha de especialidade destacada,
-   * o que a pessoa resolve — vem antes da bio no card.
+   * `tag`: selo sobre o retrato. `focus`: a linha destacada antes da bio.
+   * `age`: idade em anos, exibida ao lado da função.
+   *
+   * As duas descrições dizem a mesma coisa por baixo, com palavras diferentes:
+   * função e stack informadas são idênticas para os dois, e diferenciar aqui
+   * exigiria atribuir a cada um uma especialidade que ninguém informou.
    */
   members: [
     {
       name: 'Enzo Pontes do Nascimento',
       role: 'Desenvolvedor Full Stack',
+      age: 15,
       initials: 'EN',
       tag: 'Full stack',
-      photo: '', // TODO: foto real
-      focus: 'Sistemas administrativos e dashboards',
-      bio: 'Especializado em aplicações web modernas, sistemas administrativos e dashboards. Foca em desempenho, organização e uma experiência de uso que dispensa manual.',
+      photo: '', // FALTA: foto real
+      focus: 'Full stack: da interface ao banco de dados',
+      bio: 'Interface em React, TypeScript e JavaScript. Regra de negócio em PHP, Laravel e Node.js. Dados em MySQL.',
       links: {
-        github: 'https://github.com/enzonascimento', // TODO
-        whatsapp: '5544999999999', // TODO
-        linkedin: '', // TODO: preencher para exibir o botão
+        github: enzo.github,
+        instagram: enzo.instagram,
+        whatsapp: enzo.whatsapp,
+        linkedin: enzo.linkedin,
       },
     },
     {
       name: 'Luis Ricardo Soares',
       role: 'Desenvolvedor Full Stack',
+      age: 16,
       initials: 'LS',
       tag: 'Full stack',
-      photo: '', // TODO: foto real
-      focus: 'APIs, integrações e arquitetura',
-      bio: 'Atua em sistemas web, APIs e integrações, com foco em arquitetura bem estruturada e código limpo. Cuida da qualidade técnica do back-end à interface.',
+      photo: '', // FALTA: foto real
+      focus: 'Full stack: da interface ao banco de dados',
+      bio: 'React, TypeScript e JavaScript na interface. PHP, Laravel e Node.js na regra de negócio. MySQL no banco.',
       links: {
-        github: 'https://github.com/luisricardo', // TODO
-        whatsapp: '5544999999999', // TODO
-        linkedin: '', // TODO
+        github: luis.github,
+        instagram: luis.instagram,
+        whatsapp: luis.whatsapp,
+        linkedin: luis.linkedin,
       },
     },
   ],

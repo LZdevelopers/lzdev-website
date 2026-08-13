@@ -1,4 +1,4 @@
-import { activeSocials, contact, footer, whatsappLink } from '../../data/site'
+import { activeSocials, contact, footer, primaryWhatsapp, whatsappLink } from '../../data/site'
 import { brandColors, Icon } from '../primitives/Icon'
 import { Logo } from './Logo'
 
@@ -7,7 +7,9 @@ const YEAR = new Date().getFullYear()
 const SOCIALS = [
   {
     icon: 'whatsapp',
-    label: 'WhatsApp',
+    // Canal principal. O rótulo nomeia quem atende, como nas outras redes —
+    // os dois números ficam lado a lado na seção de contato.
+    label: `WhatsApp · ${primaryWhatsapp.person}`,
     href: whatsappLink('Olá! Vim pelo site da LZdev e gostaria de conversar sobre um projeto.'),
     external: true,
   },
@@ -80,6 +82,9 @@ export function Footer() {
                   target={social.external ? '_blank' : undefined}
                   rel={social.external ? 'noopener noreferrer' : undefined}
                   aria-label={social.label}
+                  // Com os perfis pessoais dos dois, há dois GitHub e dois
+                  // Instagram na fileira: o title diz de quem é cada um.
+                  title={social.label}
                   style={{ '--net': brandColors[social.icon] || '#ffffff' }}
                   className="grid size-9 place-items-center rounded-lg border border-white/10 bg-white/[0.03] text-muted transition-[border-color,color,background-color,transform] duration-300 hover:-translate-y-0.5 hover:border-[color-mix(in_oklab,var(--net)_50%,transparent)] hover:bg-[color-mix(in_oklab,var(--net)_14%,transparent)] hover:text-ink"
                 >

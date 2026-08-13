@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { activeSocials, contact, contactSection, whatsappLink } from '../../data/site'
+import { contact, contactSection, socialsByPerson, whatsappLink } from '../../data/site'
 import { Button } from '../primitives/Button'
 import { brandColors, Icon } from '../primitives/Icon'
 import { Reveal } from '../primitives/Reveal'
@@ -344,14 +344,23 @@ export function Contact() {
             </p>
 
             <div className="mt-4 flex flex-col gap-2">
-              <ChannelButton
-                icon="whatsapp"
-                label="WhatsApp"
-                value={contact.whatsapp.display}
-                href={whatsappLink('Olá! Vim pelo site da LZdev e gostaria de conversar sobre um projeto.')}
-                external
-                tone={brandColors.whatsapp}
-              />
+              {/* Um botão por desenvolvedor: o rótulo diz com quem a conversa
+                  abre, então dois WhatsApp na mesma coluna não viram escolha às
+                  cegas. A mensagem já chega personalizada. */}
+              {contact.whatsapps.map((channel) => (
+                <ChannelButton
+                  key={channel.number}
+                  icon="whatsapp"
+                  label={`WhatsApp · ${channel.person}`}
+                  value={channel.display}
+                  href={whatsappLink(
+                    `Olá, ${channel.person}! Vim pelo site da LZdev e gostaria de conversar sobre um projeto.`,
+                    channel.number
+                  )}
+                  external
+                  tone={brandColors.whatsapp}
+                />
+              ))}
               <ChannelButton
                 icon="mail"
                 label="E-mail"
@@ -361,25 +370,41 @@ export function Contact() {
               />
             </div>
 
-            {/* Redes sociais — só as que têm link preenchido em data/site.js */}
-            {activeSocials.length ? (
+            {/* Redes sociais — só as que têm link preenchido em data/site.js.
+                Uma linha por pessoa: numa fileira única, os dois GitHub e os
+                dois Instagram são ícones idênticos e ninguém sabe de quem é cada
+                um antes de clicar. O nome à esquerda resolve isso sem tirar a
+                compactação do cartão. */}
+            {socialsByPerson.length ? (
               <div className="mt-5 border-t border-white/8 pt-4">
                 <p className="text-[0.65rem] font-semibold tracking-[0.16em] text-faint uppercase">
                   {contactSection.direct.socialsLabel}
                 </p>
-                <ul className="mt-3 flex flex-wrap gap-2">
-                  {activeSocials.map((social) => (
-                    <li key={social.label}>
-                      <a
-                        href={social.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={social.label}
-                        style={{ '--net': brandColors[social.icon] || '#ffffff' }}
-                        className="grid size-10 place-items-center rounded-lg border border-white/10 bg-white/[0.03] transition-[border-color,background-color,transform] duration-300 hover:-translate-y-0.5 hover:border-[color-mix(in_oklab,var(--net)_50%,transparent)] hover:bg-[color-mix(in_oklab,var(--net)_14%,transparent)]"
-                      >
-                        <Icon name={social.icon} size={17} colored />
-                      </a>
+                <ul className="mt-3 flex flex-col gap-2">
+                  {socialsByPerson.map((group) => (
+                    <li key={group.person} className="flex items-center gap-3">
+                      {group.person ? (
+                        <span className="w-11 shrink-0 text-[0.8rem] font-semibold text-ink">
+                          {group.person}
+                        </span>
+                      ) : null}
+                      <ul className="flex flex-wrap gap-2">
+                        {group.links.map((social) => (
+                          <li key={social.label}>
+                            <a
+                              href={social.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              aria-label={social.label}
+                              title={social.label}
+                              style={{ '--net': brandColors[social.icon] || '#ffffff' }}
+                              className="grid size-9 place-items-center rounded-lg border border-white/10 bg-white/[0.03] transition-[border-color,background-color,transform] duration-300 hover:-translate-y-0.5 hover:border-[color-mix(in_oklab,var(--net)_50%,transparent)] hover:bg-[color-mix(in_oklab,var(--net)_14%,transparent)]"
+                            >
+                              <Icon name={social.icon} size={16} colored />
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
                     </li>
                   ))}
                 </ul>

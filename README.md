@@ -63,20 +63,32 @@ monta o PNG à mão sobre o `zlib` do Node.
 projetos e FAQ. Alterar copy nunca exige tocar em JSX. As seções estão numeradas
 no arquivo na mesma ordem em que aparecem na página.
 
+### Contatos do time
+
+E-mail, WhatsApp, GitHub e Instagram dos dois desenvolvedores saem dos objetos
+`enzo` e `luis`, no topo de `src/data/site.js`. **Trocar o link ali atualiza o
+site inteiro** — cartão da pessoa na Equipe, redes do rodapé e da seção de
+contato, canais diretos e botão flutuante — porque nenhum desses lugares repete
+a URL.
+
+O primeiro item de `contact.whatsapps` é o canal principal: é dele que saem o
+botão flutuante, o rodapé e o envio do formulário, que precisam de um destino
+só. Os dois números aparecem lado a lado nos canais diretos.
+
 ### ⚠️ Antes de publicar
 
-Os placeholders marcados com `// TODO` em `src/data/site.js` precisam ser
-substituídos pelos dados reais:
+O que ainda está marcado com `// FALTA` em `src/data/site.js`:
 
 | O quê | Onde |
 |---|---|
-| E-mail comercial | `contact.email` |
-| WhatsApp da empresa | `contact.whatsapp.number` e `.display` |
-| Redes sociais da empresa | `contact.socials[].href` |
-| GitHub, WhatsApp e LinkedIn de cada dev | `team.members[].links` |
-| URLs dos 4 projetos | `projects.items[].url` |
+| URLs dos 4 projetos (hoje `#`) | `projects.items[].url` |
 | Imagens dos projetos | `projects.items[].image` |
 | Fotos da equipe | `team.members[].photo` |
+| LinkedIn de cada dev | `enzo.linkedin` / `luis.linkedin` |
+| Perfis próprios da LZdev (hoje o site usa os pessoais) | `contact.socials` |
+
+Sem confirmação de ninguém, também seguem no ar os números de `stats`
+(30+ projetos, 20+ clientes, 100% de satisfação) e os valores do FAQ.
 
 Links vazios não geram botão morto: uma rede em `contact.socials` só aparece com
 `href` preenchido, e o mesmo vale para `links.linkedin` no card do dev.
