@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 440" width="800" height="440" fill="none">
+  <!-- LZdev · Responsividade completa — o mesmo layout em três larguras, com os
+       pontos de quebra marcados. Acento: azul categórico (cat-1). -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#141821" />
+      <stop offset="1" stop-color="#05060a" />
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0v40" stroke="#ffffff" stroke-opacity=".05" />
+    </pattern>
+    <radialGradient id="glow" cx=".5" cy="0" r=".85">
+      <stop offset="0" stop-color="#60a5fa" stop-opacity=".2" />
+      <stop offset="1" stop-color="#60a5fa" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="vig" cx=".5" cy=".42" r=".72">
+      <stop offset=".5" stop-color="#05060a" stop-opacity="0" />
+      <stop offset="1" stop-color="#05060a" stop-opacity=".7" />
+    </radialGradient>
+  </defs>
+
+  <rect width="800" height="440" fill="url(#bg)" />
+  <rect width="800" height="440" fill="url(#grid)" />
+  <rect width="800" height="440" fill="url(#glow)" />
+
+  <!-- pontos de quebra -->
+  <g stroke="#60a5fa" stroke-opacity=".14" stroke-dasharray="5 8">
+    <path d="M434 96v272M602 96v272" />
+  </g>
+
+  <!-- monitor -->
+  <rect x="120" y="110" width="300" height="196" rx="12" fill="#0a0c11" stroke="#ffffff" stroke-opacity=".16" />
+  <rect x="132" y="122" width="276" height="160" rx="8" fill="#ffffff" fill-opacity=".03" />
+  <rect x="144" y="134" width="252" height="14" rx="4" fill="#ffffff" fill-opacity=".1" />
+  <rect x="144" y="158" width="252" height="52" rx="6" fill="#60a5fa" fill-opacity=".12" stroke="#60a5fa" stroke-opacity=".28" />
+  <g fill="#ffffff" fill-opacity=".06">
+    <rect x="144" y="220" width="76" height="48" rx="6" />
+    <rect x="232" y="220" width="76" height="48" rx="6" />
+    <rect x="320" y="220" width="76" height="48" rx="6" />
+  </g>
+  <rect x="252" y="306" width="36" height="34" fill="#ffffff" fill-opacity=".1" />
+  <rect x="216" y="340" width="108" height="10" rx="5" fill="#ffffff" fill-opacity=".14" />
+
+  <!-- tablet -->
+  <rect x="448" y="170" width="140" height="180" rx="14" fill="#0a0c11" stroke="#ffffff" stroke-opacity=".16" />
+  <rect x="458" y="182" width="120" height="156" rx="8" fill="#ffffff" fill-opacity=".03" />
+  <rect x="468" y="192" width="100" height="11" rx="4" fill="#ffffff" fill-opacity=".1" />
+  <rect x="468" y="211" width="100" height="44" rx="6" fill="#60a5fa" fill-opacity=".12" stroke="#60a5fa" stroke-opacity=".28" />
+  <g fill="#ffffff" fill-opacity=".06">
+    <rect x="468" y="265" width="46" height="34" rx="6" />
+    <rect x="522" y="265" width="46" height="34" rx="6" />
+    <rect x="468" y="309" width="100" height="20" rx="6" />
+  </g>
+
+  <!-- celular -->
+  <rect x="616" y="210" width="96" height="140" rx="16" fill="#0a0c11" stroke="#ffffff" stroke-opacity=".16" />
+  <rect x="624" y="224" width="80" height="114" rx="10" fill="#ffffff" fill-opacity=".03" />
+  <rect x="652" y="216" width="24" height="4" rx="2" fill="#ffffff" fill-opacity=".2" />
+  <rect x="632" y="234" width="64" height="9" rx="4" fill="#ffffff" fill-opacity=".1" />
+  <rect x="632" y="250" width="64" height="34" rx="6" fill="#60a5fa" fill-opacity=".12" stroke="#60a5fa" stroke-opacity=".28" />
+  <g fill="#ffffff" fill-opacity=".06">
+    <rect x="632" y="292" width="64" height="20" rx="5" />
+    <rect x="632" y="318" width="44" height="12" rx="5" />
+  </g>
+
+  <!-- eixo de larguras -->
+  <g stroke="#60a5fa" stroke-opacity=".5" stroke-linecap="round">
+    <path d="M120 386h592" />
+    <path d="M120 378v16M712 378v16" />
+  </g>
+  <g fill="#60a5fa" fill-opacity=".85">
+    <path d="M434 379l7 7-7 7-7-7z" />
+    <path d="M602 379l7 7-7 7-7-7z" />
+  </g>
+
+  <rect width="800" height="440" fill="url(#vig)" />
+</svg>

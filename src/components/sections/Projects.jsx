@@ -18,9 +18,10 @@ import { Section, SectionHeader } from '../primitives/Section'
  */
 
 /**
- * Rótulo da stack → ícone da tecnologia. Só o que temos geometria para
- * desenhar; o resto (Bootstrap, Tailwind…) vira um chip neutro, que continua
- * legível — o nome escrito é a informação, o ícone é o reforço.
+ * Rótulo da stack → ícone da tecnologia. Toda tecnologia usada nos projetos tem
+ * geometria e cor oficial em Icon.jsx, então nenhum chip fica sem ícone. Um
+ * rótulo fora deste mapa continua funcionando: vira um chip neutro, só sem o
+ * reforço visual — o nome escrito é que carrega a informação.
  */
 const STACK_ICONS = {
   HTML: 'html',
@@ -33,6 +34,8 @@ const STACK_ICONS = {
   MySQL: 'mysql',
   Figma: 'figma',
   Git: 'git',
+  Bootstrap: 'bootstrap',
+  'Tailwind CSS': 'tailwind',
 }
 
 /** Moldura da captura. Mostra a imagem real quando existe; senão, espera. */

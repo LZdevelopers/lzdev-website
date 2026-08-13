@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 440" width="800" height="440" fill="none">
+  <!-- LZdev · Suporte contínuo — conversa respondida e acompanhamento que segue
+       depois da entrega. Acento: violeta categórico (cat-3). -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#141821" />
+      <stop offset="1" stop-color="#05060a" />
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0v40" stroke="#ffffff" stroke-opacity=".05" />
+    </pattern>
+    <radialGradient id="glow" cx=".5" cy="0" r=".85">
+      <stop offset="0" stop-color="#a78bfa" stop-opacity=".2" />
+      <stop offset="1" stop-color="#a78bfa" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="vig" cx=".5" cy=".42" r=".72">
+      <stop offset=".5" stop-color="#05060a" stop-opacity="0" />
+      <stop offset="1" stop-color="#05060a" stop-opacity=".7" />
+    </radialGradient>
+  </defs>
+
+  <rect width="800" height="440" fill="url(#bg)" />
+  <rect width="800" height="440" fill="url(#grid)" />
+  <rect width="800" height="440" fill="url(#glow)" />
+
+  <!-- pergunta do cliente -->
+  <path d="M162 196v26l26-26z" fill="#ffffff" fill-opacity=".05" />
+  <rect x="140" y="104" width="282" height="92" rx="18" fill="#ffffff" fill-opacity=".05" stroke="#ffffff" stroke-opacity=".1" />
+  <g fill="#ffffff">
+    <rect x="166" y="128" width="192" height="10" rx="5" fill-opacity=".22" />
+    <rect x="166" y="148" width="140" height="8" rx="4" fill-opacity=".12" />
+    <rect x="166" y="166" width="172" height="8" rx="4" fill-opacity=".12" />
+  </g>
+
+  <!-- resposta da LZdev -->
+  <path d="M634 322v26l-26-26z" fill="#a78bfa" fill-opacity=".12" />
+  <rect x="374" y="226" width="282" height="96" rx="18" fill="#a78bfa" fill-opacity=".12" stroke="#a78bfa" stroke-opacity=".32" />
+  <g>
+    <rect x="400" y="250" width="200" height="10" rx="5" fill="#ffffff" fill-opacity=".4" />
+    <rect x="400" y="270" width="158" height="8" rx="4" fill="#a78bfa" fill-opacity=".5" />
+    <rect x="400" y="288" width="188" height="8" rx="4" fill="#ffffff" fill-opacity=".14" />
+  </g>
+
+  <!-- quem responde, disponível -->
+  <circle cx="694" cy="240" r="24" fill="#a78bfa" fill-opacity=".16" stroke="#a78bfa" stroke-opacity=".35" />
+  <circle cx="694" cy="233" r="7.5" fill="#a78bfa" fill-opacity=".6" />
+  <path d="M679.5 256a15 13 0 0 1 29 0z" fill="#a78bfa" fill-opacity=".6" />
+  <circle cx="712" cy="257" r="7" fill="#05060a" />
+  <circle cx="712" cy="257" r="5" fill="#34d399" />
+
+  <!-- linha do tempo: a relação continua depois do "no ar" -->
+  <path d="M150 390h500" stroke="#ffffff" stroke-opacity=".1" stroke-width="2" />
+  <path d="M150 390h375" stroke="#a78bfa" stroke-opacity=".55" stroke-width="2" />
+  <g fill="#a78bfa">
+    <circle cx="150" cy="390" r="7" />
+    <circle cx="275" cy="390" r="7" />
+    <circle cx="400" cy="390" r="7" />
+    <circle cx="525" cy="390" r="7" />
+  </g>
+  <circle cx="650" cy="390" r="7" fill="#05060a" stroke="#ffffff" stroke-opacity=".28" stroke-width="2" />
+
+  <rect width="800" height="440" fill="url(#vig)" />
+</svg>

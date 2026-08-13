@@ -120,7 +120,7 @@ export function Team() {
     <Section id="equipe">
       <SectionHeader eyebrow={team.eyebrow} title={team.title} subtitle={team.subtitle} />
 
-      <div className="mt-14 grid gap-5 lg:grid-cols-2">
+      <div className="mt-10 grid gap-5 sm:mt-12 lg:grid-cols-2">
         {team.members.map((member, i) => (
           <MemberCard key={member.name} member={member} delay={i * 120} />
         ))}

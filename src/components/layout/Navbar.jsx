@@ -1,14 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
 import { navLinks } from '../../data/site'
-import { usePageProgress } from '../../hooks/usePageProgress'
 import { useScrolled } from '../../hooks/useScrolled'
 import { Button } from '../primitives/Button'
 import { Icon } from '../primitives/Icon'
 import { Logo } from './Logo'
 
+/**
+ * Navbar fixa. Ao rolar, ela ganha fundo com blur, uma borda de 1px e uma sombra
+ * curta — nada mais. A barra de progresso de leitura que crescia sob a borda foi
+ * removida: numa landing page de dez seções ela virava um elemento em movimento
+ * permanente no topo da tela, competindo com o conteúdo sem informar nada que a
+ * própria rolagem já não diga.
+ */
 export function Navbar() {
   const scrolled = useScrolled(20)
-  const progress = usePageProgress()
   const [open, setOpen] = useState(false)
   const panelRef = useRef(null)
   const triggerRef = useRef(null)
@@ -103,17 +108,6 @@ export function Navbar() {
           </button>
         </div>
       </nav>
-
-      {/* Barra de progresso da leitura. Só aparece depois que a navbar ganha
-          fundo, senão flutuaria sozinha sobre o hero. `scaleX` a partir da
-          esquerda: anima no compositor, sem recalcular layout a cada quadro. */}
-      <div
-        className={`pointer-events-none absolute inset-x-0 bottom-0 h-px origin-left bg-gradient-to-r from-cat-1 via-cat-2 to-cat-3 transition-opacity duration-500 ${
-          scrolled ? 'opacity-100' : 'opacity-0'
-        }`}
-        style={{ transform: `scaleX(${progress})` }}
-        aria-hidden="true"
-      />
 
       {/* Drawer — mobile/tablet */}
       <div

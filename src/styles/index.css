@@ -328,18 +328,14 @@
   padding-right: 2.75rem;
 }
 
-/* Preenchimento do conector da timeline do processo. O eixo muda com o
-   breakpoint (vertical no mobile, horizontal a partir de lg), então mora aqui
-   em vez de num transform inline. --fill (0→1) vem do progresso de rolagem. */
+/* Preenchimento do conector da timeline do processo, que agora é horizontal em
+   qualquer largura (a trilha rola de lado em vez de virar coluna no celular).
+   Mora aqui, e não num transform inline, porque `scaleX` esticaria também a
+   espessura do traço de 1px. --fill (0→1) vem do progresso de rolagem. */
 @utility timeline-fill {
-  width: 100%;
-  height: calc(var(--fill, 0) * 100%);
-  transition: height 0.2s linear;
-  @media (min-width: 1024px) {
-    width: calc(var(--fill, 0) * 100%);
-    height: 100%;
-    transition: width 0.2s linear;
-  }
+  width: calc(var(--fill, 0) * 100%);
+  height: 100%;
+  transition: width 0.2s linear;
 }
 
 @utility no-scrollbar {

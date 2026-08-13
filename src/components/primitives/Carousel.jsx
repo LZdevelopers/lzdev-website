@@ -151,7 +151,12 @@ export function Carousel({ items, label, renderSlide, slideKey, className = '' }
   )
 }
 
-function CarouselButton({ direction, disabled, onClick, label }) {
+/**
+ * Seta de navegação. Exportada porque a timeline do processo (Process.jsx)
+ * também é uma trilha rolável na horizontal e usa os MESMOS controles — dois
+ * botões com estilos duplicados divergiriam no primeiro ajuste.
+ */
+export function CarouselButton({ direction, disabled, onClick, label }) {
   return (
     <button
       type="button"

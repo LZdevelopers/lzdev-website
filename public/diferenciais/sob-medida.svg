@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 440" width="800" height="440" fill="none">
+  <!-- LZdev · Desenvolvimento sob medida — planta técnica de uma interface sendo
+       medida. Acento: azul categórico (cat-1). -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#141821" />
+      <stop offset="1" stop-color="#05060a" />
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0v40" stroke="#ffffff" stroke-opacity=".05" />
+    </pattern>
+    <radialGradient id="glow" cx=".5" cy="0" r=".85">
+      <stop offset="0" stop-color="#60a5fa" stop-opacity=".2" />
+      <stop offset="1" stop-color="#60a5fa" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="vig" cx=".5" cy=".42" r=".72">
+      <stop offset=".5" stop-color="#05060a" stop-opacity="0" />
+      <stop offset="1" stop-color="#05060a" stop-opacity=".7" />
+    </radialGradient>
+  </defs>
+
+  <rect width="800" height="440" fill="url(#bg)" />
+  <rect width="800" height="440" fill="url(#grid)" />
+  <rect width="800" height="440" fill="url(#glow)" />
+
+  <!-- eixos de construção -->
+  <g stroke="#60a5fa" stroke-opacity=".14" stroke-dasharray="6 9">
+    <path d="M400 46V400" />
+    <path d="M64 225h672" />
+  </g>
+
+  <!-- painel projetado -->
+  <rect x="210" y="110" width="380" height="230" rx="14" fill="#0a0c11" stroke="#ffffff" stroke-opacity=".14" />
+  <path d="M210 146h380" stroke="#ffffff" stroke-opacity=".08" />
+  <g fill="#ffffff" fill-opacity=".18">
+    <circle cx="232" cy="128" r="3.5" />
+    <circle cx="246" cy="128" r="3.5" />
+    <circle cx="260" cy="128" r="3.5" />
+  </g>
+  <rect x="226" y="162" width="70" height="160" rx="8" fill="#ffffff" fill-opacity=".04" />
+  <g fill="#ffffff" fill-opacity=".12">
+    <rect x="238" y="176" width="46" height="7" rx="3.5" />
+    <rect x="238" y="194" width="34" height="7" rx="3.5" />
+    <rect x="238" y="212" width="42" height="7" rx="3.5" />
+  </g>
+  <rect x="310" y="162" width="260" height="54" rx="10" fill="#60a5fa" fill-opacity=".1" stroke="#60a5fa" stroke-opacity=".35" />
+  <g fill="#ffffff" fill-opacity=".11">
+    <rect x="310" y="234" width="190" height="8" rx="4" />
+    <rect x="310" y="252" width="150" height="8" rx="4" />
+    <rect x="310" y="270" width="212" height="8" rx="4" />
+  </g>
+  <rect x="310" y="294" width="98" height="26" rx="8" fill="#60a5fa" fill-opacity=".85" />
+
+  <!-- alças de ajuste nos cantos: nada aqui é tamanho padrão -->
+  <g fill="#05060a" stroke="#60a5fa" stroke-opacity=".85">
+    <rect x="205.5" y="105.5" width="9" height="9" rx="2" />
+    <rect x="585.5" y="105.5" width="9" height="9" rx="2" />
+    <rect x="205.5" y="335.5" width="9" height="9" rx="2" />
+    <rect x="585.5" y="335.5" width="9" height="9" rx="2" />
+  </g>
+
+  <!-- cota horizontal -->
+  <g stroke="#60a5fa" stroke-opacity=".6" stroke-linecap="round">
+    <path d="M210 78h164M426 78h164" />
+    <path d="M210 68v20M590 68v20" />
+  </g>
+  <path d="M400 71l7 7-7 7-7-7z" fill="#60a5fa" fill-opacity=".8" />
+
+  <!-- cota vertical -->
+  <g stroke="#60a5fa" stroke-opacity=".6" stroke-linecap="round">
+    <path d="M178 110v92M178 248v92" />
+    <path d="M168 110h20M168 340h20" />
+  </g>
+  <path d="M178 218l7 7-7 7-7-7z" fill="#60a5fa" fill-opacity=".8" />
+
+  <!-- régua -->
+  <rect x="210" y="366" width="380" height="26" rx="6" fill="#ffffff" fill-opacity=".04" stroke="#ffffff" stroke-opacity=".08" />
+  <g stroke="#ffffff" stroke-opacity=".22" stroke-linecap="round">
+    <path d="M226 372v10M246 372v14M266 372v10M286 372v14M306 372v10M326 372v14M346 372v10M366 372v14M386 372v10M426 372v10M446 372v14M466 372v10M486 372v14M506 372v10M526 372v14M546 372v10M566 372v14" />
+  </g>
+  <path d="M406 370v18" stroke="#60a5fa" stroke-opacity=".9" stroke-width="2" stroke-linecap="round" />
+
+  <rect width="800" height="440" fill="url(#vig)" />
+</svg>

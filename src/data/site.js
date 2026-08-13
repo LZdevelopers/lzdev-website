@@ -146,8 +146,9 @@ export const tools = {
 
   /**
    * Agrupado por camada em vez de uma lista solta: mostra que a stack cobre o
-   * projeto de ponta a ponta, e não que sabemos dez nomes.
-   * Os totais por grupo (4 · 4 · 2) fecham as colunas em todos os breakpoints.
+   * projeto de ponta a ponta, e não que sabemos catorze nomes.
+   * Os totais por grupo (7 · 4 · 3) fecham as linhas do grid de 4 colunas com a
+   * última linha centralizada, sem buraco à direita em nenhum breakpoint.
    */
   groups: [
     {
@@ -157,7 +158,10 @@ export const tools = {
         { name: 'HTML', icon: 'html', text: 'Marcação semântica: a base do SEO e da acessibilidade.' },
         { name: 'CSS', icon: 'css', text: 'Layouts fluidos e animações leves, sem peso extra.' },
         { name: 'JavaScript', icon: 'javascript', text: 'A linguagem que dá vida à interface no navegador.' },
+        { name: 'TypeScript', icon: 'typescript', text: 'Tipagem que revela o erro antes de ele chegar em produção.' },
         { name: 'React', icon: 'react', text: 'Interfaces componentizadas, rápidas e fáceis de evoluir.' },
+        { name: 'Tailwind CSS', icon: 'tailwind', text: 'Design consistente e CSS que não cresce sem controle.' },
+        { name: 'Bootstrap', icon: 'bootstrap', text: 'Base responsiva madura para telas administrativas.' },
       ],
     },
     {
@@ -171,15 +175,15 @@ export const tools = {
       ],
     },
     {
-      label: 'Design e versionamento',
+      label: 'Design, build e versionamento',
       caption: 'Como o projeto nasce e fica rastreável',
       items: [
         { name: 'Figma', icon: 'figma', text: 'Protótipo navegável aprovado antes da primeira linha de código.' },
+        { name: 'Composer', icon: 'composer', text: 'Dependências PHP com versão travada: mesmo ambiente em todo lugar.' },
         { name: 'Git', icon: 'git', text: 'Histórico completo: qualquer mudança é reversível.' },
       ],
     },
   ],
-  note: 'Precisa de outra tecnologia? Avaliamos o cenário e escolhemos a que serve ao seu caso — não a que estamos acostumados a usar.',
 }
 
 /* -------------------------------------------------------------------------- */
@@ -237,40 +241,57 @@ export const why = {
   title: 'Feito certo agora custa menos que refeito depois',
   subtitle:
     'Boa parte do que recebemos para manter foi construído às pressas por alguém que não pensou no ano seguinte. Nosso padrão de engenharia existe para você nunca precisar recomeçar.',
+
+  /**
+   * `image`: ilustração do diferencial, em /public/diferenciais/*.svg.
+   * São vetores desenhados para ESTE site — mesmo grafite do tema, mesma malha
+   * do fundo e o acento categórico na ordem em que o card aparece (azul, ciano,
+   * violeta, ciclando). Foto de banco de imagem entraria com outra iluminação e
+   * outra paleta; aqui a imagem mostra a própria promessa do card (a régua de
+   * medida, o medidor no verde, o editor indentado) em vez de decorar.
+   * Vazio → o card volta ao painel só de ícone, sem imagem quebrada.
+   */
   items: [
     {
       icon: 'ruler',
       title: 'Desenvolvimento sob medida',
+      image: '/diferenciais/sob-medida.svg',
       text: 'Nada de template adaptado. Mapeamos como a sua operação funciona e construímos as regras e os fluxos em cima disso.',
     },
     {
       icon: 'gauge',
       title: 'Performance e velocidade',
+      image: '/diferenciais/performance.svg',
       text: 'Otimização de carga, consultas e assets. Página lenta perde cliente antes do primeiro clique — e posição no Google.',
     },
     {
       icon: 'palette',
       title: 'Design moderno',
+      image: '/diferenciais/design.svg',
       text: 'Interface limpa, hierarquia clara e navegação óbvia. Bonito de ver e, mais importante, fácil de usar todo dia.',
     },
     {
       icon: 'search',
       title: 'SEO otimizado',
+      image: '/diferenciais/seo.svg',
       text: 'Semântica correta, dados estruturados e Core Web Vitals no verde desde a primeira entrega — não como ajuste posterior.',
     },
     {
       icon: 'code',
       title: 'Código limpo',
+      image: '/diferenciais/codigo-limpo.svg',
       text: 'Legível, padronizado e documentado. Qualquer desenvolvedor assume o projeto depois sem precisar reescrever tudo.',
     },
     {
       icon: 'lifebuoy',
       title: 'Suporte contínuo',
+      image: '/diferenciais/suporte.svg',
       text: 'Entrega não é despedida. Acompanhamos o uso real, corrigimos o que aparecer e evoluímos o produto com o negócio.',
     },
     {
       icon: 'devices',
       title: 'Responsividade completa',
+      image: '/diferenciais/responsividade.svg',
       text: 'Testado de verdade em celular, tablet, notebook e telas grandes. Nada quebra, nada desalinha, nada fica escondido.',
     },
   ],

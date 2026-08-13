@@ -125,18 +125,19 @@ export function HeroDashboard() {
                   aria-hidden="true"
                 >
                   <defs>
-                    {/* O gráfico é o único elemento de DADO do painel, e é onde
-                        a cor volta: azul → ciano, a mesma dupla do trilho do
-                        processo. Sem ela a curva se perdia entre os cinzas do
-                        mockup. */}
+                    {/* Curva em escala neutra, como o resto do painel. O que
+                        destaca a linha não é matiz, é LUMINOSIDADE: ela abre
+                        num cinza médio e chega no branco pleno à direita, então
+                        a leitura de crescimento continua de pé sem introduzir
+                        uma cor que a página não usa em nenhum outro lugar. */}
                     <linearGradient id="hero-chart-area" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#60a5fa" stopOpacity="0.32" />
-                      <stop offset="100%" stopColor="#60a5fa" stopOpacity="0" />
+                      <stop offset="0%" stopColor="#ffffff" stopOpacity="0.14" />
+                      <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
                     </linearGradient>
                     <linearGradient id="hero-chart-stroke" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%" stopColor="#3b82f6" />
-                      <stop offset="55%" stopColor="#60a5fa" />
-                      <stop offset="100%" stopColor="#22d3ee" />
+                      <stop offset="0%" stopColor="#6b7280" />
+                      <stop offset="55%" stopColor="#b6bcc6" />
+                      <stop offset="100%" stopColor="#ffffff" />
                     </linearGradient>
                   </defs>
 
@@ -162,7 +163,7 @@ export function HeroDashboard() {
                     strokeLinecap="round"
                     vectorEffect="non-scaling-stroke"
                   />
-                  <circle cx="176" cy="42" r="3" fill="#a5f3fc" vectorEffect="non-scaling-stroke" />
+                  <circle cx="176" cy="42" r="3" fill="#ffffff" vectorEffect="non-scaling-stroke" />
                 </svg>
 
                 <div className="hero-chart-x" aria-hidden="true">

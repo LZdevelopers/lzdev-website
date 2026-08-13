@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 440" width="800" height="440" fill="none">
+  <!-- LZdev · Design moderno — escala tipográfica, telas em camadas e paleta.
+       Acento: violeta categórico (cat-3). -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#141821" />
+      <stop offset="1" stop-color="#05060a" />
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0v40" stroke="#ffffff" stroke-opacity=".05" />
+    </pattern>
+    <radialGradient id="glow" cx=".5" cy="0" r=".85">
+      <stop offset="0" stop-color="#a78bfa" stop-opacity=".2" />
+      <stop offset="1" stop-color="#a78bfa" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="vig" cx=".5" cy=".42" r=".72">
+      <stop offset=".5" stop-color="#05060a" stop-opacity="0" />
+      <stop offset="1" stop-color="#05060a" stop-opacity=".7" />
+    </radialGradient>
+  </defs>
+
+  <rect width="800" height="440" fill="url(#bg)" />
+  <rect width="800" height="440" fill="url(#grid)" />
+  <rect width="800" height="440" fill="url(#glow)" />
+
+  <!-- escala tipográfica: hierarquia antes de qualquer enfeite -->
+  <g fill="#ffffff">
+    <rect x="104" y="112" width="92" height="17" rx="4" fill-opacity=".24" />
+    <rect x="104" y="141" width="66" height="12" rx="4" fill-opacity=".15" />
+    <rect x="104" y="164" width="46" height="8" rx="4" fill-opacity=".1" />
+    <rect x="104" y="183" width="34" height="6" rx="3" fill-opacity=".07" />
+  </g>
+
+  <!-- telas em camadas -->
+  <g transform="rotate(-4 415 200)">
+    <rect x="252" y="94" width="330" height="210" rx="16" fill="#080a0e" stroke="#ffffff" stroke-opacity=".07" />
+  </g>
+  <rect x="271" y="115" width="330" height="210" rx="16" fill="#0a0d12" stroke="#ffffff" stroke-opacity=".1" />
+  <rect x="290" y="136" width="330" height="210" rx="16" fill="#10131a" stroke="#ffffff" stroke-opacity=".16" />
+  <rect x="312" y="158" width="112" height="12" rx="6" fill="#ffffff" fill-opacity=".24" />
+  <rect x="312" y="180" width="182" height="8" rx="4" fill="#ffffff" fill-opacity=".1" />
+  <rect x="312" y="204" width="286" height="64" rx="10" fill="#a78bfa" fill-opacity=".12" stroke="#a78bfa" stroke-opacity=".3" />
+  <circle cx="344" cy="236" r="14" fill="#a78bfa" fill-opacity=".5" />
+  <g fill="#ffffff" fill-opacity=".18">
+    <rect x="370" y="228" width="120" height="7" rx="3.5" />
+    <rect x="370" y="243" width="86" height="6" rx="3" />
+  </g>
+  <g fill="#ffffff" fill-opacity=".06">
+    <rect x="312" y="280" width="134" height="46" rx="10" />
+    <rect x="464" y="280" width="134" height="46" rx="10" />
+  </g>
+
+  <!-- cota de respiro: espaçamento é decisão, não sobra -->
+  <g stroke="#a78bfa" stroke-opacity=".4" stroke-linecap="round">
+    <path d="M654 136v72M654 254v92" />
+    <path d="M644 136h20M644 346h20" />
+  </g>
+  <path d="M654 224l7 7-7 7-7-7z" fill="#a78bfa" fill-opacity=".75" />
+
+  <!-- paleta -->
+  <g stroke="#ffffff" stroke-opacity=".14">
+    <circle cx="120" cy="372" r="17" fill="#ffffff" />
+    <circle cx="162" cy="372" r="17" fill="#d4d8de" />
+    <circle cx="204" cy="372" r="17" fill="#9aa0ac" />
+    <circle cx="246" cy="372" r="17" fill="#a78bfa" />
+    <circle cx="288" cy="372" r="17" fill="#15181e" />
+  </g>
+
+  <rect width="800" height="440" fill="url(#vig)" />
+</svg>
