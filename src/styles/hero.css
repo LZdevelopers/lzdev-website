@@ -548,7 +548,7 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.hero-act time {
+.hero-act-time {
   flex: none;
   font-size: calc(7.4 * var(--s));
   color: #4d4d4d;

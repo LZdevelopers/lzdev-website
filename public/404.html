@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Página não encontrada | LZdev</title>
+
+    <!--
+      POR QUE ESTA PÁGINA É UM HTML SOLTO, e não uma rota do React:
+
+      1 · Ela precisa funcionar quando o servidor responde 404. Nesse momento não
+          existe rota, não existe roteador e o bundle pode nem ser servido — o
+          Netlify, o Vercel, o GitHub Pages e o Nginx todos sabem servir um
+          arquivo chamado 404.html, e é só isso que eles precisam saber.
+      2 · Ela não pode depender do bundle com hash no nome (assets/index-XXXX.js),
+          que muda a cada build. Um <script src> desatualizado aqui daria uma
+          página de erro quebrada — o pior lugar possível para um erro.
+
+      Por isso o CSS é inline e as fontes vêm de /fonts (caminho estável). O
+      resultado é uma página de ~4 kB que abre sozinha, com a identidade do site.
+
+      `noindex`: se o servidor por algum motivo devolver esta página com status
+      200, a meta impede que ela entre no índice do Google como se fosse
+      conteúdo. Um "erro 404" indexado é o clássico soft 404.
+    -->
+    <meta name="robots" content="noindex, follow" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <style>
+      /* As mesmas duas famílias do site, do mesmo lugar. */
+      @font-face {
+        font-family: 'Plus Jakarta Sans Variable';
+        font-style: normal;
+        font-display: swap;
+        font-weight: 200 800;
+        src: url('/fonts/plus-jakarta-sans-latin-wght-normal.woff2') format('woff2-variations');
+      }
+      @font-face {
+        font-family: 'Inter Variable';
+        font-style: normal;
+        font-display: swap;
+        font-weight: 100 900;
+        src: url('/fonts/inter-latin-wght-normal.woff2') format('woff2-variations');
+      }
+
+      /* Tokens copiados de src/styles/index.css — os mesmos valores. */
+      :root {
+        --bg: #000000;
+        --ink: #ffffff;
+        --muted: #a2a8b4;
+        --faint: #767d8b;
+        --surface: #0e1014;
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100svh;
+        display: grid;
+        place-items: center;
+        padding: 2rem 1.25rem;
+        background-color: var(--bg);
+        color: var(--ink);
+        font-family: 'Inter Variable', system-ui, -apple-system, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        /* A mesma malha e a mesma vinheta do fundo global do site. */
+        background-image:
+          linear-gradient(to right, rgb(255 255 255 / 0.035) 1px, transparent 1px),
+          linear-gradient(to bottom, rgb(255 255 255 / 0.035) 1px, transparent 1px),
+          radial-gradient(ellipse 120% 80% at 50% -10%, rgb(255 255 255 / 0.06), transparent 60%);
+        background-size: 72px 72px, 72px 72px, 100% 100%;
+      }
+
+      main {
+        width: 100%;
+        max-width: 34rem;
+        text-align: center;
+      }
+
+      .marca {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.7rem;
+        font-family: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
+        font-size: 1.45rem;
+        font-weight: 800;
+        letter-spacing: -0.035em;
+        text-decoration: none;
+        color: var(--ink);
+        border-radius: 0.5rem;
+      }
+      .marca img {
+        width: 40px;
+        height: 40px;
+      }
+      /* A wordmark inteira é UM item do flex. Sem o wrapper, "LZ" e "dev" são
+         dois itens e o `gap: 0.7rem` do lockup abre um vão entre eles — a marca
+         sai lida como "LZ dev". */
+      .marca strong {
+        font-weight: 800;
+      }
+      .marca strong span {
+        color: #d4d8de;
+      }
+
+      .codigo {
+        margin: 2.5rem 0 0;
+        font-family: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
+        font-size: clamp(3.5rem, 16vw, 5.5rem);
+        font-weight: 800;
+        line-height: 1;
+        letter-spacing: -0.05em;
+        /* Prata: o mesmo gradiente da utility `text-gradient` do site. */
+        background: linear-gradient(100deg, #ffffff 8%, #d4d4d4 48%, #8f8f8f 96%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      h1 {
+        margin: 0.75rem 0 0;
+        font-family: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
+        font-size: clamp(1.5rem, 5.5vw, 2.1rem);
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        line-height: 1.15;
+      }
+
+      p {
+        margin: 1rem auto 0;
+        max-width: 28rem;
+        color: var(--muted);
+        font-size: 0.98rem;
+        line-height: 1.7;
+      }
+
+      .acoes {
+        margin-top: 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.8rem;
+      }
+
+      .botao {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        min-height: 3rem;
+        padding: 0 1.6rem;
+        border-radius: 0.75rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition:
+          background-color 0.3s var(--ease),
+          border-color 0.3s var(--ease),
+          transform 0.3s var(--ease);
+      }
+      /* Primário: placa branca com texto preto — a mesma inversão do site, e o
+         único elemento claro da tela, para não haver dúvida de onde clicar. */
+      .botao--primario {
+        background: #ffffff;
+        color: #000000;
+        box-shadow: 0 10px 36px -12px rgb(255 255 255 / 0.3);
+      }
+      .botao--primario:hover {
+        background: #e2e5ea;
+        transform: translateY(-1px);
+      }
+      .botao--contorno {
+        border: 1px solid rgb(255 255 255 / 0.14);
+        background: rgb(255 255 255 / 0.03);
+        color: var(--ink);
+      }
+      .botao--contorno:hover {
+        border-color: rgb(255 255 255 / 0.45);
+        background: rgb(255 255 255 / 0.06);
+      }
+
+      .atalhos {
+        margin-top: 2.5rem;
+        border-top: 1px solid rgb(255 255 255 / 0.08);
+        padding-top: 1.5rem;
+      }
+      .atalhos p {
+        margin: 0 0 0.9rem;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--faint);
+      }
+      .atalhos ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .atalhos a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 2.5rem;
+        padding: 0 0.9rem;
+        border: 1px solid rgb(255 255 255 / 0.08);
+        border-radius: 0.6rem;
+        background: rgb(255 255 255 / 0.02);
+        color: var(--muted);
+        font-size: 0.85rem;
+        text-decoration: none;
+        transition:
+          color 0.3s var(--ease),
+          border-color 0.3s var(--ease);
+      }
+      .atalhos a:hover {
+        color: var(--ink);
+        border-color: rgb(255 255 255 / 0.22);
+      }
+
+      /* Foco visível — o mesmo anel branco do site. */
+      a:focus-visible {
+        outline: 2px solid var(--ink);
+        outline-offset: 3px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition-duration: 0.001ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <a class="marca" href="/">
+        <img src="/logo-mark-256.png" alt="" width="256" height="256" />
+        <strong>LZ<span>dev</span></strong>
+      </a>
+
+      <!-- O número é decoração: quem lê a tela já tem o H1 dizendo o que
+           aconteceu, e ouvir "404" antes disso não ajuda ninguém. -->
+      <p class="codigo" aria-hidden="true">404</p>
+
+      <h1>Ops! Essa página não existe.</h1>
+      <p>
+        O endereço pode ter mudado, ou o link que trouxe você até aqui está incompleto. Nada de errado
+        do seu lado — e você não precisa voltar para o começo.
+      </p>
+
+      <div class="acoes">
+        <a class="botao botao--primario" href="/">Voltar para a página inicial</a>
+        <a class="botao botao--contorno" href="/#contato">Falar com a nossa equipe</a>
+      </div>
+
+      <nav class="atalhos" aria-label="Atalhos para as seções do site">
+        <p>Ou vá direto para</p>
+        <ul>
+          <li><a href="/#servicos">Serviços e preços</a></li>
+          <li><a href="/#projetos">Projetos entregues</a></li>
+          <li><a href="/#equipe">Quem somos</a></li>
+          <li><a href="/#faq">Perguntas frequentes</a></li>
+        </ul>
+      </nav>
+    </main>
+  </body>
+</html>

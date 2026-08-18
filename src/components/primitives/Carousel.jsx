@@ -12,15 +12,51 @@ import { Icon } from './Icon'
  * controlado por estado. Isso entrega de graça o swipe no celular, o gesto
  * horizontal do trackpad e o arrasto da barra — e as setas viram apenas mais
  * uma forma de chegar ao mesmo lugar, em vez da única. O índice ativo é lido da
- * posição de rolagem (num rAF), então os pontinhos e o contador acompanham
- * qualquer uma dessas formas.
+ * posição de rolagem (num rAF), então os pontinhos, o índice e o contador
+ * acompanham qualquer uma dessas formas.
+ *
+ * TRÊS CAMADAS DIZEM QUE EXISTE MAIS COISA AO LADO — o problema de um carrossel
+ * é o visitante não perceber que há um segundo item:
+ *
+ *   1 · PRÉVIA · a partir de sm o slide não ocupa a largura toda, então uma
+ *       faixa do card seguinte fica sempre à vista. É o sinal mais forte de
+ *       todos, porque é o próprio conteúdo aparecendo. Os slides fora do foco
+ *       ficam esmaecidos: assim a faixa lateral é lida como "o próximo item", e
+ *       não como um card cortado por engano.
+ *   2 · ÍNDICE NOMEADO · acima da trilha, os títulos de TODOS os itens. Quem
+ *       chega vê a lista inteira sem rolar nada, sabe quantos são e pula direto
+ *       para o que interessa. É o que responde "o que tem aqui?" de relance.
+ *   3 · CONVITE · enquanto ninguém tocou no carrossel, a seta "próximo" recebe
+ *       destaque e um empurrãozinho de 3px, ao lado de uma frase curta. Na
+ *       primeira interação — clique, tecla, swipe ou arrasto — os dois somem:
+ *       a dica cumpriu a função e não fica piscando para sempre.
  *
  * Teclado: ← e → navegam quando o foco está dentro do carrossel; o conteúdo de
  * cada slide continua tabulável na ordem natural.
+ *
+ * @param {object} props
+ * @param {Array} props.items
+ * @param {string} props.label Nome do carrossel para leitor de tela.
+ * @param {(item: any, i: number) => React.ReactNode} props.renderSlide
+ * @param {(item: any, i: number) => string} props.slideKey
+ * @param {(item: any) => string} [props.itemLabel] Título curto de cada item.
+ *        Sem ele o índice nomeado não aparece — sobram os pontinhos.
+ * @param {string} [props.hint] Frase do convite a rolar.
  */
-export function Carousel({ items, label, renderSlide, slideKey, className = '' }) {
+export function Carousel({
+  items,
+  label,
+  renderSlide,
+  slideKey,
+  itemLabel,
+  hint = 'Arraste para o lado ou use as setas',
+  className = '',
+}) {
   const trackRef = useRef(null)
   const [index, setIndex] = useState(0)
+  // Só o PRIMEIRO contato importa: é ele que apaga o convite. Depois disso o
+  // visitante já sabe que a trilha rola, e insistir viraria ruído.
+  const [interacted, setInteracted] = useState(false)
   const total = items.length
 
   const goTo = useCallback(
@@ -29,8 +65,14 @@ export function Carousel({ items, label, renderSlide, slideKey, className = '' }
       if (!track) return
       const slide = track.children[Math.max(0, Math.min(target, total - 1))]
       if (!slide) return
+      setInteracted(true)
       const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      track.scrollTo({ left: slide.offsetLeft, behavior: smooth ? 'smooth' : 'auto' })
+      // Alvo CENTRALIZADO, não a borda esquerda do slide: com a prévia lateral o
+      // slide é mais estreito que a trilha, e mandar a borda para o zero deixaria
+      // o navegador corrigindo a posição depois do scroll (o card chega e dá um
+      // pulinho). A conta é a mesma que o `snap-center` faria.
+      const centered = slide.offsetLeft - (track.clientWidth - slide.offsetWidth) / 2
+      track.scrollTo({ left: Math.max(0, centered), behavior: smooth ? 'smooth' : 'auto' })
     },
     [total]
   )
@@ -59,6 +101,9 @@ export function Carousel({ items, label, renderSlide, slideKey, className = '' }
     }
 
     const onScroll = () => {
+      // Swipe e arrasto da barra não passam por `goTo`, e são interação como
+      // qualquer outra — o convite tem de sumir neles também.
+      setInteracted(true)
       if (!frame) frame = requestAnimationFrame(read)
     }
 
@@ -87,6 +132,20 @@ export function Carousel({ items, label, renderSlide, slideKey, className = '' }
       onKeyDown={onKeyDown}
       className={`relative ${className}`}
     >
+      {/* Índice nomeado — a lista completa antes de qualquer rolagem. Escondido
+          no celular: sete pastilhas de texto ali comeriam meia tela, e é onde o
+          swipe é natural. */}
+      {itemLabel ? (
+        <CarouselIndex
+          items={items}
+          itemLabel={itemLabel}
+          activeIndex={index}
+          onSelect={goTo}
+          label={label}
+          className="mb-5 hidden sm:flex"
+        />
+      ) : null}
+
       <div
         ref={trackRef}
         className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain"
@@ -97,18 +156,23 @@ export function Carousel({ items, label, renderSlide, slideKey, className = '' }
             role="group"
             aria-roledescription="slide"
             aria-label={`${i + 1} de ${total}`}
-            className="w-full shrink-0 snap-center px-0.5"
+            /* A largura menor que 100% (a partir de sm) é o que deixa a faixa
+               do card seguinte à vista. `snap-center` cuida do resto: o
+               navegador centraliza o slide e recorta os vizinhos sozinho. */
+            className={`w-full shrink-0 snap-center px-0.5 transition-opacity duration-500 ease-[var(--ease-out-soft)] sm:w-[calc(100%-3rem)] sm:px-1.5 lg:w-[calc(100%-4rem)] ${
+              i === index ? 'opacity-100' : 'opacity-100 sm:opacity-45'
+            }`}
           >
             {renderSlide(item, i)}
           </div>
         ))}
       </div>
 
-      {/* Barra de controle: setas, pontinhos e contador. Fica ABAIXO do card em
-          vez de sobreposta — num card grande as setas laterais cobririam
+      {/* Barra de controle: setas, convite/pontinhos e contador. Fica ABAIXO do
+          card em vez de sobreposta — num card grande as setas laterais cobririam
           justamente o conteúdo que o carrossel existe para mostrar. */}
       <div className="mt-5 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           <CarouselButton
             direction="prev"
             disabled={atStart}
@@ -120,21 +184,50 @@ export function Carousel({ items, label, renderSlide, slideKey, className = '' }
             disabled={atEnd}
             onClick={() => goTo(index + 1)}
             label="Próximo item"
+            /* O destaque extra existe até o primeiro contato e some junto com a
+               frase — depois disso as duas setas voltam a pesar igual. */
+            emphasis={!interacted && !atEnd}
           />
         </div>
 
-        <ul className="flex flex-1 flex-wrap items-center justify-center gap-1.5">
+        {/* Convite (desktop) e pontinhos (celular) ocupam o MESMO vão, então a
+            barra tem a mesma altura nos dois casos. O convite continua no lugar
+            depois de sumir (só a opacidade cai): nada salta na tela. */}
+        {hint ? (
+          <p
+            aria-hidden="true"
+            className={`pointer-events-none hidden flex-1 items-center gap-2 text-xs text-faint transition-opacity duration-500 sm:flex ${
+              interacted ? 'opacity-0' : 'opacity-100'
+            }`}
+          >
+            <Icon name="arrowRight" size={13} className="shrink-0 animate-nudge-x" />
+            {hint}
+          </p>
+        ) : (
+          <span className="hidden flex-1 sm:block" />
+        )}
+
+        {/* Pontinhos do celular. O TRAÇO continua com 6px de altura, mas a área
+            clicável é o botão inteiro: 28px de altura com o padding, porque um
+            alvo de 6px é impossível de acertar com o dedo (o mínimo confortável
+            da WCAG é 24px) e errar aqui significa não ver o resto da lista. */}
+        <ul className="flex flex-1 flex-wrap items-center justify-center gap-0.5 sm:hidden">
           {items.map((item, i) => (
             <li key={slideKey(item, i)}>
               <button
                 type="button"
                 onClick={() => goTo(i)}
-                aria-label={`Ir para o item ${i + 1}`}
+                aria-label={`Ir para o item ${i + 1} de ${total}`}
                 aria-current={i === index}
-                className={`block h-1.5 rounded-full transition-[width,background-color] duration-400 ease-[var(--ease-out-soft)] ${
-                  i === index ? 'w-7 bg-ink' : 'w-1.5 bg-white/25 hover:bg-white/50'
-                }`}
-              />
+                className="group grid h-7 place-items-center px-1"
+              >
+                <span
+                  aria-hidden="true"
+                  className={`block h-1.5 rounded-full transition-[width,background-color] duration-400 ease-[var(--ease-out-soft)] ${
+                    i === index ? 'w-7 bg-ink' : 'w-1.5 bg-white/25 group-hover:bg-white/50'
+                  }`}
+                />
+              </button>
             </li>
           ))}
         </ul>
@@ -152,25 +245,84 @@ export function Carousel({ items, label, renderSlide, slideKey, className = '' }
 }
 
 /**
- * Seta de navegação. Exportada porque a timeline do processo (Process.jsx)
- * também é uma trilha rolável na horizontal e usa os MESMOS controles — dois
- * botões com estilos duplicados divergiriam no primeiro ajuste.
+ * Índice nomeado de uma trilha horizontal: uma pastilha por item, com o número
+ * de ordem e o título, e a do item atual em destaque.
+ *
+ * É a resposta ao problema central de qualquer conteúdo que rola de lado — o
+ * visitante não sabe o que está fora da tela, e por isso não rola. Com os
+ * títulos todos à vista ele lê a seção inteira de relance, escolhe e clica; a
+ * rolagem passa a ser opcional. Também serve de mapa: a pastilha acesa diz onde
+ * ele está dentro do conjunto.
+ *
+ * `className` recebe o `flex` (ou `hidden sm:flex`) de quem chama: a pastilha é
+ * um padrão da página, e cada seção decide em que largura o índice aparece.
  */
-export function CarouselButton({ direction, disabled, onClick, label }) {
+function CarouselIndex({ items, itemLabel, activeIndex, onSelect, label, className = '' }) {
+  return (
+    <ul aria-label={`Ir para um item de ${label}`} className={`flex-wrap items-center gap-1.5 ${className}`}>
+      {items.map((item, i) => {
+        const text = itemLabel(item, i)
+        const current = i === activeIndex
+        return (
+          <li key={text}>
+            <button
+              type="button"
+              onClick={() => onSelect(i)}
+              aria-current={current}
+              className={`inline-flex items-center gap-2 rounded-lg border px-2.5 py-1.5 text-[0.74rem] font-medium transition-[border-color,background-color,color] duration-300 ease-[var(--ease-out-soft)] sm:text-[0.78rem] ${
+                current
+                  ? 'border-brand/45 bg-white/[0.09] text-ink'
+                  : 'border-white/8 bg-white/[0.02] text-faint hover:border-white/22 hover:bg-white/[0.05] hover:text-muted'
+              }`}
+            >
+              {/* Número decorativo: a ordem já chega ao leitor de tela pela
+                  lista, e repetir "01" antes do título só atrapalharia. */}
+              <span
+                aria-hidden="true"
+                className={`font-display text-[0.62rem] font-bold tabular-nums ${
+                  current ? 'text-accent' : 'text-white/30'
+                }`}
+              >
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              {text}
+            </button>
+          </li>
+        )
+      })}
+    </ul>
+  )
+}
+
+/**
+ * Seta de navegação do carrossel.
+ *
+ * O botão é a 44px (o alvo mínimo confortável para o dedo), com borda e fundo
+ * mais claros que o padrão dos controles secundários do site: numa página em que
+ * a rolagem lateral é a única forma de ver o resto do conteúdo, a seta não pode
+ * ser o elemento mais discreto da seção. `emphasis` sobe um degrau — halo
+ * externo e a seta com o empurrãozinho — e é usado só na direção que leva ao
+ * conteúdo ainda não visto, enquanto o visitante não interagiu.
+ */
+function CarouselButton({ direction, disabled, onClick, label, emphasis = false }) {
   return (
     <button
       type="button"
       onClick={onClick}
       disabled={disabled}
       aria-label={label}
-      className="group grid size-10 place-items-center rounded-full border border-white/12 bg-white/[0.04] text-ink transition-[background-color,border-color,transform,opacity] duration-300 ease-[var(--ease-out-soft)] hover:border-white/35 hover:bg-white/12 active:scale-95 disabled:pointer-events-none disabled:opacity-30 desktop:hover:scale-110"
+      className={`group grid size-11 place-items-center rounded-full border text-ink transition-[background-color,border-color,box-shadow,transform,opacity] duration-300 ease-[var(--ease-out-soft)] hover:border-brand/50 hover:bg-white/14 active:scale-95 disabled:pointer-events-none disabled:opacity-25 desktop:hover:scale-110 ${
+        emphasis
+          ? 'border-white/40 bg-white/12 shadow-[0_0_0_4px_rgb(255_255_255/0.05)]'
+          : 'border-white/20 bg-white/[0.06]'
+      }`}
     >
       <Icon
         name={direction === 'next' ? 'arrowRight' : 'arrowLeft'}
-        size={17}
-        className={`transition-transform duration-300 ease-[var(--ease-out-soft)] ${
+        size={18}
+        className={`transition-transform duration-300 ease-[var(--ease-out-soft)] group-hover:animate-none ${
           direction === 'next' ? 'group-hover:translate-x-0.5' : 'group-hover:-translate-x-0.5'
-        }`}
+        } ${emphasis ? 'animate-nudge-x' : ''}`}
       />
     </button>
   )

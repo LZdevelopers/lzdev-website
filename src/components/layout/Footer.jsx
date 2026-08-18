@@ -1,21 +1,14 @@
-import { activeSocials, contact, footer, primaryWhatsapp, whatsappLink } from '../../data/site'
-import { brandColors, Icon } from '../primitives/Icon'
+import { footer } from '../../data/site'
 import { Logo } from './Logo'
 
+/**
+ * O ano é resolvido no BUILD (o HTML sai pronto do prerender) e de novo no
+ * navegador ao hidratar. Nos primeiros dias de janeiro seguinte ao último build
+ * os dois discordam, e sem `suppressHydrationWarning` no elemento abaixo o React
+ * trataria isso como HTML divergente. É o único texto da página que depende de
+ * quando a página é VISTA, não de quando foi escrita.
+ */
 const YEAR = new Date().getFullYear()
-
-const SOCIALS = [
-  {
-    icon: 'whatsapp',
-    // Canal principal. O rótulo nomeia quem atende, como nas outras redes —
-    // os dois números ficam lado a lado na seção de contato.
-    label: `WhatsApp · ${primaryWhatsapp.person}`,
-    href: whatsappLink('Olá! Vim pelo site da LZdev e gostaria de conversar sobre um projeto.'),
-    external: true,
-  },
-  { icon: 'mail', label: 'E-mail', href: `mailto:${contact.email}` },
-  ...activeSocials.map((social) => ({ ...social, external: true })),
-]
 
 /**
  * Os links das duas colunas de `footer.columns` entram numa faixa única.
@@ -26,10 +19,10 @@ const SOCIALS = [
 const LINKS = footer.columns.flatMap((column) => column.links)
 
 /**
- * Rodapé em duas faixas: marca + atalhos, e a linha legal com as redes.
- * Sem colunas, sem repetir contato (a seção acima é inteira sobre isso) e com o
- * respiro vertical cortado quase pela metade — é o fim da página, não mais uma
- * seção de conteúdo.
+ * Rodapé em duas faixas: marca + atalhos, e a linha legal.
+ * Sem colunas e sem NENHUM canal de contato: WhatsApp e e-mail estavam a uma
+ * rolagem de distância dos mesmos canais na seção de Contato, que existe
+ * inteira para isso. É o fim da página, não mais uma seção de conteúdo.
  */
 export function Footer() {
   return (
@@ -61,8 +54,8 @@ export function Footer() {
           </nav>
         </div>
 
-        <div className="mt-7 flex flex-col gap-4 border-t border-white/8 pt-5 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs leading-relaxed text-faint">
+        <div className="mt-7 border-t border-white/8 pt-5">
+          <p className="text-xs leading-relaxed text-faint" suppressHydrationWarning>
             © {YEAR} LZdev. Todos os direitos reservados.
             <span className="mx-2 hidden text-white/15 sm:inline" aria-hidden="true">
               ·
@@ -71,28 +64,6 @@ export function Footer() {
               Desenvolvido pela própria LZdev — como todo projeto que entregamos.
             </span>
           </p>
-
-          {/* Cada rede na cor oficial dela. `--net` alimenta borda e fundo do
-              hover; o e-mail não é marca (ícone de traço) e cai no branco. */}
-          <ul className="flex shrink-0 gap-2">
-            {SOCIALS.map((social) => (
-              <li key={social.label}>
-                <a
-                  href={social.href}
-                  target={social.external ? '_blank' : undefined}
-                  rel={social.external ? 'noopener noreferrer' : undefined}
-                  aria-label={social.label}
-                  // Com os perfis pessoais dos dois, há dois GitHub e dois
-                  // Instagram na fileira: o title diz de quem é cada um.
-                  title={social.label}
-                  style={{ '--net': brandColors[social.icon] || '#ffffff' }}
-                  className="grid size-9 place-items-center rounded-lg border border-white/10 bg-white/[0.03] text-muted transition-[border-color,color,background-color,transform] duration-300 hover:-translate-y-0.5 hover:border-[color-mix(in_oklab,var(--net)_50%,transparent)] hover:bg-[color-mix(in_oklab,var(--net)_14%,transparent)] hover:text-ink"
-                >
-                  <Icon name={social.icon} size={16} colored />
-                </a>
-              </li>
-            ))}
-          </ul>
         </div>
       </div>
     </footer>

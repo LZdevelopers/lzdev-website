@@ -2,17 +2,25 @@
  * Fonte única de verdade do conteúdo do site.
  * Nenhum componente contém texto fixo — alterar copy nunca exige tocar em JSX.
  *
+ * Metadados (title, description, Open Graph, domínio) NÃO moram aqui: eles têm
+ * arquivo próprio em src/data/seo.js.
+ *
  * Ordem das seções na página (App.jsx):
- *   1 Hero · 2 Projetos · 3 Ferramentas · 4 Custo invisível · 5 Diferenciais
- *   6 Processo · 7 Equipe · 8 Números · 9 FAQ · 10 Contato
+ *   1 Hero · 2 Serviços · 3 Projetos · 4 Tecnologias · 5 Custo invisível
+ *   6 Diferenciais · 7 Equipe · 8 Números · 9 FAQ · 10 Contato
  *
  * ⚠️  Ainda pendente de dado real (nada foi inventado; cada ponto está marcado
  *     com `// FALTA` no lugar exato):
- *       · URLs e screenshots dos projetos
+ *       · URLs dos projetos ainda não hospedados e screenshots de todos
  *       · fotos do time
  *       · LinkedIn dos dois desenvolvedores
  *       · perfis próprios da LZdev (hoje o site usa os pessoais)
- *       · os números de `stats` e os valores do FAQ, que ninguém confirmou
+ *       · os números de `stats`, que ninguém confirmou
+ *
+ * ⚠️  O que o site OFERECE está em `services`, e essa lista é contrato: os dados
+ *     estruturados (JSON-LD) são gerados a partir dela. Anunciar em schema um
+ *     serviço que a página não mostra é exatamente o que o Google trata como
+ *     marcação enganosa — se um serviço novo entrar, ele entra AQUI primeiro.
  */
 
 /* -------------------------------------------------------------------------- */
@@ -29,6 +37,7 @@
 const enzo = {
   first: 'Enzo',
   github: 'https://github.com/destypc',
+  portfolio: 'https://destypc.github.io/Portfolio-Enzo/',
   instagram: 'https://www.instagram.com/enzinxz2',
   whatsapp: '5545998507429',
   phone: '(45) 99850-7429',
@@ -38,6 +47,7 @@ const enzo = {
 const luis = {
   first: 'Luis',
   github: 'https://github.com/luizeh',
+  portfolio: 'https://luizeh.github.io/Portfolio-Oficial/',
   instagram: 'https://www.instagram.com/luizehofwgkta',
   whatsapp: '5544998483756',
   phone: '(44) 99848-3756',
@@ -60,13 +70,11 @@ export const contact = {
     { person: luis.first, number: luis.whatsapp, display: luis.phone },
   ],
 
-  location: 'Atendimento remoto em todo o Brasil',
-  hours: 'Segunda a sexta, 08h às 18h',
-
   /**
-   * Redes exibidas na seção de contato e no rodapé.
+   * Redes exibidas na seção de contato — e SÓ nela: o rodapé não repete nenhum
+   * canal, e assim os mesmos perfis não aparecem duas vezes na mesma tela.
    * A LZdev ainda não tem perfis próprios (FALTA), então estas são as contas
-   * pessoais dos dois desenvolvedores — os mesmos links dos cartões da Equipe.
+   * pessoais dos dois desenvolvedores.
    * O rótulo diz de quem é cada uma: são dois ícones iguais lado a lado, e sem
    * ele o visitante não teria como saber qual GitHub está clicando.
    * Deixar `href` vazio esconde o botão — nada de link morto no ar.
@@ -86,7 +94,22 @@ export const primaryWhatsapp = contact.whatsapps[0]
 export const whatsappLink = (message, number = primaryWhatsapp.number) =>
   `https://wa.me/${number}?text=${encodeURIComponent(message)}`
 
-/** Redes com link preenchido — usado pelo rodapé. */
+/**
+ * E-mail já composto, nas duas formas que o visitante pode ter à mão:
+ * `mailto` entrega para o app de e-mail do sistema; `gmail` abre o compositor do
+ * Gmail no navegador — a saída de quem usa webmail e não tem app configurado,
+ * caso em que um `mailto:` simplesmente não faz nada ao ser clicado.
+ */
+export const emailLink = {
+  mailto: (subject, body, to = contact.email) =>
+    `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+  gmail: (subject, body, to = contact.email) =>
+    `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}&su=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`,
+}
+
+/** Redes com link preenchido — base do agrupamento da seção de contato. */
 export const activeSocials = contact.socials.filter((social) => social.href)
 
 /**
@@ -107,14 +130,32 @@ export const socialsByPerson = activeSocials.reduce((groups, social) => {
 /* -------------------------------------------------------------------------- */
 /*  NAVEGAÇÃO                                                                 */
 /* -------------------------------------------------------------------------- */
+/**
+ * Menu principal. Cinco destinos, todos com nome de coisa concreta — quem lê
+ * "Serviços" sabe que vai ver o que pode contratar, e quem lê "Projetos" sabe
+ * que vai ver trabalho entregue. Nada de rótulo criativo onde o óbvio serve.
+ *
+ * "Contato" NÃO está na lista de propósito: ele é o CTA da barra, e repetir o
+ * mesmo destino como link discreto ao lado do botão só divide o clique.
+ *
+ * `label` é também o texto que o leitor de tela anuncia, e `href` a âncora da
+ * seção correspondente — a mesma string que o id do <section> usa.
+ */
 export const navLinks = [
+  { label: 'Serviços', href: '#servicos' },
   { label: 'Projetos', href: '#projetos' },
-  { label: 'Ferramentas', href: '#ferramentas' },
-  { label: 'Diferenciais', href: '#diferenciais' },
-  { label: 'Processo', href: '#processo' },
+  { label: 'Tecnologias', href: '#tecnologias' },
   { label: 'Equipe', href: '#equipe' },
   { label: 'FAQ', href: '#faq' },
 ]
+
+/**
+ * Rótulo do CTA principal, em UM lugar só.
+ * Ele aparece na barra, no Hero, no fechamento do custo invisível e no envio do
+ * formulário — quatro pontos da página que precisam prometer a MESMA coisa. Com
+ * quatro strings soltas, uma sempre ficava diferente das outras.
+ */
+export const primaryCta = 'Solicitar orçamento'
 
 /* -------------------------------------------------------------------------- */
 /*  1 · HERO                                                                  */
@@ -126,18 +167,27 @@ export const hero = {
    * pleno, contra o cinza-claro do resto da frase. Ajustar a quebra é mudar o
    * array — o CSS escala a fonte pela largura da coluna, então nada estoura em
    * tela estreita.
+   *
+   * O H1 DIZ O SERVIÇO, não a promessa. "Transformamos desafios em soluções
+   * digitais que geram resultado" descrevia qualquer empresa de tecnologia do
+   * mundo: o visitante lia a frase inteira e ainda não sabia se aqui se compra
+   * um site, uma consultoria ou um curso. Agora a primeira linha da página
+   * responde "o que vocês fazem?" — e é essa a frase que o Google usa como
+   * assunto principal.
+   *
+   * As duas palavras em destaque são justamente os dois serviços (`services`).
    */
   title: [
-    [{ text: 'Transformamos' }],
-    [{ text: 'desafios em ' }, { text: 'soluções', accent: true }],
-    [{ text: 'digitais que ' }, { text: 'geram', accent: true }],
-    [{ text: 'resultado.', accent: true }],
+    [{ text: 'Desenvolvemos' }],
+    [{ text: 'sites', accent: true }, { text: ' e ' }, { text: 'sistemas web', accent: true }],
+    [{ text: 'sob medida.' }],
   ],
 
   subtitle:
-    'Desenvolvemos soluções digitais completas, do planejamento ao código, para organizar a operação, automatizar o repetitivo e devolver tempo à sua equipe.',
-  primaryCta: 'Solicitar projeto',
-  secondaryCta: 'Conhecer projetos',
+    'Landing pages, sites institucionais e sistemas de gestão feitos do zero para o seu processo — da tela ao banco de dados, com escopo e prazo fechados antes de começar.',
+
+  /** O CTA primário sai de `primaryCta`: é o mesmo rótulo da barra e do envio. */
+  secondaryCta: 'Ver projetos',
 
   /** Cards flutuantes ao redor do painel — recortes de `why.items`.
    *  Sem `tone`: os três chips compartilham o mesmo branco translúcido. */
@@ -150,18 +200,118 @@ export const hero = {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  2 · PROJETOS — FALTA: URLs reais e screenshots                            */
+/*  2 · SERVIÇOS                                                              */
+/*                                                                            */
+/*  A seção que faltava na página. O site apresentava projetos, stack,         */
+/*  diferenciais, equipe e números — e em nenhum lugar dizia O QUE SE CONTRATA */
+/*  aqui. Pior: o title e o JSON-LD anunciavam SaaS, automações e APIs, que    */
+/*  seção nenhuma sustentava. A LZdev confirmou (18/08/2026) que o que vende   */
+/*  hoje são as DUAS famílias abaixo, e o schema passou a sair desta lista.    */
+/*                                                                            */
+/*  NADA aqui é inventado. Cada linha vem de informação que já estava no site: */
+/*    · preço e prazo dos três formatos → respostas do FAQ                    */
+/*    · login, permissão por perfil, relatório e painel único → Sprint Max     */
+/*    · caminho curto até o WhatsApp → Kimori e Tio Preto                     */
+/*    · "sem template" e "o código é seu" → diferenciais e FAQ                */
+/*    · atendimento remoto em todo o Brasil → FAQ                             */
+/* -------------------------------------------------------------------------- */
+export const services = {
+  eyebrow: 'Serviços',
+  title: 'O que a gente desenvolve',
+  subtitle:
+    'Três formatos, um jeito de trabalhar: proposta com escopo fechado, acompanhamento em ambiente de teste e o código entregue no seu nome.',
+
+  /**
+   * `price` é PISO, não tabela — a mesma informação que o FAQ dá, no formato
+   * curto. Ele fica no card porque "quanto custa" é a primeira pergunta de
+   * quem chega, e mandar o visitante caçar a resposta sete seções abaixo é
+   * como se perde um orçamento.
+   *
+   * `priceFrom` é o mesmo número em forma de dado, para o JSON-LD: o preço
+   * anunciado ao Google é EXATAMENTE o que está escrito na tela.
+   */
+  items: [
+    {
+      icon: 'rocket',
+      name: 'Landing page',
+      what: 'Uma página só, com um objetivo só.',
+      audience: 'Para divulgar um serviço, produto ou campanha.',
+      includes: [
+        'Toda a decisão em uma rolagem',
+        'Caminho curto até o WhatsApp ou formulário',
+        'Pronta para receber tráfego de anúncio',
+      ],
+      price: 'A partir de R$ 1.800',
+      priceFrom: 1800,
+      timeline: 'cerca de 1 semana',
+    },
+    {
+      icon: 'globe',
+      name: 'Site institucional',
+      what: 'A presença completa da empresa na internet.',
+      audience: 'Para quem precisa ser encontrado e passar credibilidade.',
+      includes: [
+        'Serviços, prova de trabalho e contato',
+        'Estrutura preparada para o Google',
+        'Conteúdo fácil de crescer depois',
+      ],
+      price: 'A partir de R$ 3.200',
+      priceFrom: 3200,
+      timeline: '2 a 3 semanas',
+    },
+    {
+      icon: 'blocks',
+      name: 'Sistema web sob medida',
+      what: 'O software que roda a sua operação, feito para o seu processo.',
+      audience: 'Para operação que hoje vive em planilha, papel ou WhatsApp.',
+      includes: [
+        'Login com permissão por perfil',
+        'Cadastros, vendas e relatórios num painel único',
+        'As suas regras, não as de um software de prateleira',
+      ],
+      price: 'A partir de R$ 8.500',
+      priceFrom: 8500,
+      timeline: '5 a 8 semanas',
+    },
+  ],
+
+  /**
+   * Rodapé da seção: a resposta para quem não se encaixou em nenhum dos três
+   * cards, e o único botão da seção. Três cards com três botões iguais
+   * transformariam a página numa fileira de CTAs disputando o mesmo clique.
+   */
+  closing: {
+    text: 'Não sabe qual formato encaixa no seu caso? Descreva a operação e a gente indica — inclusive se a resposta for o formato mais simples.',
+    note: 'Atendimento remoto em todo o Brasil, por vídeo, WhatsApp e e-mail.',
+  },
+}
+
+/* -------------------------------------------------------------------------- */
+/*  3 · PROJETOS — FALTA: URLs dos 3 não hospedados e screenshots             */
 /* -------------------------------------------------------------------------- */
 export const projects = {
   eyebrow: 'Projetos em destaque',
-  title: 'Resultado entregue, não portfólio de conceito',
+  title: 'Resultado entregue',
   subtitle: 'Uma amostra do que já está no ar e em uso — do sistema de gestão completo à ferramenta pública.',
+
+  /**
+   * Convite a rolar, exibido ao lado das setas até o visitante mexer no
+   * carrossel. Sem número no texto de propósito: a lista cresce, e a frase
+   * continuaria prometendo "os 4 projetos".
+   */
+  hint: 'Arraste para o lado para ver os outros projetos',
 
   /**
    * `image`: caminho de uma imagem em /public (ex.: '/projetos/sprint-max.png').
    * Enquanto estiver vazio, o card mostra uma moldura de espera com o nome do
    * projeto — nunca uma imagem quebrada. Basta preencher o caminho quando o
    * screenshot existir; nenhum outro ajuste é necessário.
+   *
+   * `url`: endereço público do projeto no ar. VAZIO ESCONDE O BOTÃO, e é por
+   * isso que ele existe assim: os quatro cards apontavam para `#`, um link que
+   * recarrega a própria página e volta ao topo. Para o visitante é um botão
+   * quebrado; para o Google, quatro links internos que não levam a nada. Sem
+   * URL, o card diz honestamente que a publicação está a caminho.
    */
   items: [
     {
@@ -170,7 +320,7 @@ export const projects = {
       image: '', // FALTA: screenshot real
       text: 'Sistema completo de gestão de produtos, usuários e vendas. Substituiu o controle por planilha por um painel único, com permissões por perfil e relatórios que fecham sozinhos.',
       stack: ['PHP', 'Laravel', 'MySQL', 'Bootstrap'],
-      url: '#', // FALTA: link real
+      url: '', // FALTA: ainda não hospedado — sem URL o card não mostra botão
     },
     {
       name: 'Kimori Korean Food',
@@ -178,7 +328,7 @@ export const projects = {
       image: '', // FALTA: screenshot real
       text: 'Presença digital para restaurante de comida coreana: cardápio navegável, identidade marcante e caminho curto até o pedido pelo WhatsApp.',
       stack: ['HTML', 'CSS', 'JavaScript', 'Tailwind CSS'],
-      url: '#', // FALTA: link real
+      url: '', // FALTA: ainda não hospedado — sem URL o card não mostra botão
     },
     {
       name: 'Horário de Brasília',
@@ -186,47 +336,77 @@ export const projects = {
       image: '', // FALTA: screenshot real
       text: 'Ferramenta pública de consulta ao horário oficial de Brasília. Interface direta, precisa e leve o bastante para abrir instantaneamente em qualquer conexão.',
       stack: ['JavaScript', 'HTML', 'CSS'],
-      url: '#', // FALTA: link real
+      url: '', // FALTA: ainda não hospedado — sem URL o card não mostra botão
     },
     {
-      name: 'Portfólio',
-      category: 'Site pessoal',
+      name: 'Tio Preto Barbearia',
+      category: 'Site para barbearia',
       image: '', // FALTA: screenshot real
-      text: 'Site pessoal moderno com foco em experiência e desempenho: animações refinadas, navegação fluida e apresentação clara de projetos e competências.',
-      stack: ['React', 'Tailwind CSS', 'JavaScript'],
-      url: '#', // FALTA: link real
+      // FALTA: confirmar o texto com o que o site realmente tem (a descrição
+      // abaixo cobre o escopo típico de barbearia — serviços, equipe e contato).
+      text: 'Presença digital para barbearia: serviços e preços na tela inicial, apresentação da equipe e caminho curto até o agendamento pelo WhatsApp.',
+      stack: ['HTML', 'CSS', 'JavaScript', 'Tailwind CSS'], // FALTA: confirmar stack real
+      url: 'https://tiopretobarbearia.lzdev.com.br',
     },
   ],
-  cta: 'Visualizar projeto',
+  /**
+   * `cta` diz o que o clique faz: abre o projeto REAL, no ar, em outra aba —
+   * "Visualizar projeto" podia ser um modal, uma galeria ou nada. `soon` é o
+   * lugar do card que ainda não tem endereço público: um selo honesto no lugar
+   * de um botão que não leva a nada.
+   */
+  cta: 'Abrir o site no ar',
+  soon: 'Publicação em breve',
 }
 
 /* -------------------------------------------------------------------------- */
-/*  3 · FERRAMENTAS                                                           */
+/*  4 · TECNOLOGIAS                                                           */
+/*                                                                            */
+/*  A âncora e o rótulo do menu dizem "tecnologias", não "ferramentas": o que  */
+/*  a seção lista são linguagens, frameworks e bancos — "ferramenta" é o nome  */
+/*  interno de quem escreve o código, não o de quem lê a página.              */
 /* -------------------------------------------------------------------------- */
 export const tools = {
-  eyebrow: 'Ferramentas',
+  eyebrow: 'Tecnologias',
   title: 'A stack que sustenta cada entrega',
   subtitle:
     'Você não precisa entender nada desta lista — escolher certo é o nosso trabalho. Ela está aqui para mostrar que existe critério técnico por trás de cada decisão.',
 
   /**
    * Agrupado por camada em vez de uma lista solta: mostra que a stack cobre o
-   * projeto de ponta a ponta, e não que sabemos catorze nomes.
-   * Os totais por grupo (7 · 4 · 3) fecham as linhas do grid de 4 colunas com a
-   * última linha centralizada, sem buraco à direita em nenhum breakpoint.
+   * projeto de ponta a ponta, e não que sabemos quinze nomes.
+   *
+   * DOIS NÍVEIS por grupo, e é isso que impede a seção de virar um paredão de
+   * logos:
+   *
+   *   `items`  · no máximo QUATRO por grupo, cada um com card e descrição. São
+   *              as escolhas que definem o projeto — o que muda a arquitetura,
+   *              o prazo e a manutenção. Quatro é o número de colunas do grid,
+   *              então todo grupo fecha em UMA linha exata no desktop: nenhuma
+   *              fileira quebrada, nenhum buraco à direita.
+   *   `extras` · a base que vem junto de qualquer projeto web. Continua listada
+   *              (omitir seria esconder parte do trabalho), mas como pastilha de
+   *              ícone e nome, sem descrição. HTML, CSS e JavaScript não são uma
+   *              DECISÃO técnica: existem em todo site do mundo, e dar a eles o
+   *              mesmo card do React inflava o front-end para sete cards, três
+   *              deles dizendo o óbvio. O que ENTRA no card é o que muda o
+   *              projeto — a biblioteca, a tipagem, o sistema de estilo.
    */
   groups: [
     {
       label: 'Front-end',
       caption: 'O que o seu cliente vê e usa',
       items: [
-        { name: 'HTML', icon: 'html', text: 'Marcação semântica: a base do SEO e da acessibilidade.' },
-        { name: 'CSS', icon: 'css', text: 'Layouts fluidos e animações leves, sem peso extra.' },
-        { name: 'JavaScript', icon: 'javascript', text: 'A linguagem que dá vida à interface no navegador.' },
-        { name: 'TypeScript', icon: 'typescript', text: 'Tipagem que revela o erro antes de ele chegar em produção.' },
         { name: 'React', icon: 'react', text: 'Interfaces componentizadas, rápidas e fáceis de evoluir.' },
+        { name: 'TypeScript', icon: 'typescript', text: 'Tipagem que revela o erro antes de ele chegar em produção.' },
         { name: 'Tailwind CSS', icon: 'tailwind', text: 'Design consistente e CSS que não cresce sem controle.' },
         { name: 'Bootstrap', icon: 'bootstrap', text: 'Base responsiva madura para telas administrativas.' },
+      ],
+      extrasLabel: 'Base de todo projeto',
+      extras: [
+        { name: 'HTML', icon: 'html' },
+        { name: 'CSS', icon: 'css' },
+        { name: 'JavaScript', icon: 'javascript' },
       ],
     },
     {
@@ -241,71 +421,131 @@ export const tools = {
     },
     {
       label: 'Design, build e versionamento',
-      caption: 'Como o projeto nasce e fica rastreável',
+      caption: 'Como o projeto nasce, é montado e fica rastreável',
       items: [
         { name: 'Figma', icon: 'figma', text: 'Protótipo navegável aprovado antes da primeira linha de código.' },
-        { name: 'Composer', icon: 'composer', text: 'Dependências PHP com versão travada: mesmo ambiente em todo lugar.' },
         { name: 'Git', icon: 'git', text: 'Histórico completo: qualquer mudança é reversível.' },
+        { name: 'GitHub', icon: 'github', text: 'Código hospedado e revisado: o projeto nunca mora numa máquina só.' },
+        { name: 'Composer', icon: 'composer', text: 'Dependências PHP com versão travada: mesmo ambiente em todo lugar.' },
       ],
     },
   ],
 }
 
 /* -------------------------------------------------------------------------- */
-/*  4 · O CUSTO INVISÍVEL                                                     */
+/*  5 · O CUSTO INVISÍVEL                                                     */
 /* -------------------------------------------------------------------------- */
+/**
+ * A seção segue a fórmula PAS (problema → agitação → solução), que é o padrão
+ * das seções de dor que convertem, com os três dispositivos que os estudos de
+ * página apontam como os que funcionam — e nenhum enfeite além deles:
+ *
+ *   1 · RECONHECIMENTO (`heard`) · falas que o dono do negócio já ouviu de um
+ *       cliente. É o "isso é sobre mim" em dois segundos, e vem antes de
+ *       qualquer argumento nosso: o visitante chega à lista de prejuízos já
+ *       tendo concordado.
+ *   2 · COMPARAÇÃO LADO A LADO (`items[].text` × `items[].fix`) · cada prejuízo
+ *       aparece junto da saída correspondente, na mesma linha. Era o dispositivo
+ *       que faltava: cinco cartões vermelhos empilhados agitavam a dor e paravam
+ *       ali, deixando a virada toda para o rodapé da seção. Agora a própria
+ *       estrutura entrega a solução, item por item.
+ *   3 · FECHAMENTO (`closing`) · a conta que corre todo mês e o próximo passo.
+ *
+ * O que NÃO entrou: número de pesquisa de mercado. A estatística aumentaria a
+ * credibilidade, mas as que encontrei sobre comportamento do consumidor
+ * brasileiro (Opinion Box, Reclame AQUI) medem preço e avaliação de produto, não
+ * "procurei a empresa e não achei site" — citá-las aqui seria esticar o dado
+ * para um argumento que ele não sustenta. Se algum dia houver um número da
+ * própria LZdev (quantos clientes chegaram pelo Google, por exemplo), ele entra
+ * aqui e vale mais que qualquer pesquisa de terceiro.
+ */
 export const invisibleCost = {
   eyebrow: 'O custo invisível',
   title: 'Não ter um site profissional não aparece na conta — mas você paga por ele',
   subtitle:
     'Nenhum desses prejuízos vem com aviso ou boleto. Eles acontecem em silêncio, todos os dias, enquanto o cliente decide fechar com outra empresa.',
+
+  /**
+   * Frases genéricas de situação, não depoimento de cliente real — são o retrato
+   * do que qualquer negócio sem site escuta, e é assim que a seção as apresenta.
+   */
+  heard: {
+    label: 'Frases que você já ouviu',
+    quotes: [
+      'Vocês têm site? Pesquisei e não achei nada.',
+      'Me manda tudo no WhatsApp que depois eu vejo.',
+      'Fechei com a outra empresa — a apresentação deles me deu mais segurança.',
+    ],
+  },
+
+  /** Rótulos das duas colunas da comparação. */
+  columns: {
+    now: 'Hoje, sem site',
+    after: 'Com o site no ar',
+  },
+
+  /**
+   * `text` é a dor e `fix` é a saída — os dois na mesma linha da comparação, e
+   * por isso escritos curtos e em paralelo: um par que não fecha no mesmo
+   * tamanho desalinha a leitura das duas colunas.
+   */
   items: [
     {
       icon: 'userX',
-      title: 'Clientes que desistem por falta de credibilidade',
-      text: 'Antes de ligar, o cliente pesquisa. Sem um site que sustente a sua reputação, ele fica na dúvida sobre o tamanho e a seriedade da operação.',
+      title: 'Credibilidade em dúvida',
+      text: 'Antes de ligar, o cliente pesquisa. Sem site, ele fica sem saber o tamanho e a seriedade da operação.',
       consequence: 'O contato morre antes de existir',
+      fix: 'Quem pesquisa encontra estrutura, trabalhos entregues e um canal de contato — e liga com a decisão meio tomada.',
     },
     {
       icon: 'moon',
-      title: 'Perda de vendas fora do horário comercial',
-      text: 'A decisão de compra raramente acontece de segunda a sexta, das 8h às 18h. Sem um canal aberto, a intenção esfria até alguém responder.',
+      title: 'Venda perdida fora do horário',
+      text: 'A decisão de compra raramente acontece de segunda a sexta, das 8h às 18h. A intenção esfria até alguém responder.',
       consequence: 'Demanda que chega quando ninguém atende',
+      fix: 'O site apresenta, responde a dúvida comum e recebe o pedido às 23h de um domingo, sem ninguém de plantão.',
     },
     {
       icon: 'share',
-      title: 'Dependência excessiva das redes sociais',
-      text: 'Perfil suspenso, alcance derrubado por mudança de algoritmo ou conta perdida — e todo o seu histórico comercial vai junto. A regra é de outro dono.',
-      consequence: 'Sua presença digital alugada, não sua',
+      title: 'Presença alugada nas redes',
+      text: 'Perfil suspenso, alcance derrubado por algoritmo ou conta perdida — e todo o histórico comercial vai junto.',
+      consequence: 'A regra é de outro dono',
+      fix: 'Domínio, conteúdo e contatos no seu nome. A rede social volta a ser vitrine, e não o seu endereço.',
     },
     {
       icon: 'trendingDown',
-      title: 'Concorrentes passando na frente',
-      text: 'Na comparação lado a lado, quem apresenta melhor a proposta ganha a reunião. Não é sempre quem entrega melhor — é quem parece mais preparado.',
+      title: 'Concorrente na frente',
+      text: 'Na comparação lado a lado, ganha quem apresenta melhor a proposta — não sempre quem entrega melhor.',
       consequence: 'Você perde antes de poder argumentar',
+      fix: 'Você entra na reunião já apresentado, no mesmo nível de quem investiu em estrutura há anos.',
     },
     {
       icon: 'searchX',
-      title: 'Baixa presença no Google',
-      text: 'Quem procura pelo seu serviço hoje encontra quem investiu em estrutura e conteúdo. Sem site, você simplesmente não está entre as opções.',
+      title: 'Invisível no Google',
+      text: 'Quem procura pelo seu serviço hoje encontra quem investiu em conteúdo. Você não está entre as opções.',
       consequence: 'Demanda pronta indo para outro lugar',
+      fix: 'Páginas indexáveis, SEO e dados estruturados desde a primeira entrega: você aparece para quem já quer comprar.',
     },
   ],
   closing: {
     title: 'Todo mês sem site é um mês pagando essa conta',
     text: 'A boa notícia: nenhum desses pontos é difícil de resolver. É estrutura, não sorte.',
-    cta: 'Quero resolver isso',
+    /* O rótulo sai de `primaryCta`: "Quero resolver isso" era entusiasmo, não
+       informação — o visitante não sabia se ia para um formulário, uma tabela
+       de preços ou uma chamada de vídeo. */
   },
 }
 
 /* -------------------------------------------------------------------------- */
-/*  5 · DIFERENCIAIS                                                          */
+/*  6 · DIFERENCIAIS                                                          */
 /* -------------------------------------------------------------------------- */
 export const why = {
   eyebrow: 'Por que escolher a LZdev',
   title: 'Feito certo agora custa menos que refeito depois',
   subtitle:
     'Boa parte do que recebemos para manter foi construído às pressas por alguém que não pensou no ano seguinte. Nosso padrão de engenharia existe para você nunca precisar recomeçar.',
+
+  /** Convite a rolar do carrossel — ver `projects.hint`. */
+  hint: 'Arraste para o lado para ver os outros diferenciais',
 
   /**
    * `image`: ilustração do diferencial, em /public/diferenciais/*.svg.
@@ -363,72 +603,6 @@ export const why = {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  6 · NOSSO PROCESSO                                                        */
-/* -------------------------------------------------------------------------- */
-export const process = {
-  eyebrow: 'Nosso processo',
-  title: 'Organização e transparência do briefing à entrega',
-  subtitle:
-    'Sem caixa-preta e sem semanas de silêncio. Cada etapa tem entregável claro, e você acompanha a evolução do começo ao fim.',
-
-  /** Frase destacada ao final da timeline. */
-  highlight: 'Você sempre sabe em que etapa o seu projeto está.',
-  highlightText:
-    'Cada etapa termina num entregável que você aprova. Nada avança sem o seu aval, e nenhuma semana passa sem retorno.',
-
-  /**
-   * Descrições curtas de propósito: na timeline horizontal cada etapa ocupa
-   * uma coluna estreita, então um parágrafo longo viraria uma torre de texto.
-   * `role` diz o que fica na sua mão naquela etapa — é o que sustenta a
-   * promessa de transparência da seção.
-   */
-  steps: [
-    {
-      icon: 'chat',
-      title: 'Briefing',
-      text: 'Entendemos o que trava a operação hoje e qual resultado realmente importa.',
-      deliverable: 'Diagnóstico e escopo inicial',
-      role: 'Você conta o problema',
-    },
-    {
-      icon: 'map',
-      title: 'Planejamento',
-      text: 'Definimos escopo, prioridades, prazo e investimento antes de codar.',
-      deliverable: 'Proposta com escopo fechado',
-      role: 'Você aprova a proposta',
-    },
-    {
-      icon: 'palette',
-      title: 'Design',
-      text: 'Projetamos a interface para quem usa todo dia: pouco clique, nada escondido.',
-      deliverable: 'Protótipo navegável',
-      role: 'Você valida o layout',
-    },
-    {
-      icon: 'terminal',
-      title: 'Desenvolvimento',
-      text: 'Construção em ciclos curtos, com ambiente de homologação sempre no ar.',
-      deliverable: 'Entregas parciais funcionais',
-      role: 'Você acompanha a evolução',
-    },
-    {
-      icon: 'bug',
-      title: 'Testes',
-      text: 'Validamos regras, formulários, permissões, responsividade e desempenho.',
-      deliverable: 'Checklist de qualidade aprovado',
-      role: 'Você recebe o relatório',
-    },
-    {
-      icon: 'rocket',
-      title: 'Entrega',
-      text: 'Publicação, domínio, treinamento da equipe e o código-fonte nas suas mãos.',
-      deliverable: 'Sistema no ar + documentação',
-      role: 'Você assume o controle',
-    },
-  ],
-}
-
-/* -------------------------------------------------------------------------- */
 /*  7 · EQUIPE                                                                */
 /* -------------------------------------------------------------------------- */
 
@@ -466,9 +640,7 @@ export const team = {
       bio: 'Interface em React, TypeScript e JavaScript. Regra de negócio em PHP, Laravel e Node.js. Dados em MySQL.',
       links: {
         github: enzo.github,
-        instagram: enzo.instagram,
-        whatsapp: enzo.whatsapp,
-        linkedin: enzo.linkedin,
+        portfolio: enzo.portfolio,
       },
     },
     {
@@ -482,9 +654,7 @@ export const team = {
       bio: 'React, TypeScript e JavaScript na interface. PHP, Laravel e Node.js na regra de negócio. MySQL no banco.',
       links: {
         github: luis.github,
-        instagram: luis.instagram,
-        whatsapp: luis.whatsapp,
-        linkedin: luis.linkedin,
+        portfolio: luis.portfolio,
       },
     },
   ],
@@ -594,43 +764,60 @@ export const faq = {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  10 · FALE COM A GENTE                                                     */
+/* 10 · FALE COM A GENTE                                                     */
 /* -------------------------------------------------------------------------- */
 export const contactSection = {
   eyebrow: 'Fale com a gente',
   title: 'Descreva o desafio. Nós desenhamos a solução.',
   subtitle:
-    'Preencha o formulário e receba um retorno em até 2 horas úteis com as próximas etapas. Quanto mais contexto você der, mais preciso será o nosso diagnóstico.',
-  projectTypes: [
-    { value: 'site', label: 'Site institucional' },
-    { value: 'landing', label: 'Landing page' },
-    { value: 'system', label: 'Sistema web' },
-    { value: 'saas', label: 'SaaS' },
-    { value: 'automation', label: 'Automação / API' },
-    { value: 'other', label: 'Outro' },
-  ],
-  budgets: [
-    { value: 'a', label: 'Até R$ 3.000' },
-    { value: 'b', label: 'R$ 3.000 a R$ 8.000' },
-    { value: 'c', label: 'R$ 8.000 a R$ 20.000' },
-    { value: 'd', label: 'Acima de R$ 20.000' },
-    { value: 'e', label: 'Ainda não sei' },
-  ],
-  deadlines: [
-    { value: 'urgent', label: 'O quanto antes' },
-    { value: 'month', label: 'Até 1 mês' },
-    { value: 'quarter', label: 'Nos próximos 3 meses' },
-    { value: 'planning', label: 'Só planejando' },
-  ],
+    'Quatro campos e um retorno em até 2 horas úteis com as próximas etapas. Se quiser adiantar o diagnóstico, conte o desafio na descrição — o campo é opcional.',
   reassurance: [
     'Retorno em até 2 horas úteis',
     'Diagnóstico inicial sem custo',
     'Seus dados não são compartilhados',
   ],
+
+  /**
+   * O que acontece DEPOIS de clicar, escrito antes do clique.
+   * O botão não envia um e-mail: ele monta a mensagem e abre o WhatsApp com ela
+   * pronta. Descobrir isso só quando a aba abre é a diferença entre "que bom,
+   * já está escrito" e "espera, eu não pedi isso" — e a segunda reação fecha a
+   * aba. `submitNote` fica ao lado do botão; `sent` é a confirmação.
+   */
+  submitNote:
+    'Ao enviar, abrimos o WhatsApp com a sua solicitação já escrita. Você lê, ajusta se quiser e manda.',
+  sent: 'Tudo pronto — abrimos o WhatsApp com a sua solicitação preenchida. Se a aba não abriu, verifique o bloqueador de pop-ups ou use um dos canais ao lado.',
   direct: {
     title: 'Prefere falar direto?',
     text: 'Escolha o canal que preferir. Respondemos rápido em todos.',
     socialsLabel: 'Também estamos aqui',
+
+    /**
+     * Painel do canal de e-mail.
+     *
+     * Um `mailto:` sozinho é aposta: em máquina sem cliente de e-mail
+     * configurado — a maioria de quem usa webmail no navegador — o clique não
+     * faz absolutamente nada, e o visitante conclui que o site está quebrado.
+     * Por isso o botão abre um painel com TRÊS saídas: o Gmail na web (o caso
+     * mais comum no Brasil), o app de e-mail do sistema e o endereço para
+     * copiar. Assunto e corpo já vão preenchidos nos dois primeiros — o mesmo
+     * tratamento que os botões de WhatsApp recebem.
+     *
+     * `\n` no corpo: o roteiro de campos existe para o visitante não travar no
+     * "não sei o que escrever". Ele pode apagar tudo e escrever à mão.
+     */
+    email: {
+      openLabel: 'Enviar um e-mail',
+      /** O endereço em si NÃO mora aqui: ele vem de `contact.email`. */
+      panelTitle: 'Enviar para',
+      subject: 'Solicitação de projeto — site LZdev',
+      body: 'Olá, equipe LZdev!\n\nVim pelo site e gostaria de conversar sobre um projeto.\n\nNome:\nEmpresa:\nTelefone:\nO que eu preciso:\n',
+      gmail: 'Abrir no Gmail',
+      app: 'Abrir meu app de e-mail',
+      copy: 'Copiar endereço',
+      copied: 'Endereço copiado',
+      note: 'O assunto e o texto inicial já vão preenchidos. Você revisa antes de enviar.',
+    },
   },
 }
 
@@ -638,22 +825,39 @@ export const contactSection = {
 /*  FOOTER                                                                    */
 /* -------------------------------------------------------------------------- */
 export const footer = {
-  tagline: 'Software house full stack. Transformamos desafios operacionais em soluções digitais que geram resultado.',
+  /* A tagline diz o serviço, como o H1 — é o texto que fecha a página e o que
+     um leitor de tela lê no rodapé para saber onde está. */
+  tagline:
+    'Desenvolvimento de sites, landing pages e sistemas web sob medida — da tela ao banco de dados.',
+
+  /**
+   * Atalhos do rodapé: são OITO, e juntos com os cinco do menu cobrem TODAS as
+   * dez seções da página — nenhuma fica órfã, sem nada que aponte para ela.
+   * Por isso "Tecnologias" não está aqui (já está no menu) e "Nossos números"
+   * está (não está no menu).
+   *
+   * Oito é o número máximo antes de a grade quebrar feio: em 2 colunas
+   * (celular) e 4 (a partir de sm), oito fecham duas fileiras exatas. Um nono
+   * link deixaria um item órfão numa terceira linha.
+   *
+   * O texto de cada link nomeia o destino: nenhum "clique aqui" e nenhum rótulo
+   * que só faz sentido depois de chegar lá.
+   */
   columns: [
     {
       title: 'Navegação',
       links: [
+        { label: 'Serviços', href: '#servicos' },
         { label: 'Projetos', href: '#projetos' },
-        { label: 'Ferramentas', href: '#ferramentas' },
         { label: 'Diferenciais', href: '#diferenciais' },
-        { label: 'Processo', href: '#processo' },
+        { label: 'Custo invisível', href: '#custo-invisivel' },
       ],
     },
     {
       title: 'Empresa',
       links: [
-        { label: 'Equipe', href: '#equipe' },
         { label: 'Nossos números', href: '#numeros' },
+        { label: 'Equipe', href: '#equipe' },
         { label: 'Perguntas frequentes', href: '#faq' },
         { label: 'Fale com a gente', href: '#contato' },
       ],

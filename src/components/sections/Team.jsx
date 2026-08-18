@@ -1,13 +1,12 @@
-import { team, whatsappLink } from '../../data/site'
+import { team } from '../../data/site'
 import { Card } from '../primitives/Card'
 import { brandColors, Icon } from '../primitives/Icon'
 import { Reveal } from '../primitives/Reveal'
 import { Section, SectionHeader } from '../primitives/Section'
 
 /**
- * Cada link puxa a cor da própria rede por `--net`: o ícone já nasce colorido e
- * o hover tinge borda e fundo no mesmo tom. É o que diferencia os três botões
- * de relance, sem precisar ler o rótulo.
+ * Cada link puxa a sua cor por `--net`: o hover tinge borda e fundo no mesmo
+ * tom, então os dois botões se separam de relance sem precisar ler o rótulo.
  */
 const SOCIAL_BASE =
   'inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-3.5 py-2 text-sm font-medium text-muted transition-[border-color,background-color,color,transform] duration-300 hover:-translate-y-0.5 hover:border-[color-mix(in_oklab,var(--net)_50%,transparent)] hover:bg-[color-mix(in_oklab,var(--net)_12%,transparent)] hover:text-ink'
@@ -28,7 +27,7 @@ const SOCIAL_BASE =
  */
 function Portrait({ member }) {
   return (
-    <div className="relative h-40 w-full shrink-0 overflow-hidden rounded-2xl bg-[linear-gradient(165deg,#4a4a4a_0%,#2a2a2a_50%,#141414_100%)] ring-1 ring-white/12 sm:h-auto sm:w-48 lg:w-56">
+    <div className="relative h-52 w-full shrink-0 overflow-hidden rounded-2xl bg-[linear-gradient(165deg,#4a4a4a_0%,#2a2a2a_50%,#141414_100%)] ring-1 ring-white/12 sm:h-auto sm:w-48 lg:w-56">
       {member.photo ? (
         <img
           src={member.photo}
@@ -54,12 +53,21 @@ function Portrait({ member }) {
   )
 }
 
-function MemberCard({ member, delay }) {
-  const message = `Olá, ${member.name.split(' ')[0]}! Vim pelo site da LZdev e gostaria de conversar sobre um projeto.`
+/**
+ * `min-h` é o que dá altura ao card: o conteúdo é curto (quatro linhas de texto
+ * e dois botões) e sozinho ele fecharia num bloco baixo demais para o par de
+ * cartões sustentar a seção. Como a coluna de texto empurra os links com
+ * `mt-auto`, a folga entra entre a bio e os botões — vira respiro, não buraco.
+ * O retrato acompanha por tabela: no mobile ele é uma faixa de altura fixa; a
+ * partir de sm ele estica junto com a linha.
+ */
+const CARD_INNER =
+  'flex h-full min-h-[24rem] flex-col gap-5 p-5 sm:min-h-[21rem] sm:flex-row sm:gap-7 sm:p-7 lg:min-h-[23rem]'
 
+function MemberCard({ member, delay }) {
   return (
     <Reveal delay={delay} className="h-full">
-      <Card className="h-full" innerClassName="flex h-full flex-col gap-5 p-5 sm:flex-row sm:gap-6 sm:p-6">
+      <Card className="h-full" innerClassName={CARD_INNER}>
         <Portrait member={member} />
 
         <div className="flex min-w-0 flex-1 flex-col">
@@ -97,43 +105,19 @@ function MemberCard({ member, delay }) {
               <Icon name="github" size={16} colored />
               GitHub
             </a>
-            {/* Instagram não entra em `brandColors`: a marca é um gradiente, que
-                o próprio Icon desenha. O hover cai no branco, como no rodapé. */}
+            {/* Portfólio não é marca de terceiro e não tem cor oficial: o ícone
+                herda a cor do texto (globe é traço, não logo) e o hover puxa o
+                token --accent, o mesmo tom que a página usa para dado. */}
             <a
-              href={member.links.instagram}
+              href={member.links.portfolio}
               target="_blank"
               rel="noopener noreferrer"
-              style={{ '--net': '#ffffff' }}
+              style={{ '--net': 'var(--color-accent)' }}
               className={SOCIAL_BASE}
             >
-              <Icon name="instagram" size={16} colored />
-              Instagram
+              <Icon name="globe" size={16} />
+              Portfólio
             </a>
-            {/* Cada pessoa com o SEU número — antes os dois botões caíam no
-                canal principal da empresa e `links.whatsapp` não era usado. */}
-            <a
-              href={whatsappLink(message, member.links.whatsapp)}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ '--net': brandColors.whatsapp }}
-              className={SOCIAL_BASE}
-            >
-              <Icon name="whatsapp" size={16} colored />
-              WhatsApp
-            </a>
-            {/* O botão de LinkedIn só existe quando a URL é preenchida em data/site.js */}
-            {member.links.linkedin ? (
-              <a
-                href={member.links.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ '--net': brandColors.linkedin }}
-                className={SOCIAL_BASE}
-              >
-                <Icon name="linkedin" size={16} colored />
-                LinkedIn
-              </a>
-            ) : null}
           </div>
         </div>
       </Card>

@@ -1,5 +1,8 @@
 @import 'tailwindcss';
 
+/* As duas famílias, só no subconjunto latino — ver src/styles/fonts.css. */
+@import './fonts.css';
+
 /* Estilos exclusivos do Hero — mantidos fora deste arquivo para não misturar
    tokens globais com a composição de uma única seção. */
 @import './hero.css';
@@ -64,8 +67,8 @@
   --color-warn: #fb7185;
 
   /* — categóricas —
-     Distinguem itens de uma MESMA lista (os diferenciais, o trilho do processo),
-     nunca estado. As três são frias de propósito: o quente fica reservado ao
+     Distinguem itens de uma MESMA lista (os diferenciais, a barra do item aberto
+     no FAQ), nunca estado. As três são frias de propósito: o quente fica reservado ao
      semântico, então um vermelho na página sempre significa perda e nunca "item
      número 4". Três bastam para que dois vizinhos jamais repitam a cor. */
   --color-cat-1: #60a5fa;
@@ -88,6 +91,11 @@
   --animate-pulse-dot: pulse-dot 2.4s ease-in-out infinite;
   --animate-grow: grow 1.1s var(--ease-out-soft) both;
   --animate-sheen: sheen 1.1s var(--ease-out-soft);
+  /* Empurrãozinho para a direita — o convite a rolar das trilhas horizontais.
+     Só a seta "próximo" o usa, e só ENQUANTO o visitante não interagiu: a
+     amplitude é de 3px, o suficiente para o olho perceber movimento na
+     periferia sem virar um enfeite piscando na página. */
+  --animate-nudge-x: nudge-x 2.4s var(--ease-out-soft) infinite;
 }
 
 @keyframes marquee {
@@ -103,15 +111,30 @@
     transform: translate3d(4%, -3%, 0) scale(1.12);
   }
 }
+/* O ponto pisca em OPACIDADE e o halo cresce em TRANSFORM — antes os dois
+   estavam num só keyframe que animava o `spread` do box-shadow. A diferença é
+   de custo: mudar o spread de uma sombra obriga o navegador a repintar a área a
+   cada quadro, e são nove etiquetas dessas na página animando para sempre.
+   Opacidade e transform o compositor resolve sem repintar nada. O desenho na
+   tela é o mesmo. */
 @keyframes pulse-dot {
   0%,
   100% {
     opacity: 1;
-    box-shadow: 0 0 0 0 rgb(96 165 250 / 0.55);
   }
   50% {
     opacity: 0.65;
-    box-shadow: 0 0 0 5px rgb(96 165 250 / 0);
+  }
+}
+@keyframes pulse-ring {
+  0%,
+  100% {
+    transform: scale(0.35);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 0;
   }
 }
 @keyframes grow {
@@ -133,6 +156,16 @@
 @keyframes spin-slow {
   to {
     transform: rotate(360deg);
+  }
+}
+@keyframes nudge-x {
+  0%,
+  55%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(3px);
   }
 }
 
@@ -328,14 +361,20 @@
   padding-right: 2.75rem;
 }
 
-/* Preenchimento do conector da timeline do processo, que agora é horizontal em
-   qualquer largura (a trilha rola de lado em vez de virar coluna no celular).
-   Mora aqui, e não num transform inline, porque `scaleX` esticaria também a
-   espessura do traço de 1px. --fill (0→1) vem do progresso de rolagem. */
-@utility timeline-fill {
-  width: calc(var(--fill, 0) * 100%);
-  height: 100%;
-  transition: width 0.2s linear;
+/* Ponto pulsante das etiquetas de seção: o ponto em si e, no ::after, o halo
+   que cresce e se apaga. Substitui a antiga classe `animate-pulse-dot`, que
+   fazia o halo com sombra animada. */
+@utility pulse-dot {
+  position: relative;
+  animation: var(--animate-pulse-dot);
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    box-shadow: 0 0 0 5px color-mix(in oklab, var(--color-info) 55%, transparent);
+    animation: pulse-ring 2.4s ease-in-out infinite;
+  }
 }
 
 @utility no-scrollbar {
@@ -349,7 +388,15 @@
    SCROLL REVEAL — controlado por useReveal via [data-reveal]
    ========================================================================== */
 @layer components {
-  [data-reveal] {
+  /* TODAS as regras de estado escondido moram sob `.js`, a classe que o
+     index.html põe no <html> antes da primeira pintura.
+
+     O motivo é o prerender: o HTML publicado já contém a página inteira, e um
+     `opacity: 0` incondicional esconderia esse conteúdo de quem não executa
+     JavaScript — deixando um site completo e invisível. Sob `.js`, o conteúdo
+     só começa escondido quando existe JavaScript para revelá-lo; sem ele, tudo
+     aparece de imediato, sem animação. */
+  .js [data-reveal] {
     opacity: 0;
     transform: translate3d(0, 22px, 0);
     transition:
@@ -358,19 +405,37 @@
     transition-delay: calc(var(--reveal-delay, 0) * 1ms);
     will-change: opacity, transform;
   }
-  [data-reveal='left'] {
+  .js [data-reveal='left'] {
     transform: translate3d(-26px, 0, 0);
   }
-  [data-reveal='right'] {
+  .js [data-reveal='right'] {
     transform: translate3d(26px, 0, 0);
   }
-  [data-reveal='scale'] {
+  .js [data-reveal='scale'] {
     transform: scale(0.965);
   }
-  [data-reveal].is-visible {
+  .js [data-reveal].is-visible {
     opacity: 1;
     transform: none;
     will-change: auto;
+  }
+}
+
+/* ==========================================================================
+   CUSTO DE ANIMAÇÃO EM TELA PEQUENA
+
+   Os três halos do fundo global são círculos de até 34rem com `blur(150px)`, em
+   deriva infinita. No desktop o compositor dá conta; num celular de entrada,
+   redesenhar um borrão desse tamanho é trabalho de GPU permanente, com a página
+   parada, só para um movimento de 28 segundos que ninguém percebe.
+
+   Abaixo de 640px os halos ficam onde estão — mesma cor, mesma posição, mesma
+   profundidade. Só param de derivar. (Regra fora de @layer de propósito: assim
+   ela vence a utility do Tailwind sem precisar de !important.)
+   ========================================================================== */
+@media (max-width: 639px) {
+  .animate-drift {
+    animation: none;
   }
 }
 

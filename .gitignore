@@ -3,6 +3,8 @@ node_modules/
 
 # Build de produção (gerado por `npm run build`)
 dist/
+# Bundle de servidor usado só pelo prerender, apagado no fim do build
+dist-ssr/
 
 # Logs
 *.log

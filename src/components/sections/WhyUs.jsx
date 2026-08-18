@@ -41,9 +41,15 @@ function WhySlide({ item, index }) {
           <>
             {/* alt vazio de propósito: a ilustração repete visualmente o que o
                 título e o texto ao lado já dizem — descrevê-la seria eco. */}
+            {/* width/height = o viewBox do arquivo (800x440). O CSS é que dá o
+                tamanho real (`absolute inset-0 size-full`), mas os atributos
+                declaram a proporção intrínseca — e é isso que impede o
+                navegador de recalcular o layout quando a ilustração chega. */}
             <img
               src={item.image}
               alt=""
+              width={800}
+              height={440}
               loading="lazy"
               decoding="async"
               className="absolute inset-0 size-full object-cover transition-transform duration-700 ease-[var(--ease-out-soft)] desktop:group-hover:scale-[1.04]"
@@ -88,6 +94,12 @@ export function WhyUs() {
           items={why.items}
           label="Diferenciais da LZdev"
           slideKey={(item) => item.title}
+          /* Os sete títulos no índice funcionam como o resumo da seção: dá para
+             ler a lista inteira de diferenciais sem avançar um slide, e o
+             carrossel passa a ser o detalhe de cada um, não a única forma de
+             descobrir que eles existem. */
+          itemLabel={(item) => item.title}
+          hint={why.hint}
           renderSlide={(item, index) => <WhySlide item={item} index={index} />}
         />
       </Reveal>

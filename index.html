@@ -3,9 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#000000" />
 
-    <!-- Ícones derivados de public/logo.png por `npm run icons`. Um tamanho por
+    <!-- As duas fontes do site, pré-carregadas.
+
+         O maior elemento de texto da página (o título do Hero, que é o LCP) é
+         desenhado em Plus Jakarta Sans. Sem estas duas linhas o navegador só
+         descobre que precisa da fonte depois de baixar o CSS, casar as regras e
+         ver que existe texto para desenhar — três etapas depois do primeiro
+         byte. Aqui o download começa imediatamente, em paralelo com tudo.
+
+         `crossorigin` é obrigatório mesmo sendo o nosso próprio domínio: fonte
+         é sempre requisitada em modo CORS, e sem o atributo o navegador baixa
+         DUAS vezes o mesmo arquivo. Os caminhos são estáveis porque os arquivos
+         moram em public/fonts (ver scripts/copy-fonts.mjs). -->
+    <link
+      rel="preload"
+      href="/fonts/plus-jakarta-sans-latin-wght-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/inter-latin-wght-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <!-- Ícones derivados de brand/logo.png por `npm run icons`. Um tamanho por
          slot, cada um reamostrado do original: assim o navegador nunca precisa
          espremer a arte, que era a causa do ícone esticado. Placa preta com a
          estrela branca — a arte nasce branca e sozinha desapareceria numa aba de
@@ -19,63 +45,82 @@
     <link rel="icon" type="image/png" sizes="180x180" href="/favicon-180.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
-    <title>LZdev — Software House Full Stack | Sistemas Web, SaaS e Automações</title>
+    <!-- A marca de que o JavaScript está vivo, decidida antes da primeira
+         pintura.
+
+         O site é entregue com o HTML já renderizado (ver scripts/prerender.mjs),
+         e o efeito de "aparecer ao rolar" começa com `opacity: 0` — o que
+         significa que, se o bundle não executar (erro de rede, extensão
+         bloqueando, JavaScript desligado), o visitante receberia uma página
+         cheia de conteúdo INVISÍVEL. Pior que a página vazia de antes.
+
+         Com esta linha, o `opacity: 0` só existe quando há JavaScript para
+         desligá-lo depois (regra `.js [data-reveal]` em src/styles/index.css).
+         Sem JavaScript, tudo aparece de uma vez, sem animação — que é
+         exactamente o comportamento correto. Sendo síncrono e no <head>, o
+         atributo já está lá quando o CSS é aplicado: nada pisca. -->
+    <script>
+      document.documentElement.classList.add('js')
+    </script>
+
+    <!-- SEO:START — bloco GERADO a partir de src/data/seo.js por `npm run seo`,
+         que o `npm run build` executa antes de qualquer coisa. Editar aqui
+         funciona até o próximo build, e aí a alteração desaparece sem aviso:
+         o domínio, o title, a description e o Open Graph moram no seo.js. -->
+    <title>Desenvolvimento de Sites e Sistemas Web | LZdev</title>
     <meta
       name="description"
-      content="A LZdev transforma desafios operacionais em soluções digitais. Desenvolvemos sistemas web, SaaS, dashboards, automações e sites que reduzem retrabalho e aumentam a produtividade da sua empresa."
+      content="A LZdev desenvolve landing pages, sites institucionais e sistemas web sob medida. Escopo e prazo fechados, atendimento remoto em todo o Brasil."
     />
     <meta name="author" content="LZdev" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="apple-mobile-web-app-title" content="LZdev" />
     <link rel="canonical" href="https://lzdev.com.br/" />
+    <link rel="manifest" href="/site.webmanifest" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="pt_BR" />
     <meta property="og:site_name" content="LZdev" />
     <meta property="og:url" content="https://lzdev.com.br/" />
-    <meta property="og:title" content="LZdev — Transformamos desafios em soluções digitais" />
+    <meta property="og:title" content="LZdev — Sites e sistemas web sob medida" />
     <meta
       property="og:description"
-      content="Software house full stack. Sistemas web, SaaS, dashboards, automações e APIs sob medida para empresas que querem escalar sem aumentar o esforço manual."
+      content="Landing pages, sites institucionais e sistemas de gestão feitos do zero para a sua operação. Escopo e prazo fechados antes de começar."
     />
     <meta property="og:image" content="https://lzdev.com.br/og-cover.png" />
-    <meta property="og:image:alt" content="LZdev — software house full stack" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="LZdev — desenvolvimento de sites e sistemas web sob medida"
+    />
 
-    <!-- Twitter -->
+    <!-- X / Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="LZdev — Transformamos desafios em soluções digitais" />
+    <meta name="twitter:title" content="LZdev — Sites e sistemas web sob medida" />
     <meta
       name="twitter:description"
-      content="Sistemas web, SaaS, dashboards e automações sob medida. Tecnologia que devolve tempo para a sua equipe."
+      content="Landing pages, sites institucionais e sistemas de gestão feitos do zero para a sua operação. Escopo e prazo fechados antes de começar."
     />
     <meta name="twitter:image" content="https://lzdev.com.br/og-cover.png" />
+    <meta
+      name="twitter:image:alt"
+      content="LZdev — desenvolvimento de sites e sistemas web sob medida"
+    />
 
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "ProfessionalService",
-        "name": "LZdev",
-        "description": "Software house especializada em desenvolvimento full stack: sistemas web, SaaS, dashboards, automações, APIs e sites de alta performance.",
-        "url": "https://lzdev.com.br/",
-        "areaServed": { "@type": "Country", "name": "Brasil" },
-        "availableLanguage": "pt-BR",
-        "knowsAbout": [
-          "Desenvolvimento de sistemas web",
-          "SaaS",
-          "Automação de processos",
-          "Integração de APIs",
-          "Dashboards e BI",
-          "Landing pages de alta conversão"
-        ],
-        "serviceType": [
-          "Sites institucionais",
-          "Landing pages",
-          "Sistemas web",
-          "SaaS",
-          "Automações",
-          "APIs"
-        ]
-      }
-    </script>
+    <!-- Google Search Console: a tag de verificação entra aqui automaticamente
+         quando `googleSiteVerification` deixar de ser null em src/data/seo.js.
+         Nunca preencha com um valor inventado — uma tag falsa não valida nada. -->
+    <!-- SEO:END -->
+
+    <!-- Os dados estruturados (JSON-LD) NÃO ficam aqui: eles são gerados a
+         partir do conteúdo real da página em
+         src/components/layout/StructuredData.jsx e entram no HTML estático pelo
+         prerender do build. Uma cópia à mão neste arquivo seria a primeira a
+         ficar velha quando um preço ou uma pergunta do FAQ mudasse. -->
   </head>
   <body>
     <div id="root"></div>

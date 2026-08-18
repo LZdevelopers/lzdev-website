@@ -45,7 +45,11 @@ function ProjectShot({ image, name }) {
 }
 
 function ProjectSlide({ project }) {
-  const external = project.url.startsWith('http')
+  /* Sem URL não existe botão. Os quatro cards apontavam para `href="#"`, que
+     recarrega a âncora vazia e joga o visitante de volta ao topo da página —
+     ou seja, um botão que promete abrir o projeto e não abre. Enquanto o
+     endereço não existir, o card mostra um selo dizendo isso com palavras. */
+  const live = Boolean(project.url)
 
   return (
     <article className="group grid gap-6 rounded-[var(--radius-xl2)] border border-white/8 bg-surface/40 p-5 border-gradient sm:p-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-stretch lg:gap-8 lg:p-7">
@@ -89,15 +93,25 @@ function ProjectSlide({ project }) {
         </div>
 
         <div className="mt-auto pt-7">
-          <Button
-            href={project.url}
-            target={external ? '_blank' : undefined}
-            rel={external ? 'noopener noreferrer' : undefined}
-            variant="outline"
-            icon="arrowUpRight"
-          >
-            {projects.cta}
-          </Button>
+          {live ? (
+            <Button
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="outline"
+              icon="arrowUpRight"
+            >
+              {/* O rótulo avisa que abre fora: o ícone diagonal diz isso para
+                  quem vê, e o texto diz para quem ouve. */}
+              {projects.cta}
+              <span className="sr-only"> (abre em nova aba)</span>
+            </Button>
+          ) : (
+            <p className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-[0.78rem] font-medium text-faint">
+              <Icon name="clock" size={14} className="shrink-0" aria-hidden="true" />
+              {projects.soon}
+            </p>
+          )}
         </div>
       </div>
     </article>
@@ -114,6 +128,11 @@ export function Projects() {
           items={projects.items}
           label="Projetos em destaque"
           slideKey={(project) => project.name}
+          /* O índice mostra o NOME dos quatro projetos antes de qualquer
+             rolagem: quem chega sabe o que tem na seção e pula direto para o
+             caso parecido com o dele. */
+          itemLabel={(project) => project.name}
+          hint={projects.hint}
           renderSlide={(project) => <ProjectSlide project={project} />}
         />
       </Reveal>

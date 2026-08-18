@@ -111,17 +111,6 @@ const stroke = {
       <path d="M20 13h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1Z" />
     </>
   ),
-  /* Composer entra como ícone de traço, e não como logo de marca: a arte oficial
-     é uma ilustração de ~39 kB de path único — mais peso do que TODO este
-     conjunto de ícones — e num tile de 22px viraria um borrão. Um pacote lacrado
-     comunica "gerenciador de dependências" no mesmo traço do resto da página. */
-  composer: (
-    <>
-      <path d="M21 8.6v6.8a2 2 0 0 1-1.02 1.74l-7 3.93a2 2 0 0 1-1.96 0l-7-3.93A2 2 0 0 1 3 15.4V8.6a2 2 0 0 1 1.02-1.74l7-3.93a2 2 0 0 1 1.96 0l7 3.93A2 2 0 0 1 21 8.6Z" />
-      <path d="m3.3 7.5 8.7 4.9 8.7-4.9" />
-      <path d="M12 12.4V21" />
-    </>
-  ),
   check: <path d="M20 6 9 17l-5-5" />,
   ruler: (
     <>
@@ -251,6 +240,12 @@ const stroke = {
       <path d="m22 6-10 7L2 6" />
     </>
   ),
+  copy: (
+    <>
+      <path d="M9 9h9a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Z" />
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+    </>
+  ),
   menu: <path d="M4 7h16M4 12h16M4 17h16" />,
   close: <path d="M18 6 6 18M6 6l12 12" />,
   chevronDown: <path d="m6 9 6 6 6-6" />,
@@ -313,15 +308,34 @@ const brand = {
 }
 
 /**
+ * Marcas cuja arte oficial é grande demais para entrar inline.
+ *
+ * O logo do Composer é uma ILUSTRAÇÃO — um path único de ~39 kB, mais peso do
+ * que todo o resto deste arquivo somado. Embutido, ele entraria no bundle de
+ * JavaScript de todo visitante só para aparecer num tile de 20px. Então a arte
+ * fica em /public/marcas/*.svg (arquivo estático, cacheado à parte, baixado uma
+ * vez) e é usada como MÁSCARA CSS, não como <img>: assim a marca continua sendo
+ * pintada pela cor que a página manda — `colored` pega a cor da marca, o resto
+ * herda `currentColor` — exatamente como os logos inline fazem. Um <img> ficaria
+ * preso ao preto do arquivo original, invisível sobre o nosso fundo.
+ */
+const maskedBrand = {
+  composer: '/marcas/composer.svg',
+}
+
+/**
  * Cor OFICIAL de cada marca, usada quando o ícone é renderizado com `colored`.
  * Aqui a cor é identidade, não estilo: um WhatsApp cinza ou um React sem o
  * ciano deixam de ser reconhecíveis à distância, que é a única função de um
  * logo pequeno. Por isso estas cores não passam pelos tokens do tema.
  *
- * Duas exceções deliberadas:
+ * Três exceções deliberadas:
  *   github    · a marca oficial é #181717, invisível sobre o nosso fundo. A
  *               própria GitHub especifica o branco em fundo escuro.
  *   instagram · a marca é um gradiente, não uma cor — tratado à parte abaixo.
+ *   composer  · o marrom oficial é #885630, escuro demais contra o preto: no
+ *               tile de 20px a silhueta desaparecia. É o MESMO marrom clareado
+ *               até a forma voltar a ser lida, sem mudar de matiz.
  */
 export const brandColors = {
   html: '#E34F26',
@@ -333,6 +347,7 @@ export const brandColors = {
   nodejs: '#5FA04E',
   mysql: '#4479A1',
   git: '#F05032',
+  composer: '#B5794A',
   figma: '#F24E1E',
   bootstrap: '#7952B3',
   tailwind: '#06B6D4',
@@ -365,6 +380,7 @@ export const techIcons = {
   Composer: 'composer',
   Figma: 'figma',
   Git: 'git',
+  GitHub: 'github',
 }
 
 /** Paradas do gradiente oficial do Instagram, do canto inferior esquerdo. */
@@ -377,7 +393,7 @@ const INSTAGRAM_STOPS = [
 
 /**
  * @param {object} props
- * @param {keyof typeof stroke | keyof typeof brand} props.name
+ * @param {keyof typeof stroke | keyof typeof brand | keyof typeof maskedBrand} props.name
  * @param {number|string} [props.size=24]
  * @param {string} [props.className]
  * @param {boolean} [props.colored] Pinta a marca na cor oficial dela.
@@ -394,11 +410,35 @@ export function Icon({
 }) {
   const gradientId = useId()
   const isBrand = name in brand
+  const maskUrl = maskedBrand[name]
   const shape = isBrand ? brand[name] : stroke[name]
 
-  if (!shape) return null
+  if (!shape && !maskUrl) return null
 
   const a11y = title ? { role: 'img', 'aria-label': title } : { 'aria-hidden': 'true' }
+
+  // Marca servida como máscara: a caixa é um <span> do tamanho pedido, pintado
+  // de ponta a ponta, e a arte do arquivo decide o que fica visível. Do lado de
+  // fora o componente se comporta igual — mesmo `size`, mesmo `className`, mesma
+  // regra de cor —, então quem usa o ícone não precisa saber de onde ele vem.
+  if (maskUrl) {
+    const mask = `url("${maskUrl}") center / contain no-repeat`
+    return (
+      <span
+        className={className}
+        style={{
+          display: 'inline-block',
+          width: size,
+          height: size,
+          backgroundColor: colored ? brandColors[name] || 'currentColor' : 'currentColor',
+          WebkitMask: mask,
+          mask,
+        }}
+        {...a11y}
+        {...rest}
+      />
+    )
+  }
 
   // Gradiente só entra no caminho colorido; fora dele o ícone herda currentColor
   // e continua servindo aos usos monocromáticos (rodapé em repouso, botões).

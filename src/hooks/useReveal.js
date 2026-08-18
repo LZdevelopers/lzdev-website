@@ -8,6 +8,15 @@ import { useEffect } from 'react'
  */
 export function useReveal() {
   useEffect(() => {
+    /* Sem IntersectionObserver não há como saber o que entrou na tela — e o
+       conteúdo NÃO pode ficar preso em opacity: 0 por causa disso. Aqui ele
+       aparece todo de uma vez, sem animação, que é o mesmo destino de quem
+       pediu movimento reduzido. */
+    if (typeof IntersectionObserver === 'undefined') {
+      for (const el of document.querySelectorAll('[data-reveal]')) el.classList.add('is-visible')
+      return
+    }
+
     const nodes = new WeakSet()
 
     const io = new IntersectionObserver(
@@ -32,10 +41,22 @@ export function useReveal() {
     scan()
 
     // Qualquer re-render do React dispara mutações (digitar no formulário, por
-    // exemplo). Coalescer num único rAF evita varrer o documento a cada tecla.
+    // exemplo). Duas defesas, e as duas importam para a resposta ao toque:
+    //
+    //   · só mutação que ADICIONA elemento pode trazer um [data-reveal] novo.
+    //     Digitar num campo troca texto, não estrutura — e antes disso varria o
+    //     documento inteiro a cada tecla, no meio da digitação;
+    //   · o que sobra é coalescido num único rAF, então dez mutações no mesmo
+    //     quadro custam uma varredura.
     let queued = 0
-    const mo = new MutationObserver(() => {
-      if (queued) return
+    const addedElements = (records) =>
+      records.some((record) => {
+        for (const node of record.addedNodes) if (node.nodeType === 1) return true
+        return false
+      })
+
+    const mo = new MutationObserver((records) => {
+      if (queued || !addedElements(records)) return
       queued = requestAnimationFrame(() => {
         queued = 0
         scan()

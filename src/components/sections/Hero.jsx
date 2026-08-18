@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import { hero } from '../../data/site'
+import { hero, primaryCta } from '../../data/site'
 import { Button } from '../primitives/Button'
 import { Reveal } from '../primitives/Reveal'
 import { HeroBackdrop } from './hero/HeroBackdrop'
@@ -36,7 +36,10 @@ function Tokens({ tokens, accentClass }) {
 
 export function Hero() {
   return (
-    <section id="inicio" className="hero">
+    /* aria-labelledby aponta para o H1: é o que dá NOME à região de abertura.
+       O Hero não usa o primitivo <Section> (ele tem composição própria), então a
+       ligação é feita à mão aqui. */
+    <section id="inicio" className="hero" aria-labelledby="inicio-titulo">
       <HeroBackdrop />
 
       <div className="hero-inner container-page">
@@ -44,10 +47,18 @@ export function Hero() {
           {/* — coluna de texto — */}
           <div className="hero-copy">
             <Reveal delay={90}>
-              <h1 className="hero-title">
+              <h1 id="inicio-titulo" className="hero-title">
                 {hero.title.map((line, i) => (
                   <span className="hero-title-line" key={i}>
                     <Tokens tokens={line} accentClass="hero-title-accent" />
+                    {/* Espaço no fim de cada linha: as linhas são blocos, então
+                        ele não muda nada na tela (espaço no fim de linha é
+                        descartado na renderização), mas é o que separa as
+                        palavras quando alguém lê o TEXTO do H1 em vez do
+                        desenho — rastreador simples, leitor de tela antigo,
+                        resumo de resultado de busca. Sem ele o título vira
+                        "Desenvolvemossites e sistemas websob medida". */}
+                    {' '}
                   </span>
                 ))}
               </h1>
@@ -59,8 +70,14 @@ export function Hero() {
 
             <Reveal delay={260}>
               <div className="hero-actions">
+                {/* O CTA principal da PÁGINA. É o único botão com a placa em
+                    gradiente e o único com o ícone em cápsula: dois recursos que
+                    não se repetem em nenhum outro botão do site, justamente para
+                    que este seja lido como "o" caminho. O secundário fica em
+                    contorno, no mesmo tamanho — quem não está pronto para pedir
+                    orçamento tem para onde ir sem competir pelo olho. */}
                 <Button href="#contato" size="xl" variant="gradient" icon="arrowUpRight" iconBadge>
-                  {hero.primaryCta}
+                  {primaryCta}
                 </Button>
                 <Button href="#projetos" size="xl" variant="outline" icon="arrowDown">
                   {hero.secondaryCta}

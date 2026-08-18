@@ -185,7 +185,11 @@ export function HeroDashboard() {
                       <Icon name={item.icon} size="62%" strokeWidth={2} />
                     </span>
                     <span className="hero-act-text">{item.text}</span>
-                    <time>{item.time}</time>
+                    {/* <span>, não <time>: "2 min" não é um instante válido para
+                        um datetime, e o painel é uma ILUSTRAÇÃO — marcar como
+                        tempo real um horário que não existe é dar semântica a
+                        uma informação inventada. */}
+                    <span className="hero-act-time">{item.time}</span>
                   </p>
                 ))}
 

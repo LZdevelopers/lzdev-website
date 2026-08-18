@@ -1,0 +1,10 @@
+# robots.txt — LZdev
+# Site institucional de uma página. Tudo aqui é público.
+
+User-agent: *
+Allow: /
+
+# CSS, JavaScript e imagens ficam liberados de propósito: o Google precisa deles
+# para renderizar e avaliar a página como um visitante a vê.
+
+Sitemap: https://lzdev.com.br/sitemap.xml

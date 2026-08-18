@@ -8,8 +8,8 @@ import { Contact } from './components/sections/Contact'
 import { Faq } from './components/sections/Faq'
 import { Hero } from './components/sections/Hero'
 import { InvisibleCost } from './components/sections/InvisibleCost'
-import { Process } from './components/sections/Process'
 import { Projects } from './components/sections/Projects'
+import { Services } from './components/sections/Services'
 import { Stats } from './components/sections/Stats'
 import { Team } from './components/sections/Team'
 import { Tools } from './components/sections/Tools'
@@ -33,14 +33,17 @@ export default function App() {
       <Navbar />
 
       <main id="conteudo">
-        {/* Jornada: promessa → prova → capacidade → dor → solução → método →
-            quem entrega → números → objeções → conversão */}
+        {/* Jornada: o que fazemos → o que se contrata → prova → capacidade →
+            dor → solução → quem entrega → números → objeções → conversão.
+            Serviços entra em segundo lugar de propósito: quem acabou de ler o
+            H1 quer saber o que pode contratar, e essa resposta não pode estar
+            depois de quatro seções de argumento. */}
         <Hero />
+        <Services />
         <Projects />
         <Tools />
         <InvisibleCost />
         <WhyUs />
-        <Process />
         <Team />
         <Stats />
         <Faq />

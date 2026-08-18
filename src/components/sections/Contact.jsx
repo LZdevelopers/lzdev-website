@@ -1,22 +1,25 @@
 import { useState } from 'react'
-import { contact, contactSection, socialsByPerson, whatsappLink } from '../../data/site'
+import { contact, contactSection, emailLink, primaryCta, socialsByPerson, whatsappLink } from '../../data/site'
 import { Button } from '../primitives/Button'
 import { brandColors, Icon } from '../primitives/Icon'
 import { Reveal } from '../primitives/Reveal'
 import { Section, SectionHeader } from '../primitives/Section'
 
+/**
+ * O formulário pede QUATRO dados: nome, empresa, telefone e e-mail — e mais nada
+ * obrigatório. Tipo de projeto, faixa de investimento e prazo saíram: eram três
+ * escolhas antes da primeira conversa, e cada campo a mais é gente que fecha a
+ * aba. Essas três respostas aparecem naturalmente na primeira mensagem de volta.
+ * A descrição do projeto virou opcional pelo mesmo motivo — quem tem o problema
+ * na ponta da língua escreve, quem só quer contato manda o contato.
+ */
 const EMPTY = {
   name: '',
   company: '',
   phone: '',
   email: '',
-  type: '',
-  budget: '',
-  deadline: '',
   message: '',
 }
-
-const labelFor = (list, value) => list.find((o) => o.value === value)?.label || '—'
 
 /** Máscara progressiva de telefone brasileiro: (99) 99999-9999 */
 function maskPhone(raw) {
@@ -27,13 +30,15 @@ function maskPhone(raw) {
   return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`
 }
 
+/**
+ * Só o que é preciso para responder: como te chamar e por onde. `message` não
+ * entra — campo opcional que reprova o envio seria opcional só no rótulo.
+ */
 function validate(form) {
   const errors = {}
   if (form.name.trim().length < 3) errors.name = 'Informe seu nome completo.'
   if (!/^\S+@\S+\.\S{2,}$/.test(form.email.trim())) errors.email = 'Informe um e-mail válido.'
   if (form.phone.replace(/\D/g, '').length < 10) errors.phone = 'Informe um telefone com DDD.'
-  if (!form.type) errors.type = 'Selecione o tipo de projeto.'
-  if (form.message.trim().length < 20) errors.message = 'Descreva o projeto em pelo menos 20 caracteres.'
   return errors
 }
 
@@ -70,37 +75,35 @@ function Field({ id, label, error, hint, required, className = '', children }) {
   )
 }
 
-/** Select com rótulo, erro e placeholder — usado pelos três campos de escolha. */
-function SelectField({ id, label, options, value, onChange, error, required, className }) {
-  return (
-    <Field id={id} label={label} error={error} required={required} className={className}>
-      <select
-        id={id}
-        name={id}
-        value={value}
-        onChange={onChange}
-        aria-invalid={Boolean(error)}
-        aria-describedby={error ? `${id}-error` : undefined}
-        className={`${fieldClass(error)} select-arrow`}
-      >
-        <option value="">Selecione…</option>
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-    </Field>
-  )
-}
-
 /**
- * Botão de canal direto (WhatsApp / e-mail).
- * `tone` é a cor do canal: o verde oficial no WhatsApp, branco no e-mail (que
+ * Canal direto (WhatsApp / e-mail).
+ * `--ch` é a cor do canal: o verde oficial no WhatsApp, branco no e-mail (que
  * não é marca de terceiro). Ela tinge moldura, tile e anel por `color-mix`, e o
  * hover só aumenta a mistura — é o que põe o WhatsApp visualmente à frente sem
  * precisar de um segundo tamanho.
+ *
+ * As classes ficam em constantes porque o canal de e-mail não é um link: é um
+ * botão que abre painel (ver `EmailChannel`), e as duas formas têm de ser
+ * indistinguíveis na coluna.
  */
+const CHANNEL_SHELL =
+  'rounded-lg border border-[color-mix(in_oklab,var(--ch)_28%,transparent)] bg-[color-mix(in_oklab,var(--ch)_7%,transparent)] transition-[border-color,background-color,transform] duration-300 ease-[var(--ease-out-soft)]'
+const CHANNEL_ROW = 'flex w-full items-center gap-3 p-3 text-left'
+const CHANNEL_TILE =
+  'grid size-9 shrink-0 place-items-center rounded-lg bg-[color-mix(in_oklab,var(--ch)_15%,transparent)] ring-1 ring-[color-mix(in_oklab,var(--ch)_30%,transparent)]'
+const CHANNEL_HOVER =
+  'hover:-translate-y-0.5 hover:border-[color-mix(in_oklab,var(--ch)_55%,transparent)] hover:bg-[color-mix(in_oklab,var(--ch)_13%,transparent)]'
+
+/** Rótulo em duas linhas do canal: o que é em cima, o endereço embaixo. */
+function ChannelText({ label, value }) {
+  return (
+    <span className="min-w-0 leading-tight">
+      <span className="block text-[0.65rem] font-semibold tracking-wide text-faint uppercase">{label}</span>
+      <span className="block truncate text-[0.82rem] font-semibold text-ink">{value}</span>
+    </span>
+  )
+}
+
 function ChannelButton({ icon, label, value, href, external, tone }) {
   return (
     <a
@@ -108,21 +111,127 @@ function ChannelButton({ icon, label, value, href, external, tone }) {
       target={external ? '_blank' : undefined}
       rel={external ? 'noopener noreferrer' : undefined}
       style={{ '--ch': tone }}
-      className="group flex items-center gap-3 rounded-lg border border-[color-mix(in_oklab,var(--ch)_28%,transparent)] bg-[color-mix(in_oklab,var(--ch)_7%,transparent)] p-3 transition-[border-color,background-color,transform] duration-300 ease-[var(--ease-out-soft)] hover:-translate-y-0.5 hover:border-[color-mix(in_oklab,var(--ch)_55%,transparent)] hover:bg-[color-mix(in_oklab,var(--ch)_13%,transparent)]"
+      className={`group ${CHANNEL_SHELL} ${CHANNEL_ROW} ${CHANNEL_HOVER}`}
     >
-      <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-[color-mix(in_oklab,var(--ch)_15%,transparent)] ring-1 ring-[color-mix(in_oklab,var(--ch)_30%,transparent)]">
+      <span className={CHANNEL_TILE}>
         <Icon name={icon} size={18} colored />
       </span>
-      <span className="min-w-0 leading-tight">
-        <span className="block text-[0.65rem] font-semibold tracking-wide text-faint uppercase">{label}</span>
-        <span className="block truncate text-[0.82rem] font-semibold text-ink">{value}</span>
-      </span>
+      <ChannelText label={label} value={value} />
       <Icon
         name="arrowUpRight"
         size={15}
         className="ml-auto shrink-0 text-faint transition-[transform,color] duration-300 group-hover:-translate-y-0.5 group-hover:text-ink"
       />
     </a>
+  )
+}
+
+/**
+ * Canal de e-mail: abre um painel na própria página em vez de disparar um
+ * `mailto:` no clique.
+ *
+ * O motivo é prático. `mailto:` depende de haver um cliente de e-mail associado
+ * no sistema; em quem usa Gmail pelo navegador — a maioria — o clique não faz
+ * nada visível, e o visitante conclui que o botão está quebrado. O painel dá as
+ * três saídas: Gmail na web, app do sistema e o endereço para copiar. Assunto e
+ * corpo já vão preenchidos nas duas primeiras, como nos botões de WhatsApp.
+ *
+ * A altura anima por `grid-template-rows`, o mesmo recurso do acordeão do FAQ —
+ * nada de medir conteúdo em JS.
+ */
+function EmailChannel() {
+  const copy = contactSection.direct.email
+  const [open, setOpen] = useState(false)
+  const [copied, setCopied] = useState(false)
+
+  const onCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(contact.email)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 2400)
+    } catch {
+      // Sem permissão de área de transferência (contexto não seguro, navegador
+      // antigo): o endereço continua à vista no painel para seleção manual.
+    }
+  }
+
+  return (
+    <div
+      style={{ '--ch': '#ffffff' }}
+      className={`${CHANNEL_SHELL} ${
+        open ? 'border-[color-mix(in_oklab,var(--ch)_55%,transparent)]' : CHANNEL_HOVER
+      }`}
+    >
+      <button
+        type="button"
+        onClick={() => setOpen((prev) => !prev)}
+        aria-expanded={open}
+        aria-controls="email-panel"
+        className={`group ${CHANNEL_ROW}`}
+      >
+        <span className={CHANNEL_TILE}>
+          <Icon name="mail" size={18} />
+        </span>
+        <ChannelText label={copy.openLabel} value={contact.email} />
+        <Icon
+          name="chevronDown"
+          size={16}
+          className={`ml-auto shrink-0 text-faint transition-[transform,color] duration-400 ease-[var(--ease-out-soft)] group-hover:text-ink ${
+            open ? 'rotate-180 text-ink' : ''
+          }`}
+        />
+      </button>
+
+      <div
+        id="email-panel"
+        className={`grid transition-[grid-template-rows] duration-450 ease-[var(--ease-out-soft)] ${
+          open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+        }`}
+      >
+        <div className="overflow-hidden">
+          <div className="flex flex-col gap-2.5 border-t border-white/10 p-3">
+            <div>
+              <p className="text-[0.65rem] font-semibold tracking-wide text-faint uppercase">
+                {copy.panelTitle}
+              </p>
+              <div className="mt-1.5 flex items-center gap-2 rounded-lg border border-white/8 bg-black/30 px-2.5 py-1.5">
+                <span className="min-w-0 flex-1 truncate font-display text-[0.78rem] font-semibold text-ink">
+                  {contact.email}
+                </span>
+                <button
+                  type="button"
+                  onClick={onCopy}
+                  className="flex shrink-0 items-center gap-1.5 rounded-md border border-white/10 bg-white/[0.04] px-2 py-1 text-[0.7rem] font-semibold text-muted transition-[border-color,color,background-color] duration-300 hover:border-white/25 hover:bg-white/[0.08] hover:text-ink"
+                >
+                  <Icon name={copied ? 'check' : 'copy'} size={13} className={copied ? 'text-success' : ''} />
+                  {copied ? copy.copied : copy.copy}
+                </button>
+              </div>
+              {/* Confirmação anunciada uma vez, sem texto duplicado na tela */}
+              <span className="sr-only" aria-live="polite">
+                {copied ? copy.copied : ''}
+              </span>
+            </div>
+
+            <Button
+              href={emailLink.gmail(copy.subject, copy.body)}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="outline"
+              icon="arrowUpRight"
+              className="w-full"
+            >
+              {copy.gmail}
+            </Button>
+            <Button href={emailLink.mailto(copy.subject, copy.body)} variant="outline" icon="mail" iconPosition="left" className="w-full">
+              {copy.app}
+            </Button>
+
+            <p className="text-[0.72rem] leading-snug text-faint">{copy.note}</p>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 
@@ -150,6 +259,8 @@ export function Contact() {
       return
     }
 
+    // Campos vazios não viram linha: a descrição é opcional, e um "*Descrição:*"
+    // seguido de nada só faria a mensagem parecer truncada do outro lado.
     const message = [
       '*Nova solicitação de projeto — site LZdev*',
       '',
@@ -157,14 +268,11 @@ export function Contact() {
       form.company ? `*Empresa:* ${form.company}` : null,
       `*Telefone:* ${form.phone}`,
       `*E-mail:* ${form.email}`,
-      `*Tipo de projeto:* ${labelFor(contactSection.projectTypes, form.type)}`,
-      form.budget ? `*Investimento:* ${labelFor(contactSection.budgets, form.budget)}` : null,
-      form.deadline ? `*Prazo:* ${labelFor(contactSection.deadlines, form.deadline)}` : null,
-      '',
-      '*Descrição:*',
-      form.message,
+      form.message.trim() ? '' : null,
+      form.message.trim() ? '*Descrição:*' : null,
+      form.message.trim() || null,
     ]
-      .filter(Boolean)
+      .filter((line) => line !== null)
       .join('\n')
 
     window.open(whatsappLink(message), '_blank', 'noopener,noreferrer')
@@ -182,22 +290,31 @@ export function Contact() {
       <div className="mt-9 grid gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:items-start">
         {/* Formulário */}
         <Reveal variant="left">
+          {/* `noValidate` desliga a validação do navegador porque a nossa é mais
+              específica (telefone com DDD, e-mail com domínio) e escreve em
+              português; `required` continua nos campos para o leitor de tela
+              anunciar "obrigatório" ANTES de o visitante digitar, em vez de
+              descobrir no erro. `aria-describedby` liga o formulário à frase que
+              explica o que acontece no envio. */}
           <form
             onSubmit={onSubmit}
             noValidate
+            aria-label="Solicitação de orçamento"
+            aria-describedby="form-nota"
             className="rounded-[var(--radius-xl2)] border border-white/8 bg-surface/45 p-5 sm:p-6 border-gradient"
           >
-            {/* Grade de 6 colunas: nome/empresa e telefone/e-mail ocupam meia
-                largura, e os TRÊS selects dividem uma linha só (2 colunas cada).
-                Num grid de 2 colunas eles gastavam duas linhas e meia — é a
-                maior economia de altura do formulário. */}
-            <div className="grid gap-3.5 sm:grid-cols-6">
-              <Field id="name" label="Nome" error={errors.name} required className="sm:col-span-3">
+            {/* Duas colunas: os quatro campos de contato em pares e a descrição
+                atravessando a largura. Eram seis colunas quando havia três
+                selects para encaixar numa linha só — sem eles, a grade de 2
+                resolve com metade das classes. */}
+            <div className="grid gap-3.5 sm:grid-cols-2">
+              <Field id="name" label="Nome" error={errors.name} required>
                 <input
                   id="name"
                   name="name"
                   type="text"
                   autoComplete="name"
+                  required
                   placeholder="Seu nome completo"
                   value={form.name}
                   onChange={update('name')}
@@ -207,7 +324,7 @@ export function Contact() {
                 />
               </Field>
 
-              <Field id="company" label="Empresa" className="sm:col-span-3">
+              <Field id="company" label="Empresa">
                 <input
                   id="company"
                   name="company"
@@ -220,13 +337,14 @@ export function Contact() {
                 />
               </Field>
 
-              <Field id="phone" label="Telefone" error={errors.phone} required className="sm:col-span-3">
+              <Field id="phone" label="Telefone" error={errors.phone} required>
                 <input
                   id="phone"
                   name="phone"
                   type="tel"
                   inputMode="tel"
                   autoComplete="tel"
+                  required
                   placeholder="(00) 00000-0000"
                   value={form.phone}
                   onChange={update('phone')}
@@ -236,13 +354,14 @@ export function Contact() {
                 />
               </Field>
 
-              <Field id="email" label="E-mail" error={errors.email} required className="sm:col-span-3">
+              <Field id="email" label="E-mail" error={errors.email} required>
                 <input
                   id="email"
                   name="email"
                   type="email"
                   inputMode="email"
                   autoComplete="email"
+                  required
                   placeholder="voce@empresa.com.br"
                   value={form.email}
                   onChange={update('email')}
@@ -252,42 +371,11 @@ export function Contact() {
                 />
               </Field>
 
-              <SelectField
-                id="type"
-                label="Tipo de projeto"
-                options={contactSection.projectTypes}
-                value={form.type}
-                onChange={update('type')}
-                error={errors.type}
-                required
-                className="sm:col-span-2"
-              />
-
-              <SelectField
-                id="budget"
-                label="Investimento"
-                options={contactSection.budgets}
-                value={form.budget}
-                onChange={update('budget')}
-                className="sm:col-span-2"
-              />
-
-              <SelectField
-                id="deadline"
-                label="Prazo"
-                options={contactSection.deadlines}
-                value={form.deadline}
-                onChange={update('deadline')}
-                className="sm:col-span-2"
-              />
-
               <Field
                 id="message"
                 label="Descrição do projeto"
-                error={errors.message}
-                hint="Quanto mais contexto, mais preciso o diagnóstico."
-                required
-                className="sm:col-span-6"
+                hint="Quanto mais contexto, mais preciso o diagnóstico — mas dá para conversar sem isso."
+                className="sm:col-span-2"
               >
                 <textarea
                   id="message"
@@ -296,9 +384,8 @@ export function Contact() {
                   placeholder="Ex.: hoje controlamos os pedidos em planilha e perdemos informação toda semana. Precisamos de um sistema onde a equipe registre tudo em um só lugar."
                   value={form.message}
                   onChange={update('message')}
-                  aria-invalid={Boolean(errors.message)}
-                  aria-describedby={errors.message ? 'message-error' : 'message-hint'}
-                  className={`${fieldClass(errors.message)} resize-y min-h-20`}
+                  aria-describedby="message-hint"
+                  className={`${fieldClass(false)} resize-y min-h-20`}
                 />
               </Field>
             </div>
@@ -315,18 +402,25 @@ export function Contact() {
                 ))}
               </ul>
               <Button type="submit" icon="send" iconPosition="left" className="w-full shrink-0 sm:w-auto">
-                Solicitar projeto
+                {primaryCta}
               </Button>
             </div>
+
+            {/* O que o botão faz, escrito antes do clique: ele não envia um
+                e-mail, ele abre o WhatsApp com a mensagem já montada. Descobrir
+                isso só quando a aba abre assusta mais do que ajuda. */}
+            <p id="form-nota" className="mt-3 flex items-start gap-2 text-[0.75rem] leading-snug text-faint">
+              <Icon name="whatsapp" size={13} className="mt-0.5 shrink-0" aria-hidden="true" />
+              {contactSection.submitNote}
+            </p>
 
             {/* aria-live no container que já existe: a mensagem visível é a mesma
                 que o leitor de tela anuncia, sem texto duplicado só para ele. */}
             <div aria-live="polite">
               {sent ? (
                 <p className="mt-4 flex items-start gap-2.5 rounded-lg border border-success/30 bg-success/10 p-3.5 text-[0.82rem] leading-relaxed text-success">
-                  <Icon name="checkCircle" size={16} className="mt-px shrink-0" />
-                  Tudo pronto — abrimos o WhatsApp com a sua solicitação preenchida. Se a aba não abriu,
-                  verifique o bloqueador de pop-ups ou fale com a gente pelos canais ao lado.
+                  <Icon name="checkCircle" size={16} className="mt-px shrink-0" aria-hidden="true" />
+                  {contactSection.sent}
                 </p>
               ) : null}
             </div>
@@ -361,13 +455,7 @@ export function Contact() {
                   tone={brandColors.whatsapp}
                 />
               ))}
-              <ChannelButton
-                icon="mail"
-                label="E-mail"
-                value={contact.email}
-                href={`mailto:${contact.email}`}
-                tone="#ffffff"
-              />
+              <EmailChannel />
             </div>
 
             {/* Redes sociais — só as que têm link preenchido em data/site.js.
@@ -411,22 +499,16 @@ export function Contact() {
               </div>
             ) : null}
 
-            <ul className="mt-5 flex flex-col gap-2.5 border-t border-white/8 pt-4 text-[0.8rem]">
-              <li className="flex items-start gap-2.5">
-                <Icon name="clock" size={15} className="mt-0.5 shrink-0 text-info" />
-                <span className="text-muted">{contact.hours}</span>
-              </li>
-              <li className="flex items-start gap-2.5">
-                <Icon name="globe" size={15} className="mt-0.5 shrink-0 text-info" />
-                <span className="text-muted">{contact.location}</span>
-              </li>
-              <li className="flex items-start gap-2.5">
-                <Icon name="shield" size={15} className="mt-0.5 shrink-0 text-success" />
-                <span className="text-muted">
-                  Suas informações são usadas apenas para responder ao seu contato.
-                </span>
-              </li>
-            </ul>
+            {/* Horário de atendimento e área de cobertura saíram: prometer
+                "segunda a sexta, 08h às 18h" ao lado de dois WhatsApp pessoais
+                cria uma expectativa que o time não controla. Sobrou a linha que
+                é sempre verdadeira — o que acontece com o dado de quem escreve. */}
+            <p className="mt-5 flex items-start gap-2.5 border-t border-white/8 pt-4 text-[0.8rem]">
+              <Icon name="shield" size={15} className="mt-0.5 shrink-0 text-success" />
+              <span className="text-muted">
+                Suas informações são usadas apenas para responder ao seu contato.
+              </span>
+            </p>
           </div>
         </Reveal>
       </div>

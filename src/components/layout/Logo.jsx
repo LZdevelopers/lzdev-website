@@ -18,6 +18,9 @@
  */
 const MARK = '/logo-mark-256.png'
 
+/** Lado do arquivo em pixels — a proporção que os atributos width/height fixam. */
+const MARK_PX = 256
+
 const MARK_SIZE = {
   compact: 'size-9 sm:size-10 lg:size-11', // 36 · 40 · 44
   full: 'size-10 sm:size-11 lg:size-12', //   40 · 44 · 48
@@ -36,11 +39,16 @@ export function Logo({ className = '', showWordmark = true, size, compact = fals
     <span className={`inline-flex items-center gap-2.5 sm:gap-3 ${className}`}>
       {/* alt vazio de propósito: na navbar e no rodapé quem nomeia a marca é o
           wordmark ao lado (texto de verdade), e no Hero o símbolo é decorativo. */}
+      {/* width/height SEMPRE presentes, mesmo quando a classe é que dá o
+          tamanho: o par de atributos é o que reserva a proporção antes de a
+          imagem chegar, e é ele que impede o layout de pular (CLS) no primeiro
+          carregamento. Com `size`, os atributos são o tamanho final; sem ele,
+          valem como proporção 1:1 e o CSS decide os pixels. */}
       <img
         src={MARK}
         alt=""
-        width={fixed ? size : undefined}
-        height={fixed ? size : undefined}
+        width={fixed ? size : MARK_PX}
+        height={fixed ? size : MARK_PX}
         decoding="async"
         className={`shrink-0 ${fixed ? '' : MARK_SIZE[step]}`}
       />

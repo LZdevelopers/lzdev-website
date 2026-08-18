@@ -55,8 +55,8 @@ export function Faq() {
                     open ? 'border-brand/35 bg-brand/[0.05]' : 'border-white/8 hover:border-white/18'
                   }`}
                 >
-                  {/* Barra de acento do item aberto: ciano→azul, a mesma dupla
-                      do trilho do processo, marcando "este é o item ativo". */}
+                  {/* Barra de acento do item aberto: ciano→azul, as mesmas
+                      categóricas dos diferenciais, marcando "este é o ativo". */}
                   <span
                     className={`absolute inset-y-0 left-0 w-[3px] bg-gradient-to-b from-cat-2 to-cat-1 transition-opacity duration-400 ${
                       open ? 'opacity-100' : 'opacity-0'
