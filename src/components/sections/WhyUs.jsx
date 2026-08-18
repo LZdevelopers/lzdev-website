@@ -40,11 +40,12 @@ function WhySlide({ item, index }) {
         {item.image ? (
           <>
             {/* alt vazio de propósito: a ilustração repete visualmente o que o
-                título e o texto ao lado já dizem — descrevê-la seria eco. */}
-            {/* width/height = o viewBox do arquivo (800x440). O CSS é que dá o
+                título e o texto ao lado já dizem — descrevê-la seria eco.
+
+                width/height = o viewBox do arquivo (800x440). O CSS é que dá o
                 tamanho real (`absolute inset-0 size-full`), mas os atributos
-                declaram a proporção intrínseca — e é isso que impede o
-                navegador de recalcular o layout quando a ilustração chega. */}
+                declaram a proporção intrínseca, e é isso que impede o navegador
+                de recalcular o layout quando a ilustração chega. */}
             <img
               src={item.image}
               alt=""
@@ -76,7 +77,9 @@ function WhySlide({ item, index }) {
       </div>
 
       <div>
-        <p className="text-xs font-semibold tracking-[0.16em] text-accent uppercase">Diferencial</p>
+        {/* O rótulo "DIFERENCIAL" em caixa alta saiu daqui junto com as
+            etiquetas de seção: era o mesmo tique visual (uma palavra em maiúscula
+            e espaçada acima do título) dizendo o que a seção inteira já diz. */}
         <h3 className="mt-2.5 text-[clamp(1.45rem,3.2vw,2rem)] text-ink">{item.title}</h3>
         <p className="mt-4 text-[0.98rem] leading-relaxed text-muted sm:text-[1.02rem]">{item.text}</p>
       </div>
@@ -87,18 +90,13 @@ function WhySlide({ item, index }) {
 export function WhyUs() {
   return (
     <Section id="diferenciais">
-      <SectionHeader eyebrow={why.eyebrow} title={why.title} subtitle={why.subtitle} align="left" />
+      <SectionHeader title={why.title} subtitle={why.subtitle} align="left" />
 
       <Reveal variant="scale" className="mt-10 block sm:mt-12">
         <Carousel
           items={why.items}
           label="Diferenciais da LZdev"
           slideKey={(item) => item.title}
-          /* Os sete títulos no índice funcionam como o resumo da seção: dá para
-             ler a lista inteira de diferenciais sem avançar um slide, e o
-             carrossel passa a ser o detalhe de cada um, não a única forma de
-             descobrir que eles existem. */
-          itemLabel={(item) => item.title}
           hint={why.hint}
           renderSlide={(item, index) => <WhySlide item={item} index={index} />}
         />

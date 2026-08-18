@@ -128,7 +128,7 @@ function MemberCard({ member, delay }) {
 export function Team() {
   return (
     <Section id="equipe">
-      <SectionHeader eyebrow={team.eyebrow} title={team.title} subtitle={team.subtitle} />
+      <SectionHeader title={team.title} subtitle={team.subtitle} />
 
       <div className="mt-10 grid gap-5 sm:mt-12 lg:grid-cols-2">
         {team.members.map((member, i) => (

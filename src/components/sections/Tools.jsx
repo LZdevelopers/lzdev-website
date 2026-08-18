@@ -95,7 +95,7 @@ export function Tools() {
     // critério técnico e passa a bola para a próxima. Não precisa do respiro
     // vertical das seções que argumentam.
     <Section id="tecnologias" tight>
-      <SectionHeader eyebrow={tools.eyebrow} title={tools.title} subtitle={tools.subtitle} />
+      <SectionHeader title={tools.title} subtitle={tools.subtitle} />
 
       <div className="mt-8 flex flex-col gap-6 sm:mt-10">
         {tools.groups.map((group, g) => (

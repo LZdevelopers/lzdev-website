@@ -39,7 +39,7 @@ export function Stats() {
         />
 
         <div className="relative">
-          <SectionHeader eyebrow={stats.eyebrow} title={stats.title} subtitle={stats.subtitle} />
+          <SectionHeader title={stats.title} subtitle={stats.subtitle} />
 
           {/* 5 métricas. Larguras fixas com flex-wrap centralizado deixam a
               última linha centrada e do mesmo tamanho — num grid de 3 colunas

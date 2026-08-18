@@ -6,12 +6,11 @@ import { Reveal } from '../primitives/Reveal'
 import { Section, SectionHeader } from '../primitives/Section'
 
 /**
- * Recuo do conteúdo da resposta: alinha com o texto da pergunta, não com a
- * borda do card. É a soma do padding lateral (5/6), da coluna do número (4) e
- * do gap entre os dois (4) — a coluna do número tem largura fixa justamente
- * para essa conta fechar sem depender da métrica da fonte.
+ * Recuo do conteúdo da resposta: alinha com o texto da pergunta, não com a borda
+ * do card. Agora é só o padding lateral (5/6) — a coluna do número, que a conta
+ * antiga somava, deixou de existir (ver o comentário do botão abaixo).
  */
-const ANSWER_INSET = 'pl-13 pr-5 sm:pl-14 sm:pr-6'
+const ANSWER_INSET = 'px-5 sm:px-6'
 
 /**
  * Acordeão acessível: um item aberto por vez, controlado por botão com
@@ -25,7 +24,7 @@ export function Faq() {
     <Section id="faq">
       <div className="grid gap-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
         <div className="lg:sticky lg:top-28 lg:self-start">
-          <SectionHeader eyebrow={faq.eyebrow} title={faq.title} align="left" />
+          <SectionHeader title={faq.title} align="left" />
 
           <Reveal delay={200}>
             <div className="mt-8 flex gap-4 rounded-[var(--radius-card)] border border-white/8 bg-surface/45 p-6">
@@ -73,16 +72,12 @@ export function Faq() {
                       id={`faq-trigger-${i}`}
                       className="flex w-full items-center gap-4 px-5 py-5 text-left sm:px-6"
                     >
-                      {/* Numeração decorativa: quem usa leitor de tela já recebe
-                          a ordem da lista, então ela fica fora do nome acessível. */}
-                      <span
-                        className={`w-4 shrink-0 font-display text-xs font-bold tabular-nums transition-colors duration-400 ${
-                          open ? 'text-accent' : 'text-faint'
-                        }`}
-                        aria-hidden="true"
-                      >
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
+                      {/* A NUMERAÇÃO "01 02 03…" saía aqui, à esquerda de cada
+                          pergunta. Um FAQ não tem ordem de execução: numerar
+                          sugere etapa onde só existe assunto, e era a mesma
+                          numeração decorativa que aparecia no menu do celular e
+                          nos carrosséis — o padrão repetido três vezes na mesma
+                          página. */}
                       <span className="flex-1 text-[0.98rem] font-semibold text-ink sm:text-base">{item.q}</span>
                       <span
                         className={`grid size-8 shrink-0 place-items-center rounded-lg border transition-[transform,border-color,background-color,color] duration-400 ease-[var(--ease-out-soft)] ${

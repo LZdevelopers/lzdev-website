@@ -35,12 +35,12 @@ export const site = {
    * existe para ser lido no resultado de busca, não para o robô contar termos.
    */
   description:
-    'A LZdev desenvolve landing pages, sites institucionais e sistemas web sob medida. Escopo e prazo fechados, atendimento remoto em todo o Brasil.',
+    'A LZdev desenvolve landing pages, sites institucionais e sistemas web sob medida. Proposta com escopo fechado e atendimento remoto em todo o Brasil.',
 
   /** Título e texto do cartão de compartilhamento (WhatsApp, LinkedIn, Discord). */
   ogTitle: 'LZdev — Sites e sistemas web sob medida',
   ogDescription:
-    'Landing pages, sites institucionais e sistemas de gestão feitos do zero para a sua operação. Escopo e prazo fechados antes de começar.',
+    'Landing pages, sites institucionais e sistemas de gestão feitos do zero para a sua operação. Você fala direto com quem escreve o código.',
 
   /**
    * Imagem de compartilhamento: 1200x630 (a proporção que o Facebook, o

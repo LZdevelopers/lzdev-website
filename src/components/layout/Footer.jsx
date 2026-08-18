@@ -42,9 +42,12 @@ export function Footer() {
             <ul className="grid grid-cols-2 gap-x-8 gap-y-2.5 sm:grid-cols-4">
               {LINKS.map((link) => (
                 <li key={link.label}>
+                  {/* `inline-block py-1` dá ao atalho 24px de altura de alvo,
+                      o mínimo da WCAG 2.2 para link que não está no meio de uma
+                      frase. O padding é transparente: nada muda na tela. */}
                   <a
                     href={link.href}
-                    className="text-[0.82rem] text-muted transition-colors duration-300 hover:text-ink"
+                    className="inline-block py-1 text-[0.82rem] text-muted transition-colors duration-300 hover:text-ink"
                   >
                     {link.label}
                   </a>

@@ -2,21 +2,6 @@ import { createContext, useContext } from 'react'
 import { Reveal } from './Reveal'
 
 /**
- * Ponto pulsante + rótulo — elemento de repetição que costura o site.
- * O ponto é a única cor fixa do cabeçalho de seção: um azul pequeno que se
- * repete do topo ao rodapé e impede que a sequência de títulos brancos vire
- * uma parede monocromática.
- */
-function Eyebrow({ children }) {
-  return (
-    <span className="inline-flex items-center gap-2.5 text-xs font-semibold tracking-[0.18em] text-accent uppercase">
-      <span className="size-1.5 rounded-full bg-info pulse-dot" aria-hidden="true" />
-      {children}
-    </span>
-  )
-}
-
-/**
  * Id do <h2> de uma seção, derivado do id da própria seção.
  * Existe para que `aria-labelledby` e o `id` do título saiam da MESMA conta:
  * escrever a string nos dois lugares é o jeito garantido de um dia mudar um e
@@ -53,12 +38,26 @@ export function Section({ id, className = '', tight = false, children, ...rest }
 }
 
 /**
- * Cabeçalho de seção: eyebrow + título + subtítulo, com reveal em cascata.
+ * Cabeçalho de seção: título e subtítulo. Nada mais.
  *
  * O <h2> recebe o id derivado da seção que o contém (via contexto), então ele é
  * o nome acessível daquela região sem ninguém precisar passar nada.
+ *
+ * A ETIQUETA ACIMA DO TÍTULO SAIU. Era um `SERVIÇOS` em caixa alta, com
+ * espaçamento de letra largo e um PONTO AZUL PULSANDO ao lado, repetido em nove
+ * seções. Três motivos, e o terceiro é o que decidiu:
+ *
+ *   · dizia a mesma coisa que o <h2> logo abaixo ("SERVIÇOS" sobre "O que a
+ *     gente desenvolve"), então era ruído, não informação;
+ *   · o ponto pulsava para sempre, nove vezes na mesma página, sem comunicar
+ *     estado nenhum — e o olho é atraído por movimento, então ele roubava
+ *     atenção justamente de quem estava tentando ler o título;
+ *   · a dupla "rótulo em caixa alta + bolinha acesa" é a assinatura visual mais
+ *     reconhecível de página gerada automaticamente.
+ *
+ * O título sozinho já nomeia a seção, e é ele que o leitor de tela anuncia.
  */
-export function SectionHeader({ eyebrow, title, subtitle, align = 'center', className = '' }) {
+export function SectionHeader({ title, subtitle, align = 'center', className = '' }) {
   const sectionId = useContext(SectionIdContext)
   const centered = align === 'center'
 
@@ -66,11 +65,6 @@ export function SectionHeader({ eyebrow, title, subtitle, align = 'center', clas
     <header
       className={`flex flex-col gap-5 ${centered ? 'items-center text-center mx-auto max-w-3xl' : 'items-start text-left max-w-3xl'} ${className}`}
     >
-      {eyebrow ? (
-        <Reveal>
-          <Eyebrow>{eyebrow}</Eyebrow>
-        </Reveal>
-      ) : null}
       <Reveal delay={80}>
         <h2 id={sectionId ? headingId(sectionId) : undefined} className="text-[clamp(1.85rem,4.6vw,3.05rem)] text-ink">
           {title}

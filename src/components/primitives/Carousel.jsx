@@ -39,8 +39,6 @@ import { Icon } from './Icon'
  * @param {string} props.label Nome do carrossel para leitor de tela.
  * @param {(item: any, i: number) => React.ReactNode} props.renderSlide
  * @param {(item: any, i: number) => string} props.slideKey
- * @param {(item: any) => string} [props.itemLabel] Título curto de cada item.
- *        Sem ele o índice nomeado não aparece — sobram os pontinhos.
  * @param {string} [props.hint] Frase do convite a rolar.
  */
 export function Carousel({
@@ -48,7 +46,6 @@ export function Carousel({
   label,
   renderSlide,
   slideKey,
-  itemLabel,
   hint = 'Arraste para o lado ou use as setas',
   className = '',
 }) {
@@ -132,20 +129,6 @@ export function Carousel({
       onKeyDown={onKeyDown}
       className={`relative ${className}`}
     >
-      {/* Índice nomeado — a lista completa antes de qualquer rolagem. Escondido
-          no celular: sete pastilhas de texto ali comeriam meia tela, e é onde o
-          swipe é natural. */}
-      {itemLabel ? (
-        <CarouselIndex
-          items={items}
-          itemLabel={itemLabel}
-          activeIndex={index}
-          onSelect={goTo}
-          label={label}
-          className="mb-5 hidden sm:flex"
-        />
-      ) : null}
-
       <div
         ref={trackRef}
         className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain"
@@ -219,7 +202,7 @@ export function Carousel({
                 onClick={() => goTo(i)}
                 aria-label={`Ir para o item ${i + 1} de ${total}`}
                 aria-current={i === index}
-                className="group grid h-7 place-items-center px-1"
+                className="group grid h-7 place-items-center px-2.5"
               >
                 <span
                   aria-hidden="true"
@@ -232,67 +215,31 @@ export function Carousel({
           ))}
         </ul>
 
-        {/* aria-live: quem usa leitor de tela ouve a mudança de item ao navegar
-            pelas setas, que de outro modo seriam botões sem retorno audível. */}
-        <p className="shrink-0 font-display text-sm font-bold tabular-nums text-muted" aria-live="polite">
-          <span className="text-ink">{String(index + 1).padStart(2, '0')}</span>
-          <span className="mx-1 text-faint">/</span>
-          {String(total).padStart(2, '0')}
+        {/* O contador "01 / 04" saiu da tela, mas o ANÚNCIO ficou: sem ele, as
+            setas viram dois botões sem nenhum retorno audível para quem navega
+            por leitor de tela. Agora a mesma informação existe só para quem
+            precisa dela, em `sr-only` com `aria-live`. */}
+        <p className="sr-only" aria-live="polite">
+          Item {index + 1} de {total}
         </p>
       </div>
     </div>
   )
 }
 
-/**
- * Índice nomeado de uma trilha horizontal: uma pastilha por item, com o número
- * de ordem e o título, e a do item atual em destaque.
+/* O ÍNDICE NOMEADO foi removido daqui.
  *
- * É a resposta ao problema central de qualquer conteúdo que rola de lado — o
- * visitante não sabe o que está fora da tela, e por isso não rola. Com os
- * títulos todos à vista ele lê a seção inteira de relance, escolhe e clica; a
- * rolagem passa a ser opcional. Também serve de mapa: a pastilha acesa diz onde
- * ele está dentro do conjunto.
+ * Era uma fileira de pastilhas acima da trilha — "01 Sprint Max",
+ * "02 Kimori Korean Food", "03 Horário de Brasília"… —, uma por item, com o
+ * número de ordem em destaque. A intenção era boa (mostrar o que existe fora da
+ * tela antes de rolar), mas o resultado eram duas listas do mesmo conteúdo na
+ * mesma seção, e a numeração dava a entender que os projetos seguem uma ordem
+ * que eles não seguem.
  *
- * `className` recebe o `flex` (ou `hidden sm:flex`) de quem chama: a pastilha é
- * um padrão da página, e cada seção decide em que largura o índice aparece.
+ * O que continua dizendo que há mais coisa ao lado: a PRÉVIA do card seguinte
+ * (o slide não ocupa a largura toda a partir de sm), as SETAS, os PONTINHOS no
+ * celular e a FRASE de convite. Quatro sinais, nenhum deles numerado.
  */
-function CarouselIndex({ items, itemLabel, activeIndex, onSelect, label, className = '' }) {
-  return (
-    <ul aria-label={`Ir para um item de ${label}`} className={`flex-wrap items-center gap-1.5 ${className}`}>
-      {items.map((item, i) => {
-        const text = itemLabel(item, i)
-        const current = i === activeIndex
-        return (
-          <li key={text}>
-            <button
-              type="button"
-              onClick={() => onSelect(i)}
-              aria-current={current}
-              className={`inline-flex items-center gap-2 rounded-lg border px-2.5 py-1.5 text-[0.74rem] font-medium transition-[border-color,background-color,color] duration-300 ease-[var(--ease-out-soft)] sm:text-[0.78rem] ${
-                current
-                  ? 'border-brand/45 bg-white/[0.09] text-ink'
-                  : 'border-white/8 bg-white/[0.02] text-faint hover:border-white/22 hover:bg-white/[0.05] hover:text-muted'
-              }`}
-            >
-              {/* Número decorativo: a ordem já chega ao leitor de tela pela
-                  lista, e repetir "01" antes do título só atrapalharia. */}
-              <span
-                aria-hidden="true"
-                className={`font-display text-[0.62rem] font-bold tabular-nums ${
-                  current ? 'text-accent' : 'text-white/30'
-                }`}
-              >
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              {text}
-            </button>
-          </li>
-        )
-      })}
-    </ul>
-  )
-}
 
 /**
  * Seta de navegação do carrossel.

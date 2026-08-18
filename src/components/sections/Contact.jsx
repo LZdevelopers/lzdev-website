@@ -282,7 +282,6 @@ export function Contact() {
   return (
     <Section id="contato" tight>
       <SectionHeader
-        eyebrow={contactSection.eyebrow}
         title={contactSection.title}
         subtitle={contactSection.subtitle}
       />

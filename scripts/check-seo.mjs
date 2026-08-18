@@ -212,7 +212,120 @@ if (existsSync(join(dist, 'sitemap.xml'))) {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  8 · O QUE PRECISA DE GENTE                                                */
+/*  8 · REGRAS DE CONTEÚDO — preço, prazo e estatística não confirmada        */
+/*                                                                            */
+/*  A varredura roda no HTML PUBLICADO, não no código-fonte: assim ela pega o  */
+/*  valor mesmo que ele venha de outro arquivo, de uma tradução ou de um CMS.   */
+/*                                                                            */
+/*  A severidade é POR REGRA, e não uma chave só para as três:                */
+/*                                                                            */
+/*    · PREÇO e PRAZO reprovam o build (`strict: true`). São decisão fechada   */
+/*      da LZdev e o site está limpo dos dois — a trava existe para ninguém    */
+/*      reintroduzir um "a partir de R$" ou um "2 a 3 semanas" sem perceber.   */
+/*    · ESTATÍSTICA apenas AVISA. Os números da seção "Nossos números" (30+,   */
+/*      20+, 10+, 100%) continuam no ar por decisão da LZdev e ainda não foram */
+/*      confirmados. O aviso mantém a pendência à vista sem travar o trabalho  */
+/*      de ninguém; vira `strict: true` no dia em que alguém confirmar os      */
+/*      valores, ou eles saírem.                                               */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Remove do texto todo elemento declarado como IMAGEM (`role="img"`).
+ *
+ * O painel do Hero é um deles: os números lá dentro ("R$ 48.750,00",
+ * "+12,5% este mês", "50k") são dado fictício de um mockup, para a tela parecer
+ * um sistema em uso — não são preço nem estatística da empresa. Sem esta
+ * exclusão, a varredura reportaria a ilustração e o aviso perderia o sentido.
+ *
+ * O caminhamento conta `<div` e `</div>` para achar o fechamento certo, em vez
+ * de chutar um `</div>` qualquer: dentro do painel há dezenas deles aninhados.
+ */
+function stripRoleImg(html) {
+  let out = html
+  let guard = 0
+  while (guard++ < 50) {
+    const at = out.indexOf('role="img"')
+    if (at === -1) break
+    const open = out.lastIndexOf('<div', at)
+    if (open === -1) break
+
+    let depth = 0
+    let i = open
+    let end = -1
+    while (i < out.length) {
+      if (out.startsWith('<div', i)) depth += 1
+      else if (out.startsWith('</div>', i)) {
+        depth -= 1
+        if (depth === 0) {
+          end = i + '</div>'.length
+          break
+        }
+      }
+      i += 1
+    }
+    if (end === -1) break
+    out = out.slice(0, open) + ' ' + out.slice(end)
+  }
+  return out
+}
+
+/** Texto visível: sem tags, sem script/style, com as entidades mais comuns. */
+const visibleText = stripRoleImg(rootHtml)
+  .replace(/<(script|style)[\s\S]*?<\/\1>/g, ' ')
+  .replace(/<[^>]+>/g, ' ')
+  .replace(/&nbsp;/g, ' ')
+  .replace(/&amp;/g, '&')
+  .replace(/\s+/g, ' ')
+
+/** Mostra o trecho em volta do achado, para o alerta ser acionável. */
+const excerpt = (match, index) => {
+  const from = Math.max(0, index - 40)
+  return `…${visibleText.slice(from, index + match.length + 40).trim()}…`
+}
+
+const CONTENT_RULES = [
+  {
+    name: 'PREÇO',
+    strict: true,
+    /* R$ 1.800 · R$1.800,00 · 1.800 reais */
+    pattern: /R\$\s?\d|\d+\s?reais\b/gi,
+    why: 'valor publicado faz o visitante decidir por um número antes de saber o que está comprando.',
+  },
+  {
+    name: 'PRAZO',
+    strict: true,
+    /* "em 7 dias" · "2 a 3 semanas" · "cerca de 1 semana" · "até 2 horas úteis" */
+    pattern: /\b\d+\s?(?:a\s?\d+\s?)?(?:hora|horas|dia|dias|semana|semanas|m[eê]s|meses)\b/gi,
+    why: 'prazo sem escopo é chute, e chute publicado vira promessa que alguém cobra.',
+  },
+  {
+    name: 'ESTATÍSTICA NÃO CONFIRMADA',
+    strict: false,
+    /* "30+ projetos" · "100% de satisfação" · "10 anos de experiência" */
+    pattern: /\b\d+\s?\+|\b\d{2,3}\s?% de \w+|\b\d+\s?anos de (?:experi[eê]ncia|mercado)/gi,
+    why: 'número de vitrine sem alguém que confirme é o que uma revisão técnica derruba primeiro.',
+  },
+]
+
+let clean = 0
+for (const rule of CONTENT_RULES) {
+  const hits = [...visibleText.matchAll(rule.pattern)]
+  if (!hits.length) {
+    clean += 1
+    continue
+  }
+  for (const match of hits) {
+    const message = `${rule.name} no texto da página ("${match[0]}") — ${rule.why} Contexto: ${excerpt(match[0], match.index)}`
+    if (rule.strict) fail(message)
+    else warn(message)
+  }
+}
+note(
+  `regras de conteúdo: ${clean} de ${CONTENT_RULES.length} limpas em ${(visibleText.length / 1024).toFixed(0)} kB de texto visível — preço e prazo reprovam o build, estatística não confirmada apenas avisa`
+)
+
+/* -------------------------------------------------------------------------- */
+/*  9 · O QUE PRECISA DE GENTE                                                */
 /* -------------------------------------------------------------------------- */
 const pendings = []
 const siteData = readFileSync(join(repoRoot, 'src', 'data', 'site.js'), 'utf8')

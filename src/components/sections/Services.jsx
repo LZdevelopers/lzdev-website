@@ -51,7 +51,10 @@ function ServiceCard({ service, index }) {
         {service.audience}
       </p>
 
-      <ul className="mt-4 flex flex-col gap-2">
+      {/* `mb-auto` no lugar do antigo `mt-auto` da faixa de preço: com o pé do
+          card removido, é a lista que precisa empurrar o resto para cima, senão
+          os três cards ficam com alturas diferentes sem nada alinhado. */}
+      <ul className="mt-4 mb-auto flex flex-col gap-2">
         {service.includes.map((item) => (
           <li key={item} className="flex items-start gap-2.5 text-[0.85rem] leading-snug text-muted">
             <Icon name="check" size={14} className="mt-0.5 shrink-0 text-[var(--cat)]" aria-hidden="true" />
@@ -60,15 +63,6 @@ function ServiceCard({ service, index }) {
         ))}
       </ul>
 
-      {/* Preço e prazo: `mt-auto` cola a faixa no pé do card, então os três
-          cards alinham essa linha mesmo com listas de alturas diferentes. */}
-      <div className="mt-auto flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-t border-white/8 pt-4 sm:pt-5">
-        <p className="font-display text-[0.95rem] font-bold text-ink">{service.price}</p>
-        <p className="flex items-center gap-1.5 text-[0.75rem] text-faint">
-          <Icon name="clock" size={13} className="shrink-0" aria-hidden="true" />
-          {service.timeline}
-        </p>
-      </div>
     </Card>
   )
 }
@@ -76,7 +70,7 @@ function ServiceCard({ service, index }) {
 export function Services() {
   return (
     <Section id="servicos">
-      <SectionHeader eyebrow={services.eyebrow} title={services.title} subtitle={services.subtitle} />
+      <SectionHeader title={services.title} subtitle={services.subtitle} />
 
       <ul className="mt-10 grid gap-4 sm:mt-12 lg:grid-cols-3">
         {services.items.map((service, i) => (
@@ -105,7 +99,8 @@ export function Services() {
             </Button>
             <a
               href="#projetos"
-              className="group inline-flex items-center gap-1.5 text-sm font-semibold text-muted transition-colors duration-300 hover:text-ink"
+              /* py-1: 20px de alvo viram 28px. Ver o comentário do rodapé. */
+              className="group inline-flex items-center gap-1.5 py-1 text-sm font-semibold text-muted transition-colors duration-300 hover:text-ink"
             >
               Ver projetos entregues
               <Icon

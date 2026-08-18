@@ -121,17 +121,13 @@ function ProjectSlide({ project }) {
 export function Projects() {
   return (
     <Section id="projetos">
-      <SectionHeader eyebrow={projects.eyebrow} title={projects.title} subtitle={projects.subtitle} />
+      <SectionHeader title={projects.title} subtitle={projects.subtitle} />
 
       <Reveal variant="scale" className="mt-12 block">
         <Carousel
           items={projects.items}
           label="Projetos em destaque"
           slideKey={(project) => project.name}
-          /* O índice mostra o NOME dos quatro projetos antes de qualquer
-             rolagem: quem chega sabe o que tem na seção e pula direto para o
-             caso parecido com o dele. */
-          itemLabel={(project) => project.name}
           hint={projects.hint}
           renderSlide={(project) => <ProjectSlide project={project} />}
         />

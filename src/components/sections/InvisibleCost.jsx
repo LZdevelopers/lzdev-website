@@ -102,7 +102,6 @@ export function InvisibleCost() {
   return (
     <Section id="custo-invisivel">
       <SectionHeader
-        eyebrow={invisibleCost.eyebrow}
         title={invisibleCost.title}
         subtitle={invisibleCost.subtitle}
       />

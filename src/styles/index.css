@@ -88,7 +88,6 @@
 
   --animate-marquee: marquee 38s linear infinite;
   --animate-drift: drift 28s ease-in-out infinite alternate;
-  --animate-pulse-dot: pulse-dot 2.4s ease-in-out infinite;
   --animate-grow: grow 1.1s var(--ease-out-soft) both;
   --animate-sheen: sheen 1.1s var(--ease-out-soft);
   /* Empurrãozinho para a direita — o convite a rolar das trilhas horizontais.
@@ -111,32 +110,9 @@
     transform: translate3d(4%, -3%, 0) scale(1.12);
   }
 }
-/* O ponto pisca em OPACIDADE e o halo cresce em TRANSFORM — antes os dois
-   estavam num só keyframe que animava o `spread` do box-shadow. A diferença é
-   de custo: mudar o spread de uma sombra obriga o navegador a repintar a área a
-   cada quadro, e são nove etiquetas dessas na página animando para sempre.
-   Opacidade e transform o compositor resolve sem repintar nada. O desenho na
-   tela é o mesmo. */
-@keyframes pulse-dot {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.65;
-  }
-}
-@keyframes pulse-ring {
-  0%,
-  100% {
-    transform: scale(0.35);
-    opacity: 0.55;
-  }
-  50% {
-    transform: scale(1);
-    opacity: 0;
-  }
-}
+/* Os keyframes `pulse-dot` e `pulse-ring` saíram junto com a etiqueta de seção
+   (o rótulo em caixa alta com a bolinha acesa ao lado). Ver o comentário em
+   src/components/primitives/Section.jsx. */
 @keyframes grow {
   from {
     transform: scaleY(0);
@@ -180,10 +156,37 @@
   }
 
   html {
+    /**
+     * ANCORAS — a conta que faz o clique no menu parar no lugar certo.
+     *
+     * `--header-h` e escrito em tempo de execucao com a altura REAL da barra
+     * fixa (src/hooks/useHeaderHeight.js, via ResizeObserver). O valor abaixo e
+     * so o piso, para a primeira pintura e para o caso de o JavaScript nao
+     * rodar; ele corresponde a altura da barra no desenho atual (72px).
+     *
+     * Aqui havia um `scroll-padding-top: 6rem` escrito a mao. Sao 96px contra
+     * uma barra de 72: cada ancora parava 24px depois do comeco da secao, em
+     * toda tela — e no dia em que a barra mudasse de altura o erro mudaria de
+     * tamanho sem ninguem saber de onde vinha.
+     */
+    --header-h: 4.5rem;
     scroll-behavior: smooth;
-    /* compensa a navbar fixa ao navegar por âncoras */
-    scroll-padding-top: 6rem;
     -webkit-text-size-adjust: 100%;
+  }
+
+  /**
+   * O DESCONTO DA BARRA, aplicado no alvo e nao no scroller.
+   *
+   * `scroll-margin-top` acompanha QUALQUER forma de chegar ao alvo — clique no
+   * link nativo, `scrollIntoView` do menu do celular (src/lib/anchors.js), URL
+   * colada com #secao, botao voltar do navegador — e usa sempre a mesma conta.
+   * Nao existem duas rotinas de offset para divergir.
+   *
+   * O 0.75rem extra e o respiro entre a barra e o topo da secao: encostar o
+   * conteudo na borda inferior da barra fica pior que sobrar um fio de espaco.
+   */
+  :where(section[id], main[id]) {
+    scroll-margin-top: calc(var(--header-h) + 0.75rem);
   }
 
   body {
@@ -221,6 +224,14 @@
     outline: 2px solid var(--color-ink);
     outline-offset: 3px;
     border-radius: 0.5rem;
+  }
+
+  /* A seção que recebe o foco por script (ver src/lib/anchors.js) não desenha
+     anel nenhum: ela não é um controle, e o anel em volta de um bloco inteiro
+     parece defeito. O foco continua lá para o Tab seguinte. */
+  :where(section, main):focus,
+  :where(section, main):focus-visible {
+    outline: none;
   }
 
   /* Seleção invertida — sem matiz para tingir o fundo, o único jeito de a
@@ -359,22 +370,6 @@
   background-position: right 0.9rem center;
   background-size: 18px 18px;
   padding-right: 2.75rem;
-}
-
-/* Ponto pulsante das etiquetas de seção: o ponto em si e, no ::after, o halo
-   que cresce e se apaga. Substitui a antiga classe `animate-pulse-dot`, que
-   fazia o halo com sombra animada. */
-@utility pulse-dot {
-  position: relative;
-  animation: var(--animate-pulse-dot);
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 9999px;
-    box-shadow: 0 0 0 5px color-mix(in oklab, var(--color-info) 55%, transparent);
-    animation: pulse-ring 2.4s ease-in-out infinite;
-  }
 }
 
 @utility no-scrollbar {

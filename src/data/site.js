@@ -184,7 +184,7 @@ export const hero = {
   ],
 
   subtitle:
-    'Landing pages, sites institucionais e sistemas de gestão feitos do zero para o seu processo — da tela ao banco de dados, com escopo e prazo fechados antes de começar.',
+    'Landing pages, sites institucionais e sistemas de gestão feitos do zero para o seu processo — da tela ao banco de dados, com escopo fechado antes de começar.',
 
   /** O CTA primário sai de `primaryCta`: é o mesmo rótulo da barra e do envio. */
   secondaryCta: 'Ver projetos',
@@ -209,26 +209,29 @@ export const hero = {
 /*  hoje são as DUAS famílias abaixo, e o schema passou a sair desta lista.    */
 /*                                                                            */
 /*  NADA aqui é inventado. Cada linha vem de informação que já estava no site: */
-/*    · preço e prazo dos três formatos → respostas do FAQ                    */
+/*    · o que cada formato entrega → respostas do FAQ                        */
 /*    · login, permissão por perfil, relatório e painel único → Sprint Max     */
 /*    · caminho curto até o WhatsApp → Kimori e Tio Preto                     */
 /*    · "sem template" e "o código é seu" → diferenciais e FAQ                */
 /*    · atendimento remoto em todo o Brasil → FAQ                             */
 /* -------------------------------------------------------------------------- */
 export const services = {
-  eyebrow: 'Serviços',
   title: 'O que a gente desenvolve',
   subtitle:
     'Três formatos, um jeito de trabalhar: proposta com escopo fechado, acompanhamento em ambiente de teste e o código entregue no seu nome.',
 
   /**
-   * `price` é PISO, não tabela — a mesma informação que o FAQ dá, no formato
-   * curto. Ele fica no card porque "quanto custa" é a primeira pergunta de
-   * quem chega, e mandar o visitante caçar a resposta sete seções abaixo é
-   * como se perde um orçamento.
+   * SEM PREÇO E SEM PRAZO, e é regra do site — não descuido.
    *
-   * `priceFrom` é o mesmo número em forma de dado, para o JSON-LD: o preço
-   * anunciado ao Google é EXATAMENTE o que está escrito na tela.
+   * Cada card tinha um pé com "A partir de R$ 1.800" e "cerca de 1 semana".
+   * Os dois saíram por decisão da LZdev: valor e cronograma sem escopo definido
+   * são chute, e chute publicado vira âncora contra a própria proposta (o
+   * visitante decide por um número antes de saber o que está comprando) e
+   * promessa que alguém cobra depois. Os dois voltam na conversa, onde existe
+   * escopo para sustentá-los.
+   *
+   * A trava está em `scripts/check-seo.mjs`: ela varre o HTML publicado e
+   * REPROVA o build se um preço ou um prazo reaparecer em qualquer lugar.
    */
   items: [
     {
@@ -241,9 +244,6 @@ export const services = {
         'Caminho curto até o WhatsApp ou formulário',
         'Pronta para receber tráfego de anúncio',
       ],
-      price: 'A partir de R$ 1.800',
-      priceFrom: 1800,
-      timeline: 'cerca de 1 semana',
     },
     {
       icon: 'globe',
@@ -255,9 +255,6 @@ export const services = {
         'Estrutura preparada para o Google',
         'Conteúdo fácil de crescer depois',
       ],
-      price: 'A partir de R$ 3.200',
-      priceFrom: 3200,
-      timeline: '2 a 3 semanas',
     },
     {
       icon: 'blocks',
@@ -269,9 +266,6 @@ export const services = {
         'Cadastros, vendas e relatórios num painel único',
         'As suas regras, não as de um software de prateleira',
       ],
-      price: 'A partir de R$ 8.500',
-      priceFrom: 8500,
-      timeline: '5 a 8 semanas',
     },
   ],
 
@@ -290,7 +284,6 @@ export const services = {
 /*  3 · PROJETOS — FALTA: URLs dos 3 não hospedados e screenshots             */
 /* -------------------------------------------------------------------------- */
 export const projects = {
-  eyebrow: 'Projetos em destaque',
   title: 'Resultado entregue',
   subtitle: 'Uma amostra do que já está no ar e em uso — do sistema de gestão completo à ferramenta pública.',
 
@@ -367,7 +360,6 @@ export const projects = {
 /*  interno de quem escreve o código, não o de quem lê a página.              */
 /* -------------------------------------------------------------------------- */
 export const tools = {
-  eyebrow: 'Tecnologias',
   title: 'A stack que sustenta cada entrega',
   subtitle:
     'Você não precisa entender nada desta lista — escolher certo é o nosso trabalho. Ela está aqui para mostrar que existe critério técnico por trás de cada decisão.',
@@ -460,7 +452,6 @@ export const tools = {
  * aqui e vale mais que qualquer pesquisa de terceiro.
  */
 export const invisibleCost = {
-  eyebrow: 'O custo invisível',
   title: 'Não ter um site profissional não aparece na conta — mas você paga por ele',
   subtitle:
     'Nenhum desses prejuízos vem com aviso ou boleto. Eles acontecem em silêncio, todos os dias, enquanto o cliente decide fechar com outra empresa.',
@@ -539,7 +530,6 @@ export const invisibleCost = {
 /*  6 · DIFERENCIAIS                                                          */
 /* -------------------------------------------------------------------------- */
 export const why = {
-  eyebrow: 'Por que escolher a LZdev',
   title: 'Feito certo agora custa menos que refeito depois',
   subtitle:
     'Boa parte do que recebemos para manter foi construído às pressas por alguém que não pensou no ano seguinte. Nosso padrão de engenharia existe para você nunca precisar recomeçar.',
@@ -551,10 +541,17 @@ export const why = {
    * `image`: ilustração do diferencial, em /public/diferenciais/*.svg.
    * São vetores desenhados para ESTE site — mesmo grafite do tema, mesma malha
    * do fundo e o acento categórico na ordem em que o card aparece (azul, ciano,
-   * violeta, ciclando). Foto de banco de imagem entraria com outra iluminação e
-   * outra paleta; aqui a imagem mostra a própria promessa do card (a régua de
+   * violeta, ciclando). A imagem mostra a própria promessa do card (a régua de
    * medida, o medidor no verde, o editor indentado) em vez de decorar.
    * Vazio → o card volta ao painel só de ícone, sem imagem quebrada.
+   *
+   * FOTOGRAFIA FOI TESTADA E RECUSADA (18/08/2026). As sete ilustrações foram
+   * trocadas por foto real e a LZdev preferiu voltar ao vetor — o que faz
+   * sentido: as ilustrações nascem na paleta do site, e sete fotos de sete
+   * fotógrafos diferentes chegam com sete iluminações, o que aparece na hora
+   * numa página preta. Se um dia forem retomadas, as escolhidas estavam no
+   * Unsplash (ids wdnpaTNwOEQ, JKUTrJ4vK00, h7v_38e3iGE, c4aT8MfEzdw,
+   * _SgRNwAVNKw, Im_cQ6hQo10, 2mc2B5iX6as, nesta ordem de card).
    */
   items: [
     {
@@ -613,7 +610,6 @@ export const why = {
  * repetição — o que importa aqui é quem é, o que faz e como falar com ela.
  */
 export const team = {
-  eyebrow: 'Quem constrói',
   title: 'Você fala direto com quem escreve o código',
   subtitle:
     'Sem camada de intermediário e sem atendente repassando recado. Time enxuto, contato direto e responsabilidade sobre o que entregamos.',
@@ -664,7 +660,6 @@ export const team = {
 /*  8 · NOSSOS NÚMEROS                                                        */
 /* -------------------------------------------------------------------------- */
 export const stats = {
-  eyebrow: 'Nossos números',
   title: 'Consistência que dá para medir',
   subtitle:
     'Sem número inflado para impressionar. É o que já foi entregue, está no ar e continua sendo mantido.',
@@ -690,13 +685,8 @@ export const stats = {
       label: 'Tecnologias dominadas',
       text: 'Do front-end ao banco de dados e à infraestrutura.',
     },
-    {
-      icon: 'clock',
-      value: 3,
-      suffix: ' sem.',
-      label: 'Tempo médio de entrega',
-      text: 'Média entre projetos de site institucional.',
-    },
+    /* A métrica "Tempo médio de entrega · 3 sem." saiu daqui: era um prazo de
+       entrega publicado, e o site não publica prazo. */
     {
       icon: 'star',
       value: 100,
@@ -711,7 +701,6 @@ export const stats = {
 /*  9 · FAQ                                                                   */
 /* -------------------------------------------------------------------------- */
 export const faq = {
-  eyebrow: 'Perguntas frequentes',
   title: 'As dúvidas que chegam antes do primeiro contato',
   helper: {
     text: 'Sua dúvida não está aqui? Pergunte direto — resposta rápida, sem compromisso.',
@@ -725,15 +714,21 @@ export const faq = {
    * detalhe fala com a gente — é esse o próximo passo que a seção quer.
    */
   items: [
+    /**
+     * As duas primeiras perguntas mudaram de RESPOSTA, não de assunto: elas
+     * publicavam tabela de preço e de semanas. Continuam sendo as duas dúvidas
+     * que chegam primeiro, e agora explicam COMO se chega ao número — que é a
+     * resposta honesta quando ninguém sabe ainda o escopo.
+     */
     {
-      q: 'Quanto custa um site?',
-      tag: 'Investimento',
-      a: 'Landing page a partir de R$ 1.800, site institucional de R$ 3.200 e sistema web de R$ 8.500. Você recebe uma proposta com escopo fechado — sem valor surpresa no meio do caminho.',
+      q: 'Como funciona o orçamento?',
+      tag: 'Orçamento',
+      a: 'A primeira conversa é para entender o que você precisa: o que o site ou o sistema tem de fazer, quem vai usar e o que já existe hoje. Com isso na mão você recebe uma proposta de escopo fechado, e nada muda no meio do caminho sem você aprovar antes.',
     },
     {
-      q: 'Quanto tempo demora?',
-      tag: 'Prazo',
-      a: 'Landing page em cerca de uma semana, site institucional entre duas e três e sistema web de cinco a oito. Você acompanha a evolução em ambiente de homologação desde o início, em vez de esperar o resultado no escuro.',
+      q: 'Como funciona do primeiro contato até a entrega?',
+      tag: 'Processo',
+      a: 'Conversa, proposta com escopo fechado, protótipo aprovado no Figma, desenvolvimento em ambiente de homologação que você acompanha, entrega e suporte. Cada etapa é aprovada antes de a próxima começar.',
     },
     {
       q: 'Posso solicitar alterações?',
@@ -767,15 +762,14 @@ export const faq = {
 /* 10 · FALE COM A GENTE                                                     */
 /* -------------------------------------------------------------------------- */
 export const contactSection = {
-  eyebrow: 'Fale com a gente',
   title: 'Descreva o desafio. Nós desenhamos a solução.',
   subtitle:
-    'Quatro campos e um retorno em até 2 horas úteis com as próximas etapas. Se quiser adiantar o diagnóstico, conte o desafio na descrição — o campo é opcional.',
-  reassurance: [
-    'Retorno em até 2 horas úteis',
-    'Diagnóstico inicial sem custo',
-    'Seus dados não são compartilhados',
-  ],
+    'Quatro campos e a gente responde com as próximas etapas. Se quiser adiantar o diagnóstico, conte o desafio na descrição — o campo é opcional.',
+  /* "Retorno em até 2 horas úteis" saiu: era um prazo publicado — e um que um
+     time de duas pessoas não controla em dia de entrega —, do tipo que o
+     visitante cobra no minuto 121. As duas linhas que sobraram são as que a
+     LZdev consegue cumprir sempre. */
+  reassurance: ['Diagnóstico inicial sem custo', 'Seus dados não são compartilhados'],
 
   /**
    * O que acontece DEPOIS de clicar, escrito antes do clique.

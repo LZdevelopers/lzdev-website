@@ -22,8 +22,8 @@ import { contact, faq, projects, services, team } from '../../data/site'
  *     (e não tem) nada sobre isso; a LZdev confirmou que não vende esses
  *     serviços hoje. Agora a lista de serviços é gerada de `services`, a mesma
  *     que desenha os cards da seção Serviços — se sair da tela, sai do schema.
- *   · o preço entra como `Offer` porque ele está ESCRITO na página. O valor
- *     anunciado é o mesmo `priceFrom` que virou "A partir de R$ 1.800" no card.
+ *   · nenhum `Offer` e nenhum preço: o site não publica valor em lugar nenhum,
+ *     e o schema acompanha o que está na tela.
  *
  * O que deliberadamente NÃO está aqui: `aggregateRating` e `review`. O site
  * exibe "100% de satisfação", mas isso não é avaliação de cliente com autor e
@@ -103,9 +103,12 @@ export function StructuredData() {
         primaryImageOfPage: absolute(site.ogImage.path),
       },
 
-      /* O QUE SE CONTRATA — um nó por card da seção Serviços, com o preço que
-         está na tela. `offers.priceSpecification.minPrice` porque o valor é
-         piso ("a partir de"), não preço fechado. */
+      /* O QUE SE CONTRATA — um nó por card da seção Serviços.
+         SEM `offers`: havia um `Offer` com `minPrice` por serviço, espelhando o
+         "a partir de R$ …" que os cards mostravam. O preço saiu da tela, e o
+         schema acompanha a tela — anunciar ao Google um valor que o visitante
+         não vê é a marcação que o Search Console reporta como inconsistente, e
+         renderia um resultado de busca com um preço que a página não confirma. */
       ...services.items.map((service) => ({
         '@type': 'Service',
         name: service.name,
@@ -113,15 +116,6 @@ export function StructuredData() {
         serviceType: service.name,
         provider: { '@id': orgId },
         areaServed: { '@type': 'Country', name: 'Brasil' },
-        offers: {
-          '@type': 'Offer',
-          priceSpecification: {
-            '@type': 'PriceSpecification',
-            priceCurrency: 'BRL',
-            minPrice: service.priceFrom,
-            valueAddedTaxIncluded: true,
-          },
-        },
       })),
 
       /* AS DÚVIDAS, palavra por palavra como o acordeão do FAQ mostra. */

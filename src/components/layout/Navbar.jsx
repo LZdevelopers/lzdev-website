@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { navLinks, primaryCta } from '../../data/site'
+import { afterTwoFrames, scrollToAnchor } from '../../lib/anchors'
 import { useActiveSection } from '../../hooks/useActiveSection'
+import { useHeaderHeight } from '../../hooks/useHeaderHeight'
 import { useScrolled } from '../../hooks/useScrolled'
 import { Button } from '../primitives/Button'
 import { Icon } from '../primitives/Icon'
@@ -22,11 +24,22 @@ import { Logo } from './Logo'
 const NAV_IDS = navLinks.map((link) => link.href.replace('#', ''))
 
 export function Navbar() {
+  /**
+   * A altura medida é a da FAIXA (o <nav>), não a do <header> inteiro.
+   * O painel do celular é filho do header: com ele aberto, o header mede a
+   * faixa + o painel, e `--header-h` passaria a valer 300px e sobrando. Quem
+   * cobre o conteúdo é sempre a faixa.
+   */
+  const navRef = useRef(null)
   const scrolled = useScrolled(20)
   const activeId = useActiveSection(NAV_IDS)
   const [open, setOpen] = useState(false)
   const panelRef = useRef(null)
   const triggerRef = useRef(null)
+
+  // A altura real da barra vira `--header-h`, que o CSS usa para descontar a
+  // barra ao parar a rolagem numa âncora. Ver src/hooks/useHeaderHeight.js.
+  useHeaderHeight(navRef)
 
   // Bloqueia o scroll do body e devolve o foco ao botão ao fechar o drawer.
   useEffect(() => {
@@ -74,6 +87,22 @@ export function Navbar() {
     }
   }, [open])
 
+  /**
+   * Item do menu do celular: fecha o painel e SÓ DEPOIS rola.
+   *
+   * Com o painel aberto, a rolagem do body está travada (`overflow: hidden`,
+   * senão a página rola atrás do painel). O navegador processa o salto da âncora
+   * no MESMO instante do clique — antes de o React fechar o painel e devolver a
+   * rolagem —, então ele tenta rolar um documento travado e o menu fecha com a
+   * página parada onde estava. É o clássico "o menu do celular não vai para a
+   * seção". Detalhes em src/lib/anchors.js.
+   */
+  const onDrawerLink = (href) => (event) => {
+    event.preventDefault()
+    setOpen(false)
+    afterTwoFrames(() => scrollToAnchor(href))
+  }
+
   return (
     <header
       className={`fixed top-0 inset-x-0 z-50 transition-[background-color,border-color,backdrop-filter,box-shadow] duration-500 ease-[var(--ease-out-soft)] ${
@@ -85,6 +114,7 @@ export function Navbar() {
       {/* Três colunas para o menu ficar opticamente centralizado na tela,
           independente da largura do logo e do CTA. */}
       <nav
+        ref={navRef}
         className="container-page grid h-18 grid-cols-[auto_1fr_auto] items-center gap-6"
         aria-label="Navegação principal"
       >
@@ -135,7 +165,8 @@ export function Navbar() {
         </div>
       </nav>
 
-      {/* Drawer — mobile/tablet */}
+      {/* Drawer — mobile/tablet. Os números "01 02 03" que ficavam à direita de
+          cada item saíram: numeravam uma lista que não tem ordem nenhuma. */}
       <div
         id="menu-mobile"
         ref={panelRef}
@@ -143,28 +174,25 @@ export function Navbar() {
         className="lg:hidden border-t border-white/8 bg-bg/95 backdrop-blur-xl"
       >
         <ul className="container-page flex flex-col gap-1 py-5">
-          {navLinks.map((link, i) => {
+          {navLinks.map((link) => {
             const current = activeId === link.href.replace('#', '')
             return (
               <li key={link.href}>
                 <a
                   href={link.href}
                   aria-current={current ? 'true' : undefined}
-                  onClick={() => setOpen(false)}
-                  className={`flex items-center justify-between rounded-xl px-4 py-3.5 text-base font-medium transition-colors hover:bg-white/[0.05] hover:text-ink ${
+                  onClick={onDrawerLink(link.href)}
+                  className={`block rounded-xl px-4 py-3.5 text-base font-medium transition-colors hover:bg-white/[0.05] hover:text-ink ${
                     current ? 'bg-white/[0.06] text-ink' : 'text-muted'
                   }`}
                 >
                   {link.label}
-                  <span className="font-mono text-xs text-faint" aria-hidden="true">
-                    0{i + 1}
-                  </span>
                 </a>
               </li>
             )
           })}
           <li className="mt-3">
-            <Button href="#contato" size="lg" className="w-full" icon="arrowRight" onClick={() => setOpen(false)}>
+            <Button href="#contato" size="lg" className="w-full" icon="arrowRight" onClick={onDrawerLink('#contato')}>
               {primaryCta}
             </Button>
           </li>
