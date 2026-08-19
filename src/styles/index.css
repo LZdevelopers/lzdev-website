@@ -7,6 +7,10 @@
    tokens globais com a composição de uma única seção. */
 @import './hero.css';
 
+/* Mesma regra para o fundo da seção Equipe: três camadas que só existem sob
+   `.team`. */
+@import './team.css';
+
 /* ==========================================================================
    DESIGN TOKENS — LZdev
 

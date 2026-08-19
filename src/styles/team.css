@@ -1,0 +1,78 @@
+/* ==========================================================================
+   EQUIPE — fundo discreto
+   Estilos exclusivos da seção #equipe. Nada aqui vaza: todo seletor vive sob
+   `.team` ou sob `.team-fx`, que só existe dentro dela.
+
+   São três camadas, todas estáticas: uma trama de pontos, uma luz suave vinda
+   de cima e um halo que acompanha o cursor de longe. Nenhuma animação, nenhuma
+   mesclagem, nenhum contraste alto — o fundo aqui é TEXTURA, não desenho.
+
+   A regra que decidiu o desenho: esta é a seção em que o visitante lê nomes e
+   decide falar com alguém. Fundo que puxa o olho compete exatamente com isso.
+   Ele precisa dar profundidade ao preto e parar por aí.
+   ========================================================================== */
+
+.team {
+  /* Posição do halo, em % da seção. É AQUI que os padrões moram, e não em
+     `.team-fx`: o JS de Team.jsx escreve as duas no `<section>` e a camada de
+     baixo herda. Se a declaração ficasse no `.team-fx`, ela venceria o valor
+     herdado e o halo nunca sairia do lugar. */
+  --team-x: 50%;
+  --team-y: 40%;
+
+  /* Mantém as camadas presas à seção, sem chance de escaparem para o fundo
+     global da página. */
+  isolation: isolate;
+}
+
+.team-fx {
+  position: absolute;
+  inset: 0;
+  /* atrás do conteúdo em fluxo da seção (os cards são estáticos e pintam depois) */
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* 1 · Trama de pontos.
+   O fundo global da página já tem uma malha de LINHAS de 72px (GridBackdrop);
+   aqui são pontos finos e mais juntos, para a seção ter textura própria sem
+   parecer que a malha global mudou de tamanho no meio da rolagem.
+   A máscara dissolve a trama nas bordas: sem ela o retângulo de pontos teria
+   quatro cantos visíveis e o fundo viraria um bloco colado na página. */
+.team-fx-dots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgb(255 255 255 / 0.15) 1px, transparent 1px);
+  background-size: 20px 20px;
+  -webkit-mask-image: radial-gradient(ellipse 84% 70% at 50% 45%, #000 28%, transparent 78%);
+  mask-image: radial-gradient(ellipse 84% 70% at 50% 45%, #000 28%, transparent 78%);
+}
+
+/* 2 · Luz de cima — um clareamento de 3,5% que separa a seção do preto chapado
+   das vizinhas. É o mesmo recurso do Hero, numa dose muito menor. */
+.team-fx-wash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 72% at 50% 0%, rgb(255 255 255 / 0.035), transparent 62%);
+}
+
+/* 3 · Halo que acompanha o cursor.
+   Grande, quase transparente e com quase um segundo de atraso: ele não segue o
+   ponteiro, ele DERIVA na direção dele. É a única coisa viva do fundo, e mesmo
+   assim só se percebe de canto de olho — que é o ponto.
+   No celular e no teclado ele fica parado no lugar padrão, o que já basta:
+   sozinho ele é um degradê suave atrás dos cards. */
+.team-fx-glow {
+  position: absolute;
+  top: var(--team-y);
+  left: var(--team-x);
+  width: clamp(20rem, 48vw, 40rem);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.025) 42%, transparent 70%);
+  transition:
+    top 0.9s var(--ease-out-soft),
+    left 0.9s var(--ease-out-soft);
+}

@@ -9,6 +9,10 @@ import { HeroDashboard } from './HeroDashboard'
  *
  * A ordem de pintura é controlada por z-index em hero.css:
  * órbitas/plataforma (1) → painel (2) → cards flutuantes (3).
+ *
+ * O palco também é a área sensível ao ponteiro: é ele que escreve o desvio de
+ * inclinação do painel (ver trackTilt abaixo). O painel em si tem interação
+ * própria — trilha lateral e gráfico —, que mora em HeroDashboard.jsx.
  */
 
 /** Anéis concêntricos da plataforma — desenhados em SVG para controle do traço. */
@@ -46,10 +50,47 @@ function Platform() {
   )
 }
 
+/**
+ * O PALCO SEGUE O CURSOR.
+ *
+ * Enquanto o mouse anda sobre o palco, estas duas variáveis são somadas à
+ * inclinação base do painel (ver .hero-panel-wrap em hero.css) — o mockup gira
+ * alguns graus em direção ao ponteiro e volta sozinho quando ele sai. É o que
+ * transforma uma ilustração 3D parada em algo que responde a quem chegou.
+ *
+ * Custo por evento: um `getBoundingClientRect` e duas custom properties. Nenhum
+ * estado do React, nenhum re-render, nenhum recálculo de layout — só uma matriz
+ * de transformação que o compositor já ia calcular de qualquer jeito.
+ *
+ * Amplitude curta de propósito (±5,5° na horizontal, ±3° na vertical): o painel
+ * tem texto pequeno lá dentro, e girar demais o deixa ilegível justamente
+ * quando o visitante está tentando olhar.
+ *
+ * `mouse` exclui dedo e caneta: em toque a inclinação ficaria travada no último
+ * ponto tocado, o que não é resposta a nada.
+ */
+const trackTilt = (event) => {
+  if (event.pointerType !== 'mouse') return
+
+  const rect = event.currentTarget.getBoundingClientRect()
+  const style = event.currentTarget.style
+  const x = (event.clientX - rect.left) / rect.width - 0.5
+  const y = (event.clientY - rect.top) / rect.height - 0.5
+
+  style.setProperty('--hero-pointer-x', `${(x * 11).toFixed(2)}deg`)
+  style.setProperty('--hero-pointer-y', `${(-y * 6).toFixed(2)}deg`)
+}
+
+/** Ponteiro fora do palco: as variáveis somem e o painel volta à pose base. */
+const releaseTilt = (event) => {
+  event.currentTarget.style.removeProperty('--hero-pointer-x')
+  event.currentTarget.style.removeProperty('--hero-pointer-y')
+}
+
 export function HeroStage() {
   return (
     <div className="hero-stage-outer">
-      <div className="hero-stage">
+      <div className="hero-stage" onPointerMove={trackTilt} onPointerLeave={releaseTilt}>
         {/* Pontos de luz que percorrem as elipses da plataforma */}
         <div className="hero-orbit hero-orbit--wide" aria-hidden="true">
           <span className="hero-orbit-dot" />

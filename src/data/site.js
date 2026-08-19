@@ -604,10 +604,20 @@ export const why = {
 /* -------------------------------------------------------------------------- */
 
 /**
- * A stack dos dois (os dois são full stack e dominam o mesmo conjunto) NÃO é
- * listada aqui de propósito: quem apresenta tecnologia no site é a seção
- * Ferramentas, uma vez e com descrição. No cartão da pessoa a lista virava
- * repetição — o que importa aqui é quem é, o que faz e como falar com ela.
+ * NENHUM CARTÃO DESTA SEÇÃO DIVIDE TRABALHO NEM LISTA TECNOLOGIA.
+ *
+ * Nada de "fulano cuida do front", "sicrano mexe com React, TypeScript e
+ * JavaScript". São dois motivos:
+ *
+ *   · dividir áreas é o contrário do que a seção promete. O título diz que o
+ *     cliente fala DIRETO com quem escreve o código; um card que separa "front"
+ *     de "back" já cria a pergunta "então com qual dos dois eu falo?";
+ *   · a stack já é apresentada uma vez, com descrição, na seção Tecnologias.
+ *     Repetida no cartão da pessoa ela vira etiqueta — e etiqueta de tecnologia
+ *     envelhece a cada projeto novo.
+ *
+ * O que fica no cartão é o que não muda: quem é a pessoa, que ela acompanha o
+ * projeto inteiro e por onde falar com ela.
  */
 export const team = {
   title: 'Você fala direto com quem escreve o código',
@@ -617,23 +627,24 @@ export const team = {
   /**
    * `photo`: caminho de uma imagem em /public (ex.: '/equipe/enzo.jpg').
    * Vazio → o card usa o avatar de iniciais, mantendo a identidade visual.
-   * `tag`: selo sobre o retrato. `focus`: a linha destacada antes da bio.
+   * `tag`: selo sobre o retrato. `headline`: a linha destacada antes da bio.
    * `age`: idade em anos, exibida ao lado da função.
    *
-   * As duas descrições dizem a mesma coisa por baixo, com palavras diferentes:
-   * função e stack informadas são idênticas para os dois, e diferenciar aqui
-   * exigiria atribuir a cada um uma especialidade que ninguém informou.
+   * `headline` e `bio` falam de RELAÇÃO, não de stack: com quem o cliente vai
+   * falar, em que etapas e até quando. É o único recorte em que os dois cartões
+   * podem dizer coisas parecidas sem mentir — porque aqui eles fazem, de fato,
+   * a mesma coisa.
    */
   members: [
     {
       name: 'Enzo Pontes do Nascimento',
-      role: 'Desenvolvedor Full Stack',
+      role: 'Desenvolvedor',
       age: 15,
       initials: 'EN',
-      tag: 'Full stack',
+      tag: 'Contato direto',
       photo: '', // FALTA: foto real
-      focus: 'Full stack: da interface ao banco de dados',
-      bio: 'Interface em React, TypeScript e JavaScript. Regra de negócio em PHP, Laravel e Node.js. Dados em MySQL.',
+      headline: 'Você fala com ele do primeiro contato à entrega',
+      bio: 'É a mesma pessoa na conversa inicial, no desenvolvimento e no suporte depois que o site entra no ar — sem recado repassado no meio do caminho.',
       links: {
         github: enzo.github,
         portfolio: enzo.portfolio,
@@ -641,13 +652,13 @@ export const team = {
     },
     {
       name: 'Luis Ricardo Soares',
-      role: 'Desenvolvedor Full Stack',
+      role: 'Desenvolvedor',
       age: 16,
       initials: 'LS',
-      tag: 'Full stack',
+      tag: 'Contato direto',
       photo: '', // FALTA: foto real
-      focus: 'Full stack: da interface ao banco de dados',
-      bio: 'React, TypeScript e JavaScript na interface. PHP, Laravel e Node.js na regra de negócio. MySQL no banco.',
+      headline: 'Do que foi combinado ao site no ar, sem intermediário',
+      bio: 'Acompanha o projeto de ponta a ponta e continua por perto depois da entrega, quando aparece o ajuste que ninguém tinha previsto.',
       links: {
         github: luis.github,
         portfolio: luis.portfolio,

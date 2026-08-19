@@ -5,6 +5,24 @@ import { Reveal } from '../primitives/Reveal'
 import { Section, SectionHeader } from '../primitives/Section'
 
 /**
+ * Fundo da seção: trama de pontos, uma luz suave vinda de cima e um halo que
+ * deriva na direção do cursor. Três divs sem estado nenhum — o desenho inteiro
+ * e o porquê de cada camada estão em src/styles/team.css.
+ *
+ * Sem animação de propósito. Esta é a seção em que o visitante lê nomes e
+ * decide falar com alguém; fundo que se mexe compete justamente com isso.
+ */
+function TeamBackdrop() {
+  return (
+    <div className="team-fx" aria-hidden="true">
+      <div className="team-fx-dots" />
+      <div className="team-fx-wash" />
+      <div className="team-fx-glow" />
+    </div>
+  )
+}
+
+/**
  * Cada link puxa a sua cor por `--net`: o hover tinge borda e fundo no mesmo
  * tom, então os dois botões se separam de relance sem precisar ler o rótulo.
  */
@@ -86,10 +104,12 @@ function MemberCard({ member, delay }) {
             ) : null}
           </p>
 
-          {/* A especialidade sai da bio e vira o destaque do card: é a linha que
-              responde "para o que eu chamo esta pessoa?" antes do texto corrido. */}
+          {/* A linha destacada responde "o que muda para mim se eu chamar esta
+              pessoa?" — e a resposta é sobre CONVÍVIO, não sobre tecnologia.
+              Nenhum cartão desta seção divide áreas nem lista stack; o porquê
+              está no comentário de `team` em data/site.js. */}
           <p className="mt-5 border-l-2 border-brand pl-3.5 text-sm leading-snug font-semibold text-ink">
-            {member.focus}
+            {member.headline}
           </p>
 
           <p className="mt-4 text-sm leading-relaxed text-muted">{member.bio}</p>
@@ -125,9 +145,38 @@ function MemberCard({ member, delay }) {
   )
 }
 
+/**
+ * Leva o halo do fundo na direção do cursor.
+ *
+ * A escrita é a mais barata possível, e igual à do brilho dos cards: duas
+ * custom properties em PORCENTAGEM da seção, num elemento que já existe. O
+ * React não re-renderiza nada, não há estado envolvido e o único
+ * `getBoundingClientRect` acontece por evento de ponteiro, não por quadro. As
+ * duas variáveis são herdadas pelo `.team-fx` lá dentro.
+ *
+ * `mouse` exclui dedo e caneta: em toque o halo ficaria congelado no último
+ * ponto tocado, o que não é resposta nenhuma — no celular ele fica parado no
+ * lugar padrão, e ali ele é só um degradê atrás dos cards.
+ */
+const trackGlow = (event) => {
+  if (event.pointerType !== 'mouse') return
+  const rect = event.currentTarget.getBoundingClientRect()
+  const style = event.currentTarget.style
+  style.setProperty('--team-x', `${(((event.clientX - rect.left) / rect.width) * 100).toFixed(2)}%`)
+  style.setProperty('--team-y', `${(((event.clientY - rect.top) / rect.height) * 100).toFixed(2)}%`)
+}
+
+/** Cursor fora da seção: as variáveis somem e o halo volta ao padrão do CSS. */
+const releaseGlow = (event) => {
+  event.currentTarget.style.removeProperty('--team-x')
+  event.currentTarget.style.removeProperty('--team-y')
+}
+
 export function Team() {
   return (
-    <Section id="equipe">
+    <Section id="equipe" className="team" onPointerMove={trackGlow} onPointerLeave={releaseGlow}>
+      <TeamBackdrop />
+
       <SectionHeader title={team.title} subtitle={team.subtitle} />
 
       <div className="mt-10 grid gap-5 sm:mt-12 lg:grid-cols-2">

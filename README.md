@@ -4,7 +4,7 @@ Site institucional da LZdev: desenvolvimento de sites, landing pages e sistemas
 web sob medida. Página única focada em conversão, em dez seções nesta ordem:
 
 1. **Hero** — o que fazemos, em uma frase, e o CTA principal
-2. **Serviços** — o que se contrata, com preço inicial e prazo
+2. **Serviços** — o que se contrata: o que é, para quem é e o que entra
 3. **Projetos** — prova de entrega
 4. **Tecnologias** — a stack de trabalho
 5. **O custo invisível** — o prejuízo de não ter um site profissional
@@ -79,13 +79,31 @@ gerado. Editar ali funciona até o próximo build.
 ### Serviços — a lista é contrato
 
 `services` em `src/data/site.js` alimenta ao mesmo tempo os cards da seção
-Serviços e os nós `Service` do JSON-LD, **com o mesmo preço que aparece na
-tela**. Anunciar ao Google um serviço que a página não mostra (ou um preço
-diferente do publicado) é marcação enganosa e custa a elegibilidade a resultados
-enriquecidos do site inteiro. Serviço novo entra ali primeiro.
+Serviços e os nós `Service` do JSON-LD. **O schema espelha a tela**: anunciar ao
+Google um serviço que a página não mostra é marcação enganosa e custa a
+elegibilidade a resultados enriquecidos do site inteiro. Serviço novo entra ali
+primeiro.
 
 Por isso `SaaS`, `automações` e `APIs` saíram do `title` e do JSON-LD: estavam
-anunciados no HTML antigo e nenhuma seção do site os sustentava.
+anunciados no HTML antigo e nenhuma seção do site os sustentava. E pelo mesmo
+motivo os nós `Service` não têm `offers` — o preço saiu dos cards, então saiu
+também do schema.
+
+### Sem preço e sem prazo — e existe uma trava
+
+Cada card de Serviços tinha um pé com "A partir de R$ 1.800" e "cerca de 1
+semana". Os dois saíram por decisão da LZdev: valor e cronograma sem escopo
+definido são chute, e chute publicado vira âncora contra a própria proposta (o
+visitante decide por um número antes de saber o que está comprando) e promessa
+que alguém cobra depois. Os dois voltam na conversa, onde existe escopo para
+sustentá-los.
+
+Isso é **regra do site, não preferência de quem escreveu o texto**:
+`npm run check` varre o HTML publicado e **reprova o build** se um preço
+(`R$ …`, "… reais") ou um prazo ("em 7 dias", "2 a 3 semanas") reaparecer em
+qualquer lugar da página — inclusive vindo de outro arquivo, de uma tradução ou
+de um CMS. Os números do painel do Hero não contam: ele é um `role="img"` e a
+varredura o ignora inteiro.
 
 ### Contatos do time
 
@@ -111,7 +129,8 @@ O que ainda está marcado com `// FALTA` em `src/data/site.js`:
 | Stack e descrição confirmadas do Tio Preto Barbearia | `projects.items[3]` |
 
 Sem confirmação de ninguém, também seguem no ar os números de `stats`
-(30+ projetos, 20+ clientes, 100% de satisfação).
+(30+ projetos, 20+ clientes, 10+ tecnologias e 100% de satisfação). `npm run check`
+avisa sobre eles a cada build, sem travar o trabalho de ninguém.
 
 **Link vazio nunca gera botão morto.** Uma rede em `contact.socials` só aparece
 com `href` preenchido; um projeto sem `url` mostra o selo "Publicação em breve"
@@ -147,6 +166,13 @@ que mudam o comportamento do Google:
 
 ```
 brand/logo.png           arte original da marca (fonte dos ícones, NÃO publicada)
+public/
+├─ 404.html              página de erro, com CSS embutido (não depende do bundle)
+├─ fonts/                as duas famílias em .woff2 (subconjunto latino)
+├─ diferenciais/         as ilustrações SVG da seção Diferenciais
+├─ marcas/               logo que não cabe em SVG inline (Composer)
+└─ …                     ícones, og-cover.png, robots.txt, sitemap.xml e o
+                         manifest — todos GERADOS, não edite à mão
 scripts/
 ├─ lib/png.mjs           codec de PNG sem dependências
 ├─ lib/mark.mjs          recorte e reamostragem da arte da marca
@@ -163,8 +189,9 @@ src/
 ├─ styles/
 │  ├─ fonts.css          @font-face das duas famílias (subconjunto latino)
 │  ├─ index.css          tokens de design, utilities, keyframes
-│  └─ hero.css           estilos exclusivos do Hero (variáveis --hero-*)
-├─ hooks/                reveal, contador, scroll, seção ativa
+│  ├─ hero.css           estilos exclusivos do Hero (variáveis --hero-*)
+│  └─ team.css           fundo discreto da seção Equipe
+├─ hooks/                reveal, contador, scroll, seção ativa, altura da barra
 ├─ components/
 │  ├─ primitives/        Section, Reveal, Card, Button, Counter, Carousel, Icon
 │  ├─ layout/            Navbar, Footer, WhatsAppFab, GridBackdrop, Logo, StructuredData
@@ -222,6 +249,8 @@ família (cirílico, grego, vietnamita…) para um site em português e com nome
 arquivo com hash — o que impedia o preload. Os pacotes npm continuam sendo a
 fonte: atualizar é `npm update` + `npm run fonts`.
 
+## As seções por dentro
+
 ### Hero
 
 O Hero ocupa ~100vh e é montado por inteiro em JSX/CSS/SVG — a única imagem é a
@@ -233,7 +262,35 @@ proporcionalmente de 320px ao desktop sem quebrar. Os números do painel são
 inteiro é um `role="img"` com descrição, para nenhum leitor de tela ler
 "R$ 48.750,00" como se fosse dado da empresa.
 
-## Formulário de contato
+O painel **responde ao visitante**: a trilha lateral troca a tela inteira (cinco
+telas, cada uma com KPIs, gráfico e atividades próprios), o gráfico tem leitura
+por ponto (linha guia, bolinha e balão com o valor do mês apontado) e o palco se
+inclina alguns graus atrás do cursor. Nada disso é focável pelo teclado, de
+propósito: dentro de um `role="img"` os elementos não existem para o leitor de
+tela, e botão fora da árvore de acessibilidade não pode receber foco. Como os
+dados são fictícios, nenhuma informação fica inacessível — o porquê está escrito
+no cabeçalho de `HeroDashboard.jsx`.
+
+A curva do gráfico é **calculada** a partir dos valores (Catmull-Rom convertido
+em Bézier), não escrita à mão: trocar um número em `VIEWS` redesenha a linha.
+
+### Equipe
+
+Os cartões **não dividem áreas nem listam tecnologia** — nada de "fulano cuida do
+front" ou "sicrano usa React". A seção promete que o cliente fala direto com quem
+escreve o código, e separar front de back cria exatamente a pergunta que ela
+existe para eliminar; a stack já é apresentada, uma vez e com descrição, na seção
+Tecnologias. O que fica no cartão é quem é a pessoa, que ela acompanha o projeto
+inteiro e por onde falar com ela.
+
+O fundo da seção (`team.css`) é **textura, não desenho**: uma trama fina de
+pontos que se dissolve nas bordas, uma luz de 3,5% vinda de cima e um halo largo
+e quase transparente que deriva na direção do cursor, com quase um segundo de
+atraso. Sem animação, sem mesclagem, sem contraste alto — esta é a seção em que
+o visitante lê nomes e decide falar com alguém, e fundo que puxa o olho compete
+exatamente com isso. Tudo em gradiente CSS: nenhuma imagem, nenhum canvas.
+
+### Formulário de contato
 
 O formulário valida no cliente e monta uma mensagem formatada que abre no
 WhatsApp (`wa.me`) — sem backend. A microcópia ao lado do botão avisa isso
@@ -244,8 +301,14 @@ WhatsApp (`wa.me`) — sem backend. A microcópia ao lado do botão avisa isso
 ## Acessibilidade e movimento
 
 O repertório de animação é deliberadamente curto: **fade, slide, hover e scroll
-reveal**. Nada acompanha o cursor além do brilho dos cards, que só transiciona
-opacidade.
+reveal**, mais a troca de tela do painel do Hero.
+
+Três coisas acompanham o cursor — o brilho dos cards, a inclinação do painel do
+Hero e o halo do fundo da Equipe — e as três seguem a mesma regra: o evento de
+ponteiro escreve **duas custom properties** num elemento que já existe, e o CSS
+faz o resto. Nenhuma passa por estado do React, nenhuma re-renderiza nada, nenhuma
+dispara layout. Todas ignoram dedo e caneta (`pointerType !== 'mouse'`), porque em
+toque o efeito ficaria congelado no último ponto tocado.
 
 - cada `<section>` é uma **região nomeada** pelo próprio `<h2>`
   (`aria-labelledby`), então quem navega por regiões ouve "Serviços",
@@ -255,14 +318,15 @@ opacidade.
 - alvos de toque com no mínimo 24px, inclusive os pontinhos dos carrosséis
 - foco visível em anel branco, o traço mais claro da tela
 - toda animação respeita `prefers-reduced-motion: reduce`, num único bloco em
-  `src/styles/index.css`; abaixo de 640px os halos do fundo param de derivar,
-  porque redesenhar um borrão de 34rem é trabalho permanente de GPU num celular
-  de entrada
+  `src/styles/index.css`; com movimento reduzido o painel do Hero também para de
+  seguir o cursor. Abaixo de 640px os halos do fundo param de derivar, porque
+  redesenhar um borrão de 34rem é trabalho permanente de GPU num celular de
+  entrada
 
-## Ícones
+## Ícones da interface
 
 `src/components/primitives/Icon.jsx` reúne dois conjuntos: ícones de traço
 desenhados à mão (`stroke`) e logos de marca preenchidos (`brand`), estes com a
 geometria oficial do Simple Icons embutida — evita carregar uma biblioteca de
-ícones inteira só pelos dez logos da seção de Tecnologias. Sem `title`, um ícone
+ícones inteira só pelos logos da seção de Tecnologias e das redes sociais. Sem `title`, um ícone
 é decorativo e sai da árvore de acessibilidade.

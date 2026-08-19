@@ -243,7 +243,16 @@
   left: 0;
   right: 3%;
   container-type: inline-size;
-  transform: rotateX(var(--hero-tilt-x)) rotateY(var(--hero-tilt-y)) rotateZ(var(--hero-tilt-z));
+  /* A inclinação BASE vem dos tokens --hero-tilt-*, que mudam por breakpoint. As
+     duas variáveis de ponteiro são o DESVIO que HeroStage.jsx escreve enquanto o
+     mouse anda pelo palco: somar em vez de substituir é o que permite o painel
+     seguir o cursor sem o JavaScript precisar saber em que breakpoint está. */
+  transform: rotateX(calc(var(--hero-tilt-x) + var(--hero-pointer-y, 0deg)))
+    rotateY(calc(var(--hero-tilt-y) + var(--hero-pointer-x, 0deg)))
+    rotateZ(var(--hero-tilt-z));
+  /* Meio segundo: o painel PERSEGUE o cursor em vez de grudar nele — e, quando o
+     ponteiro sai do palco, volta sozinho à pose de origem. */
+  transition: transform 0.5s var(--hero-ease);
   z-index: 2;
 }
 .hero-panel-float {
@@ -378,18 +387,62 @@
   border-right: 1px solid rgb(255 255 255 / 0.06);
   padding: calc(14 * var(--s)) calc(8 * var(--s));
 }
-.hero-panel-rail li {
+/* Cada item é um BOTÃO de verdade: troca a tela inteira do painel (KPIs,
+   gráfico e atividades) — ver HeroDashboard.jsx. Sem parada de teclado de
+   propósito; o porquê está documentado lá. */
+.hero-panel-rail button {
+  position: relative;
   display: grid;
   place-items: center;
   width: calc(22 * var(--s));
   height: calc(22 * var(--s));
+  padding: 0;
+  border: 0;
   border-radius: calc(7 * var(--s));
+  background: transparent;
   color: #5c5c5c;
+  cursor: pointer;
+  transition:
+    background-color 0.3s var(--hero-ease),
+    box-shadow 0.3s var(--hero-ease),
+    color 0.3s var(--hero-ease);
 }
-.hero-panel-rail li[data-active='true'] {
+/* O CONVITE. Em repouso o ícone é cinza-escuro e se dissolve no painel; no hover
+   ele acende antes de qualquer clique. É assim que o visitante descobre que a
+   trilha faz alguma coisa — sem uma legenda "clique aqui" quebrando a ilusão de
+   que aquilo é um sistema em uso. */
+.hero-panel-rail button:hover {
+  background: rgb(255 255 255 / 0.07);
+  color: #d4d4d4;
+}
+.hero-panel-rail button[data-active='true'] {
   background: rgb(255 255 255 / 0.14);
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.28);
   color: var(--hero-key);
+}
+
+/* Etiqueta que abre ao lado do ícone, como num sistema de verdade. Ela cobre o
+   conteúdo à direita e não empurra nada: é posicionada fora do fluxo. */
+.hero-rail-tip {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 7 * var(--s));
+  z-index: 4;
+  translate: 0 -50%;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: calc(6 * var(--s));
+  background: rgb(10 10 10 / 0.94);
+  padding: calc(4 * var(--s)) calc(8 * var(--s));
+  font-size: calc(8.4 * var(--s));
+  font-weight: 600;
+  color: #e6e6e6;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s var(--hero-ease);
+}
+.hero-panel-rail button:hover .hero-rail-tip {
+  opacity: 1;
 }
 
 .hero-panel-main {
@@ -425,6 +478,17 @@
   border-radius: calc(10 * var(--s));
   background: var(--hero-surface-2);
   padding: calc(12 * var(--s)) calc(11 * var(--s)) calc(11 * var(--s));
+  transition:
+    border-color 0.35s var(--hero-ease),
+    background-color 0.35s var(--hero-ease),
+    transform 0.35s var(--hero-ease);
+}
+/* Levantar duas unidades é pouco — e é o ponto: o cartão responde ao ponteiro
+   sem prometer um clique, porque ele não leva a lugar nenhum. */
+.hero-kpi:hover {
+  border-color: rgb(255 255 255 / 0.16);
+  background: rgb(255 255 255 / 0.06);
+  transform: translateY(calc(-2 * var(--s)));
 }
 .hero-kpi > span {
   display: block;
@@ -497,11 +561,95 @@
   color: #4d4d4d;
   text-align: right;
 }
+/* Caixa do traçado. O SVG desenha a curva; a bolinha, a linha guia e o balão
+   ficam POR CIMA, em HTML: dentro do SVG (que tem preserveAspectRatio="none")
+   qualquer círculo sairia esticado junto com o viewBox. */
 .hero-chart-plot {
+  position: relative;
+  grid-column: 2;
+  height: calc(138 * var(--s));
+}
+.hero-chart-svg {
   display: block;
   width: 100%;
-  height: calc(138 * var(--s));
+  height: 100%;
   overflow: visible;
+}
+
+/* Linha guia do mês apontado */
+.hero-chart-guide {
+  position: absolute;
+  top: calc(-3 * var(--s));
+  bottom: 0;
+  width: 1px;
+  translate: -50% 0;
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.42), rgb(255 255 255 / 0.05));
+  opacity: 0;
+  transition:
+    opacity 0.2s var(--hero-ease),
+    left 0.25s var(--hero-ease);
+}
+.hero-chart-guide[data-on='true'] {
+  opacity: 1;
+}
+
+/* Bolinha do valor: em repouso mora no último mês e desliza até o mês apontado */
+.hero-chart-dot {
+  position: absolute;
+  width: calc(7 * var(--s));
+  height: calc(7 * var(--s));
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 0 calc(2.5 * var(--s)) rgb(255 255 255 / 0.16);
+  transition:
+    left 0.25s var(--hero-ease),
+    top 0.25s var(--hero-ease);
+}
+
+/* Balão com o valor do mês */
+.hero-chart-tip {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  justify-items: center;
+  gap: calc(1 * var(--s));
+  translate: -50% -170%;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  border-radius: calc(7 * var(--s));
+  background: rgb(10 10 10 / 0.95);
+  padding: calc(5 * var(--s)) calc(9 * var(--s));
+  font-size: calc(7.6 * var(--s));
+  color: var(--hero-faint);
+  white-space: nowrap;
+  box-shadow: 0 calc(8 * var(--s)) calc(22 * var(--s)) calc(-8 * var(--s)) rgb(0 0 0 / 0.9);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.2s var(--hero-ease),
+    left 0.25s var(--hero-ease),
+    top 0.25s var(--hero-ease);
+}
+.hero-chart-tip strong {
+  font-size: calc(9.6 * var(--s));
+  font-weight: 700;
+  color: var(--hero-text);
+}
+.hero-chart-tip[data-on='true'] {
+  opacity: 1;
+}
+.hero-chart-tip[data-below='true'] {
+  translate: -50% 60%;
+}
+
+/* Faixas de captura — uma por mês, cobrindo metade do caminho até os vizinhos
+   (1fr nas pontas, 2fr no meio). Assim o mês que acende é sempre o mais PRÓXIMO
+   do ponteiro, e não o da coluna em que ele calhou de entrar. */
+.hero-chart-hit {
+  position: absolute;
+  inset: calc(-8 * var(--s)) 0;
+  display: grid;
+  grid-template-columns: 1fr 2fr 2fr 2fr 2fr 1fr;
 }
 .hero-chart-x {
   display: flex;
@@ -510,6 +658,13 @@
   margin-top: calc(5 * var(--s));
   font-size: calc(7.2 * var(--s));
   color: #4d4d4d;
+}
+/* O mês apontado clareia no eixo: o balão diz QUANTO, o eixo confirma QUANDO. */
+.hero-chart-x span {
+  transition: color 0.2s var(--hero-ease);
+}
+.hero-chart-x span[data-on='true'] {
+  color: #e6e6e6;
 }
 
 /* atividades recentes */
@@ -525,6 +680,17 @@
   gap: calc(7 * var(--s));
   font-size: calc(8.6 * var(--s));
   color: #c9c9c9;
+  transition: color 0.3s var(--hero-ease);
+  /* Entrada em cascata quando a tela troca: --i é o índice da linha, escrito
+     inline em HeroDashboard.jsx. */
+  animation: hero-swap 0.45s var(--hero-ease) both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+.hero-act:hover {
+  color: #ffffff;
+}
+.hero-act:hover .hero-act-icon {
+  background: rgb(255 255 255 / 0.18);
 }
 /* Um tratamento só. Os quatro tons de antes (violeta, ciano, esmeralda, azul)
    distinguiam os tipos de atividade por matiz; traduzidos para quatro níveis de
@@ -794,6 +960,22 @@
     transform: translate(-50%, 50%) scaleY(var(--squash)) rotate(360deg);
   }
 }
+/* Troca de tela do painel: o bloco novo entra subindo. Meio segundo é o
+   bastante para o olho registrar que a informação MUDOU sem atrasar a leitura —
+   é o que separa "trocou de aba" de "o texto piscou". */
+.hero-swap {
+  animation: hero-swap 0.45s var(--hero-ease) both;
+}
+@keyframes hero-swap {
+  from {
+    opacity: 0;
+    transform: translate3d(0, calc(7 * var(--s)), 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
 @keyframes hero-sheen {
   0% {
     transform: translateX(-105%);
@@ -931,10 +1113,18 @@
   .hero-orbit,
   .hero-spark,
   .hero-halo,
-  .hero-platform-core {
+  .hero-platform-core,
+  .hero-swap,
+  .hero-act {
     animation: none;
   }
   .hero-panel::after {
     display: none;
+  }
+  /* O painel para de seguir o cursor: quem pediu menos movimento não quer uma
+     peça do tamanho da tela girando atrás do ponteiro. O JavaScript continua
+     escrevendo as variáveis — é a fórmula aqui que deixa de usá-las. */
+  .hero-panel-wrap {
+    transform: rotateX(var(--hero-tilt-x)) rotateY(var(--hero-tilt-y)) rotateZ(var(--hero-tilt-z));
   }
 }
