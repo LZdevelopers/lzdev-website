@@ -18,13 +18,18 @@ import { Section, SectionHeader } from '../primitives/Section'
  */
 
 /** Moldura da captura. Mostra a imagem real quando existe; senão, espera. */
-function ProjectShot({ image, name }) {
+function ProjectShot({ image, shot, name }) {
   return (
     <div className="relative aspect-16/10 overflow-hidden rounded-[1rem] border border-white/10 bg-surface-2 lg:aspect-auto lg:h-full">
       {image ? (
         <img
           src={image}
           alt={`Interface do projeto ${name}`}
+          /* Dimensão real do arquivo, vinda de `shot` no data/site.js: reserva o
+             espaço antes da imagem chegar — sem isso o card salta quando ela
+             carrega. A moldura tem proporção própria e recorta por cima. */
+          width={shot?.width}
+          height={shot?.height}
           loading="lazy"
           decoding="async"
           className="size-full object-cover transition-transform duration-700 ease-[var(--ease-out-soft)] group-hover:scale-[1.03]"
@@ -53,7 +58,7 @@ function ProjectSlide({ project }) {
 
   return (
     <article className="group grid gap-6 rounded-[var(--radius-xl2)] border border-white/8 bg-surface/40 p-5 border-gradient sm:p-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-stretch lg:gap-8 lg:p-7">
-      <ProjectShot image={project.image} name={project.name} />
+      <ProjectShot image={project.image} shot={project.shot} name={project.name} />
 
       <div className="flex flex-col">
         <p className="text-xs font-semibold tracking-[0.16em] text-accent uppercase">

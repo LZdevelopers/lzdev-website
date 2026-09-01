@@ -11,7 +11,7 @@
  *
  * ⚠️  Ainda pendente de dado real (nada foi inventado; cada ponto está marcado
  *     com `// FALTA` no lugar exato):
- *       · URLs dos projetos ainda não hospedados e screenshots de todos
+ *       · hospedagem do Kimori e do Tio Preto (as URLs já estão no ar em 404)
  *       · fotos do time
  *       · LinkedIn dos dois desenvolvedores
  *       · perfis próprios da LZdev (hoje o site usa os pessoais)
@@ -210,7 +210,10 @@ export const hero = {
 /*                                                                            */
 /*  NADA aqui é inventado. Cada linha vem de informação que já estava no site: */
 /*    · o que cada formato entrega → respostas do FAQ                        */
-/*    · login, permissão por perfil, relatório e painel único → Sprint Max     */
+/*    · login e conta por cliente → Tio Preto Barbearia                     */
+/*  RESSALVA: "cadastros, vendas e relatórios num painel único" vinha do      */
+/*  Sprint Max, que saiu da página em 01/09/2026. A frase continua verdadeira  */
+/*  sobre o que a LZdev faz, mas nenhum projeto na tela a comprova hoje.       */
 /*    · caminho curto até o WhatsApp → Kimori e Tio Preto                     */
 /*    · "sem template" e "o código é seu" → diferenciais e FAQ                */
 /*    · atendimento remoto em todo o Brasil → FAQ                             */
@@ -281,7 +284,7 @@ export const services = {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  3 · PROJETOS — FALTA: URLs dos 3 não hospedados e screenshots             */
+/*  3 · PROJETOS — FALTA: hospedar Kimori e Tio Preto (domínios em 404)        */
 /* -------------------------------------------------------------------------- */
 export const projects = {
   title: 'Resultado entregue',
@@ -295,51 +298,54 @@ export const projects = {
   hint: 'Arraste para o lado para ver os outros projetos',
 
   /**
-   * `image`: caminho de uma imagem em /public (ex.: '/projetos/sprint-max.png').
+   * `image`: caminho de uma imagem em /public (ex.: '/projetos/kimori.png').
    * Enquanto estiver vazio, o card mostra uma moldura de espera com o nome do
-   * projeto — nunca uma imagem quebrada. Basta preencher o caminho quando o
-   * screenshot existir; nenhum outro ajuste é necessário.
+   * projeto — nunca uma imagem quebrada.
+   *
+   * `shot`: a dimensão REAL do arquivo, só para o navegador reservar o espaço
+   * antes da imagem chegar. As três capturas têm proporções diferentes (1,52,
+   * 1,60 e 2,10) e a moldura recorta com `object-cover`, então cravar um
+   * tamanho único no componente descreveria errado dois dos três arquivos.
    *
    * `url`: endereço público do projeto no ar. VAZIO ESCONDE O BOTÃO, e é por
    * isso que ele existe assim: os quatro cards apontavam para `#`, um link que
    * recarrega a própria página e volta ao topo. Para o visitante é um botão
    * quebrado; para o Google, quatro links internos que não levam a nada. Sem
    * URL, o card diz honestamente que a publicação está a caminho.
+   *
+   * ATENÇÃO — Kimori e Tio Preto já têm o endereço DEFINITIVO preenchido por
+   * decisão da LZdev (01/09/2026), mas os dois domínios ainda respondem 404.
+   * Enquanto a hospedagem não subir, o botão "Abrir o site no ar" leva o
+   * visitante a uma página de erro. Publicar os dois projetos ou esvaziar
+   * estas duas URLs é o que fecha a pendência.
    */
   items: [
     {
-      name: 'Sprint Max',
-      category: 'Sistema de gestão',
-      image: '', // FALTA: screenshot real
-      text: 'Sistema completo de gestão de produtos, usuários e vendas. Substituiu o controle por planilha por um painel único, com permissões por perfil e relatórios que fecham sozinhos.',
-      stack: ['PHP', 'Laravel', 'MySQL', 'Bootstrap'],
-      url: '', // FALTA: ainda não hospedado — sem URL o card não mostra botão
-    },
-    {
       name: 'Kimori Korean Food',
       category: 'Website',
-      image: '', // FALTA: screenshot real
+      image: '/projetos/kimori-korean-food.png',
+      shot: { width: 1440, height: 950 },
       text: 'Presença digital para restaurante de comida coreana: cardápio navegável, identidade marcante e caminho curto até o pedido pelo WhatsApp.',
-      stack: ['HTML', 'CSS', 'JavaScript', 'Tailwind CSS'],
-      url: '', // FALTA: ainda não hospedado — sem URL o card não mostra botão
+      stack: ['PHP', 'MySQL', 'JavaScript', 'CSS'],
+      url: 'https://kimori.lzdev.com.br', // FALTA: hospedar — hoje o domínio ainda responde 404
     },
     {
       name: 'Horário de Brasília',
       category: 'Ferramenta online',
-      image: '', // FALTA: screenshot real
+      image: '/projetos/horario-de-brasilia.png',
+      shot: { width: 1600, height: 1000 },
       text: 'Ferramenta pública de consulta ao horário oficial de Brasília. Interface direta, precisa e leve o bastante para abrir instantaneamente em qualquer conexão.',
-      stack: ['JavaScript', 'HTML', 'CSS'],
+      stack: ['HTML', 'CSS', 'JavaScript'],
       url: '', // FALTA: ainda não hospedado — sem URL o card não mostra botão
     },
     {
       name: 'Tio Preto Barbearia',
-      category: 'Site para barbearia',
-      image: '', // FALTA: screenshot real
-      // FALTA: confirmar o texto com o que o site realmente tem (a descrição
-      // abaixo cobre o escopo típico de barbearia — serviços, equipe e contato).
-      text: 'Presença digital para barbearia: serviços e preços na tela inicial, apresentação da equipe e caminho curto até o agendamento pelo WhatsApp.',
-      stack: ['HTML', 'CSS', 'JavaScript', 'Tailwind CSS'], // FALTA: confirmar stack real
-      url: 'https://tiopretobarbearia.lzdev.com.br',
+      category: 'Sistema de agendamento',
+      image: '/projetos/tio-preto-barbearia.png',
+      shot: { width: 1920, height: 914 },
+      text: 'Sistema de agendamento para barbearia: o cliente cria conta, marca o horário pelo próprio site e consulta o catálogo de produtos — sem fila de mensagem para confirmar.',
+      stack: ['PHP', 'MySQL', 'Composer'],
+      url: 'https://tiopretobarbearia.lzdev.com.br', // FALTA: hospedar — hoje o domínio ainda responde 404
     },
   ],
   /**
@@ -628,7 +634,6 @@ export const team = {
    * `photo`: caminho de uma imagem em /public (ex.: '/equipe/enzo.jpg').
    * Vazio → o card usa o avatar de iniciais, mantendo a identidade visual.
    * `tag`: selo sobre o retrato. `headline`: a linha destacada antes da bio.
-   * `age`: idade em anos, exibida ao lado da função.
    *
    * `headline` e `bio` falam de RELAÇÃO, não de stack: com quem o cliente vai
    * falar, em que etapas e até quando. É o único recorte em que os dois cartões
@@ -639,7 +644,6 @@ export const team = {
     {
       name: 'Enzo Pontes do Nascimento',
       role: 'Desenvolvedor',
-      age: 15,
       initials: 'EN',
       tag: 'Contato direto',
       photo: '', // FALTA: foto real
@@ -653,7 +657,6 @@ export const team = {
     {
       name: 'Luis Ricardo Soares',
       role: 'Desenvolvedor',
-      age: 16,
       initials: 'LS',
       tag: 'Contato direto',
       photo: '', // FALTA: foto real

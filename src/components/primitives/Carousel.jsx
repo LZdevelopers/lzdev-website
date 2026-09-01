@@ -229,8 +229,8 @@ export function Carousel({
 
 /* O ÍNDICE NOMEADO foi removido daqui.
  *
- * Era uma fileira de pastilhas acima da trilha — "01 Sprint Max",
- * "02 Kimori Korean Food", "03 Horário de Brasília"… —, uma por item, com o
+ * Era uma fileira de pastilhas acima da trilha — "01 Kimori Korean Food",
+ * "02 Horário de Brasília", "03 Tio Preto Barbearia"… —, uma por item, com o
  * número de ordem em destaque. A intenção era boa (mostrar o que existe fora da
  * tela antes de rolar), mas o resultado eram duas listas do mesmo conteúdo na
  * mesma seção, e a numeração dava a entender que os projetos seguem uma ordem

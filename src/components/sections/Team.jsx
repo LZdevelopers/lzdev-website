@@ -90,19 +90,7 @@ function MemberCard({ member, delay }) {
 
         <div className="flex min-w-0 flex-1 flex-col">
           <h3 className="text-lg leading-tight font-bold text-ink">{member.name}</h3>
-          {/* Função e idade na mesma linha, separadas por um ponto: a idade é
-              dado de apoio e não merece uma linha própria puxando o olho. */}
-          <p className="mt-1.5 flex flex-wrap items-center gap-x-2 text-sm font-medium text-accent">
-            {member.role}
-            {member.age ? (
-              <>
-                <span className="text-white/25" aria-hidden="true">
-                  ·
-                </span>
-                <span className="font-normal text-muted">{member.age} anos</span>
-              </>
-            ) : null}
-          </p>
+          <p className="mt-1.5 text-sm font-medium text-accent">{member.role}</p>
 
           {/* A linha destacada responde "o que muda para mim se eu chamar esta
               pessoa?" — e a resposta é sobre CONVÍVIO, não sobre tecnologia.

@@ -121,12 +121,11 @@ O que ainda está marcado com `// FALTA` em `src/data/site.js`:
 
 | O quê | Onde |
 |---|---|
-| URLs dos projetos ainda não hospedados (Sprint Max, Kimori, Horário de Brasília) | `projects.items[].url` |
-| Imagens dos projetos | `projects.items[].image` |
+| Hospedar Kimori e Tio Preto — as URLs já estão publicadas e respondem 404 | `projects.items[].url` |
+| URL do Horário de Brasília (o card mostra "Publicação em breve") | `projects.items[1].url` |
 | Fotos da equipe | `team.members[].photo` |
 | LinkedIn de cada dev | `enzo.linkedin` / `luis.linkedin` |
 | Perfis próprios da LZdev (hoje o site usa os pessoais) | `contact.socials` |
-| Stack e descrição confirmadas do Tio Preto Barbearia | `projects.items[3]` |
 
 Sem confirmação de ninguém, também seguem no ar os números de `stats`
 (30+ projetos, 20+ clientes, 10+ tecnologias e 100% de satisfação). `npm run check`
