@@ -11,7 +11,6 @@
  *
  * ⚠️  Ainda pendente de dado real (nada foi inventado; cada ponto está marcado
  *     com `// FALTA` no lugar exato):
- *       · hospedagem do Kimori e do Tio Preto (as URLs já estão no ar em 404)
  *       · fotos do time
  *       · LinkedIn dos dois desenvolvedores
  *       · perfis próprios da LZdev (hoje o site usa os pessoais)
@@ -284,7 +283,7 @@ export const services = {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  3 · PROJETOS — FALTA: hospedar Kimori e Tio Preto (domínios em 404)        */
+/*  3 · PROJETOS                                                              */
 /* -------------------------------------------------------------------------- */
 export const projects = {
   title: 'Resultado entregue',
@@ -312,12 +311,6 @@ export const projects = {
    * recarrega a própria página e volta ao topo. Para o visitante é um botão
    * quebrado; para o Google, quatro links internos que não levam a nada. Sem
    * URL, o card diz honestamente que a publicação está a caminho.
-   *
-   * ATENÇÃO — Kimori e Tio Preto já têm o endereço DEFINITIVO preenchido por
-   * decisão da LZdev (01/09/2026), mas os dois domínios ainda respondem 404.
-   * Enquanto a hospedagem não subir, o botão "Abrir o site no ar" leva o
-   * visitante a uma página de erro. Publicar os dois projetos ou esvaziar
-   * estas duas URLs é o que fecha a pendência.
    */
   items: [
     {
@@ -327,7 +320,7 @@ export const projects = {
       shot: { width: 1440, height: 950 },
       text: 'Presença digital para restaurante de comida coreana: cardápio navegável, identidade marcante e caminho curto até o pedido pelo WhatsApp.',
       stack: ['PHP', 'MySQL', 'JavaScript', 'CSS'],
-      url: 'https://kimori.lzdev.com.br', // FALTA: hospedar — hoje o domínio ainda responde 404
+      url: 'https://kimori.lzdev.com.br',
     },
     {
       name: 'Horário de Brasília',
@@ -336,7 +329,7 @@ export const projects = {
       shot: { width: 1600, height: 1000 },
       text: 'Ferramenta pública de consulta ao horário oficial de Brasília. Interface direta, precisa e leve o bastante para abrir instantaneamente em qualquer conexão.',
       stack: ['HTML', 'CSS', 'JavaScript'],
-      url: '', // FALTA: ainda não hospedado — sem URL o card não mostra botão
+      url: 'https://brasil-time.lzdev.com.br',
     },
     {
       name: 'Tio Preto Barbearia',
@@ -345,7 +338,7 @@ export const projects = {
       shot: { width: 1920, height: 914 },
       text: 'Sistema de agendamento para barbearia: o cliente cria conta, marca o horário pelo próprio site e consulta o catálogo de produtos — sem fila de mensagem para confirmar.',
       stack: ['PHP', 'MySQL', 'Composer'],
-      url: 'https://tiopretobarbearia.lzdev.com.br', // FALTA: hospedar — hoje o domínio ainda responde 404
+      url: 'https://tiopretobarbearia.lzdev.com.br',
     },
   ],
   /**

@@ -121,8 +121,6 @@ O que ainda está marcado com `// FALTA` em `src/data/site.js`:
 
 | O quê | Onde |
 |---|---|
-| Hospedar Kimori e Tio Preto — as URLs já estão publicadas e respondem 404 | `projects.items[].url` |
-| URL do Horário de Brasília (o card mostra "Publicação em breve") | `projects.items[1].url` |
 | Fotos da equipe | `team.members[].photo` |
 | LinkedIn de cada dev | `enzo.linkedin` / `luis.linkedin` |
 | Perfis próprios da LZdev (hoje o site usa os pessoais) | `contact.socials` |
