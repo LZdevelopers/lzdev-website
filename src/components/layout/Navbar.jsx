@@ -21,7 +21,7 @@ import { Logo } from './Logo'
  * fica aceso —, porque cor sozinha não serve para quem não a distingue. Para o
  * leitor de tela é `aria-current`.
  */
-const NAV_IDS = navLinks.map((link) => link.href.replace('#', ''))
+const NAV_IDS = navLinks.map((link) => link.href.slice(1))
 
 export function Navbar() {
   /**
@@ -118,14 +118,14 @@ export function Navbar() {
         className="container-page grid h-18 grid-cols-[auto_1fr_auto] items-center gap-6"
         aria-label="Navegação principal"
       >
-        <a href="#inicio" className="rounded-lg" aria-label="LZdev — voltar ao início da página">
+        <a href="/" className="rounded-lg" aria-label="LZdev — voltar ao início da página">
           <Logo compact />
         </a>
 
         {/* Links — desktop */}
         <ul className="hidden lg:flex items-center justify-center gap-1">
           {navLinks.map((link) => {
-            const current = activeId === link.href.replace('#', '')
+            const current = activeId === link.href.slice(1)
             return (
               <li key={link.href}>
                 <a
@@ -146,7 +146,7 @@ export function Navbar() {
           {/* O wrapper é que esconde: `hidden` na própria Button perderia para o
               `inline-flex` das classes base dela na ordem final do CSS. */}
           <div className="hidden sm:block">
-            <Button href="#contato" size="md" variant="glass" pill icon="send" iconPosition="left">
+            <Button href="/contato" size="md" variant="glass" pill icon="send" iconPosition="left">
               {primaryCta}
             </Button>
           </div>
@@ -175,7 +175,7 @@ export function Navbar() {
       >
         <ul className="container-page flex flex-col gap-1 py-5">
           {navLinks.map((link) => {
-            const current = activeId === link.href.replace('#', '')
+            const current = activeId === link.href.slice(1)
             return (
               <li key={link.href}>
                 <a
@@ -192,7 +192,7 @@ export function Navbar() {
             )
           })}
           <li className="mt-3">
-            <Button href="#contato" size="lg" className="w-full" icon="arrowRight" onClick={onDrawerLink('#contato')}>
+            <Button href="/contato" size="lg" className="w-full" icon="arrowRight" onClick={onDrawerLink('/contato')}>
               {primaryCta}
             </Button>
           </li>

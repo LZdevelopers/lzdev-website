@@ -12,7 +12,7 @@
  *
  * dist-ssr/ é lixo de build: é removido no fim, e nunca vai para o servidor.
  */
-import { readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { repoRoot } from './lib/mark.mjs'
@@ -31,6 +31,27 @@ if (!html.includes(target)) {
 }
 
 writeFileSync(indexPath, html.replace(target, `<div id="root">${app}</div>`), 'utf8')
+
+// Cada URL de seção recebe uma cópia do HTML principal. Assim /projetos e os
+// demais destinos funcionam também em hospedagem estática pura, sem depender de
+// uma regra de rewrite do servidor.
+const sectionRoutes = [
+  'servicos',
+  'projetos',
+  'tecnologias',
+  'custo-invisivel',
+  'diferenciais',
+  'equipe',
+  'numeros',
+  'faq',
+  'contato',
+]
+const rendered = html.replace(target, `<div id="root">${app}</div>`)
+for (const route of sectionRoutes) {
+  const routeDir = join(dist, route)
+  mkdirSync(routeDir, { recursive: true })
+  writeFileSync(join(routeDir, 'index.html'), rendered, 'utf8')
+}
 rmSync(distSsr, { recursive: true, force: true })
 
 /* Um número: se ele voltar a ficar perto de zero, o prerender parou de funcionar

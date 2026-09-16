@@ -1,4 +1,6 @@
+import { useEffect } from 'react'
 import { useReveal } from './hooks/useReveal'
+import { afterTwoFrames, isSiteRoute, scrollToAnchor } from './lib/anchors'
 import { Footer } from './components/layout/Footer'
 import { GridBackdrop } from './components/layout/GridBackdrop'
 import { Navbar } from './components/layout/Navbar'
@@ -14,12 +16,39 @@ import { Stats } from './components/sections/Stats'
 import { Team } from './components/sections/Team'
 import { Tools } from './components/sections/Tools'
 import { WhyUs } from './components/sections/WhyUs'
+import { NotFound } from './components/pages/NotFound'
 
 export default function App() {
   useReveal()
 
+  const pathname = typeof window === 'undefined' ? '/' : window.location.pathname
+
+  useEffect(() => {
+    const restoreRoute = () =>
+      scrollToAnchor(window.location.pathname, { updateHistory: false, focus: false, behavior: 'auto' })
+
+    afterTwoFrames(restoreRoute)
+    window.addEventListener('popstate', restoreRoute)
+    return () => window.removeEventListener('popstate', restoreRoute)
+  }, [])
+
+  const onInternalNavigation = (event) => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+
+    const link = event.target.closest('a[href]')
+    if (!link || link.target || link.download) return
+
+    const url = new URL(link.href, window.location.href)
+    if (url.origin !== window.location.origin || !isSiteRoute(url.pathname)) return
+
+    event.preventDefault()
+    scrollToAnchor(url.pathname)
+  }
+
+  if (!isSiteRoute(pathname)) return <NotFound />
+
   return (
-    <>
+    <div onClick={onInternalNavigation}>
       <StructuredData />
       <GridBackdrop />
 
@@ -52,6 +81,6 @@ export default function App() {
 
       <Footer />
       <WhatsAppFab />
-    </>
+    </div>
   )
 }

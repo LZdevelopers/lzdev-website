@@ -94,11 +94,11 @@ export function Services() {
           </div>
 
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-            <Button href="#contato" variant="outline" size="lg" icon="arrowRight">
+            <Button href="/contato" variant="outline" size="lg" icon="arrowRight">
               {primaryCta}
             </Button>
             <a
-              href="#projetos"
+              href="/projetos"
               /* py-1: 20px de alvo viram 28px. Ver o comentário do rodapé. */
               className="group inline-flex items-center gap-1.5 py-1 text-sm font-semibold text-muted transition-colors duration-300 hover:text-ink"
             >

@@ -141,11 +141,11 @@ export const socialsByPerson = activeSocials.reduce((groups, social) => {
  * seção correspondente — a mesma string que o id do <section> usa.
  */
 export const navLinks = [
-  { label: 'Serviços', href: '#servicos' },
-  { label: 'Projetos', href: '#projetos' },
-  { label: 'Tecnologias', href: '#tecnologias' },
-  { label: 'Equipe', href: '#equipe' },
-  { label: 'FAQ', href: '#faq' },
+  { label: 'Serviços', href: '/servicos' },
+  { label: 'Projetos', href: '/projetos' },
+  { label: 'Tecnologias', href: '/tecnologias' },
+  { label: 'Equipe', href: '/equipe' },
+  { label: 'FAQ', href: '/faq' },
 ]
 
 /**
@@ -848,19 +848,19 @@ export const footer = {
     {
       title: 'Navegação',
       links: [
-        { label: 'Serviços', href: '#servicos' },
-        { label: 'Projetos', href: '#projetos' },
-        { label: 'Diferenciais', href: '#diferenciais' },
-        { label: 'Custo invisível', href: '#custo-invisivel' },
+        { label: 'Serviços', href: '/servicos' },
+        { label: 'Projetos', href: '/projetos' },
+        { label: 'Diferenciais', href: '/diferenciais' },
+        { label: 'Custo invisível', href: '/custo-invisivel' },
       ],
     },
     {
       title: 'Empresa',
       links: [
-        { label: 'Nossos números', href: '#numeros' },
-        { label: 'Equipe', href: '#equipe' },
-        { label: 'Perguntas frequentes', href: '#faq' },
-        { label: 'Fale com a gente', href: '#contato' },
+        { label: 'Nossos números', href: '/numeros' },
+        { label: 'Equipe', href: '/equipe' },
+        { label: 'Perguntas frequentes', href: '/faq' },
+        { label: 'Fale com a gente', href: '/contato' },
       ],
     },
   ],

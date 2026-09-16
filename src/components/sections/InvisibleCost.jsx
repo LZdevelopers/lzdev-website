@@ -166,7 +166,7 @@ export function InvisibleCost() {
             <h3 className="text-[clamp(1.3rem,2.8vw,1.7rem)] text-ink">{invisibleCost.closing.title}</h3>
             <p className="mt-2.5 text-[0.95rem] leading-relaxed text-muted">{invisibleCost.closing.text}</p>
           </div>
-          <Button href="#contato" size="lg" icon="arrowRight">
+          <Button href="/contato" size="lg" icon="arrowRight">
             {primaryCta}
           </Button>
         </div>

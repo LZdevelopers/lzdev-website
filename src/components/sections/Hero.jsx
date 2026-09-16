@@ -76,10 +76,10 @@ export function Hero() {
                     que este seja lido como "o" caminho. O secundário fica em
                     contorno, no mesmo tamanho — quem não está pronto para pedir
                     orçamento tem para onde ir sem competir pelo olho. */}
-                <Button href="#contato" size="xl" variant="gradient" icon="arrowUpRight" iconBadge>
+                <Button href="/contato" size="xl" variant="gradient" icon="arrowUpRight" iconBadge>
                   {primaryCta}
                 </Button>
-                <Button href="#projetos" size="xl" variant="outline" icon="arrowDown">
+                <Button href="/projetos" size="xl" variant="outline" icon="arrowDown">
                   {hero.secondaryCta}
                 </Button>
               </div>

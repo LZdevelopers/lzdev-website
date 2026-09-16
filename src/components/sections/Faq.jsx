@@ -36,7 +36,7 @@ export function Faq() {
               </span>
               <div className="min-w-0">
                 <p className="text-sm leading-relaxed text-muted">{faq.helper.text}</p>
-                <Button href="#contato" variant="outline" className="mt-5" icon="arrowRight">
+                <Button href="/contato" variant="outline" className="mt-5" icon="arrowRight">
                   {faq.helper.cta}
                 </Button>
               </div>

@@ -81,11 +81,15 @@
       main {
         width: 100%;
         max-width: 34rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         text-align: center;
       }
 
       .marca {
-        display: inline-flex;
+        display: flex;
+        width: fit-content;
         align-items: center;
         gap: 0.7rem;
         font-family: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
@@ -95,8 +99,10 @@
         text-decoration: none;
         color: var(--ink);
         border-radius: 0.5rem;
+        line-height: 1;
       }
       .marca img {
+        display: block;
         width: 40px;
         height: 40px;
       }
@@ -122,6 +128,7 @@
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
+        transform: translateX(0.025em);
       }
 
       h1 {
@@ -260,16 +267,16 @@
 
       <div class="acoes">
         <a class="botao botao--primario" href="/">Voltar para a página inicial</a>
-        <a class="botao botao--contorno" href="/#contato">Falar com a nossa equipe</a>
+        <a class="botao botao--contorno" href="/contato">Falar com a nossa equipe</a>
       </div>
 
       <nav class="atalhos" aria-label="Atalhos para as seções do site">
         <p>Ou vá direto para</p>
         <ul>
-          <li><a href="/#servicos">Serviços e preços</a></li>
-          <li><a href="/#projetos">Projetos entregues</a></li>
-          <li><a href="/#equipe">Quem somos</a></li>
-          <li><a href="/#faq">Perguntas frequentes</a></li>
+          <li><a href="/servicos">Serviços e preços</a></li>
+          <li><a href="/projetos">Projetos entregues</a></li>
+          <li><a href="/equipe">Quem somos</a></li>
+          <li><a href="/faq">Perguntas frequentes</a></li>
         </ul>
       </nav>
     </main>
